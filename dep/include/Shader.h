@@ -22,7 +22,7 @@ public:
 	void getFloat(const std::string& name, float& value) const;
 
 private:
-	void fileRead(const std::string fileName, std::string shaderCode, 
+	void fileRead(const char* fileName, std::string shaderCode, 
 		const std::string start, const std::string end);
 	void checkCompileErrors(unsigned int shader, std::string type);
 };

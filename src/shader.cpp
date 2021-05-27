@@ -77,26 +77,28 @@ void Shader::getFloat(const std::string& name, float& value) const {
 }
 
 // utility function for reading shaders from the same file
-void Shader::fileRead(const std::string fileName, std::string shaderCode,
+void Shader::fileRead(const char* fileName, std::string shaderCode,
     const std::string start, const std::string end) {
 
     std::string temp;
     bool shaderFound = false;
 
     std::ifstream shaderFile;
-    shaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+//    shaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
     try {
-        shaderFile.open(fileName);
+        std::cout << "Executed" << std::endl;
+        shaderFile.open(fileName, std::ifstream::in);
 
         while (getline(shaderFile, temp)) {
             if (temp == end) {
                 shaderFile.close();
+                std::cout << shaderCode << std::endl;
                 shaderFound = false;
             }
 
             if (shaderFound)
-                shaderCode += temp;
+                shaderCode += "\n" + temp;
 
             if (temp == start)
                 shaderFound = true;
@@ -119,7 +121,9 @@ void Shader::checkCompileErrors(unsigned int shader, std::string type) {
         if (!success)
         {
             glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-            std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+            std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " 
+                << type << "\n" << infoLog 
+                << "\n -- --------------------------------------------------- -- " << std::endl;
         }
     }
     else
@@ -128,7 +132,9 @@ void Shader::checkCompileErrors(unsigned int shader, std::string type) {
         if (!success)
         {
             glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-            std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+            std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " 
+                << type << "\n" << infoLog 
+                << "\n -- --------------------------------------------------- -- " << std::endl;
         }
     }
 }
