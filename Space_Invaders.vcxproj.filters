@@ -18,7 +18,8 @@
     <None Include="README.md">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="src\shader.shader" />
+    <None Include="res\shaders\vertex.shader" />
+    <None Include="res\shaders\fragment.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -32,8 +33,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="dep\lib\lib-vc2019\glfw3.lib" />
-    <Library Include="dep\lib\lib-vc2019\glfw3_mt.lib" />
+    <Library Include="dep\lib\glfw3.lib" />
+    <Library Include="dep\lib\glfw3_mt.lib" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dep\include\OpenGL\KHR\khrplatform.h">
@@ -42,5 +43,88 @@
     <ClInclude Include="dep\include\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\common.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\exponential.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\ext.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\fwd.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\geometric.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\glm.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\integer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\mat2x2.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\mat2x3.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\mat2x4.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\mat3x2.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\mat3x3.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\mat3x4.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\mat4x2.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\mat4x3.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\mat4x4.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\matrix.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\packing.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\trigonometric.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\vec2.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\vec3.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\vec4.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\OpenGL\glm\vector_relational.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\awesomeface.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\container.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="dep\include\OpenGL\glm\CMakeLists.txt" />
   </ItemGroup>
 </Project>

@@ -9,7 +9,7 @@ class Shader {
 public:
 	unsigned int ID;
 
-	Shader(const char* shaderPath);
+	Shader(const char* vertexPath, const char* fragmentPath);
 
 	void use();
 
@@ -22,8 +22,6 @@ public:
 	void getFloat(const std::string& name, float& value) const;
 
 private:
-	void fileRead(const std::string fileName, std::string shaderCode, 
-		const std::string start, const std::string end);
 	void checkCompileErrors(unsigned int shader, std::string type);
 };
 
