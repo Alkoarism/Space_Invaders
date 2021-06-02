@@ -47,7 +47,7 @@ int main() {
 		return -1;
 	}
 
-	Shader myShader("src\\shader.shader");
+	Shader myShader("res\\shaders\\vertex.shader", "res\\shaders\\fragment.shader");
 
 	// vertices definition -------------------------------------------------------
 	float vertices_sq[] = {
@@ -72,7 +72,7 @@ int main() {
 	};
 
 	// objects and buffer configurations -----------------------------------------
-	unsigned int VBO, VAO, EBO, texture[2];
+	unsigned int VBO, VAO, EBO;
 
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &EBO);
@@ -94,15 +94,18 @@ int main() {
 		(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
 	// texture handling ----------------------------------------------------------
 	// this section could be reduced to a function or a specialized class
+	unsigned int texture[2];
 	glGenTextures(1, &texture[0]);
 	glGenTextures(1, &texture[1]);
 	
 	//procedure refering to texture 1
-	//set the texture wrapping / filtering options
+	//set the texture wrapping / filtering options		glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -124,6 +127,7 @@ int main() {
 	stbi_image_free(data);
 
 	//procedure referring to texture 2
+	glBindTexture(GL_TEXTURE_2D, texture[1]);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

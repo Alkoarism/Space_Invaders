@@ -123,7 +123,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="README.md" />
-    <None Include="src\shader.shader" />
+    <None Include="res\shaders\fragment.shader" />
+    <None Include="res\shaders\vertex.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\glad.c" />
