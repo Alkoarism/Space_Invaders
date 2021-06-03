@@ -1,21 +1,37 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #define STBI_FAILURE_USERMSG
 #define STBI_ONLYJPEG
 
 #include "Shader.h"
+#include "Camera.h"
 
 #include <iostream>
 
 // function declarations ------------------------------------------------------
 void processInput(GLFWwindow* window);
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void mouse_callback(GLFWwindow* window, double xPos, double yPos);
+void scroll_callback(GLFWwindow* window, double xOffset, double yOffset);
 
 // global variables -----------------------------------------------------------
 const int screenWidth = 800, screenHeight = 600;
+
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+float lastX = screenWidth / 2, lastY = screenHeight / 2;
+float fov = 45.0;
+bool firstMouse = true;
+
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
 
 int main() {
 	// glfw: initialize and configure --------------------------------------------
@@ -40,6 +56,10 @@ int main() {
 	// glfw: setup
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
+
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// glad: load all OpenGL function pointers
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -47,10 +67,12 @@ int main() {
 		return -1;
 	}
 
+	glEnable(GL_DEPTH_TEST);
+
 	Shader myShader("res\\shaders\\vertex.shader", "res\\shaders\\fragment.shader");
 
 	// vertices definition -------------------------------------------------------
-	float vertices_sq[] = {
+	float vertices_cube[] = {
 		//vertex			//texture		
 		// Bottom vertices
 		0.5f,  0.5f,  0.5f,  1.0f, 1.0f,	//top right
@@ -71,6 +93,19 @@ int main() {
 		1, 2, 3,	5, 6, 7, 	1, 4, 5,	3, 6, 7,	2, 5, 6,	4, 3, 7
 	};
 
+	glm::vec3 cubeTransformations[] = {
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(2.0f,  5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f,  3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f,  2.0f, -2.5f),
+		glm::vec3(1.5f,  0.2f, -1.5f),
+		glm::vec3(-1.3f,  1.0f, -1.5f)
+	};
+
 	// objects and buffer configurations -----------------------------------------
 	unsigned int VBO, VAO, EBO;
 
@@ -84,7 +119,7 @@ int main() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices_sq), vertices_sq, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices_cube), vertices_cube, GL_STATIC_DRAW);
 
 	//AttribPointer(attribute, components, type, ???, total size of components, offset)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
@@ -148,18 +183,22 @@ int main() {
 
 	// initialization before rendering -------------------------------------------
 	myShader.use();
-	glUniform1i(glGetUniformLocation(myShader.ID, "myTexture"), 0);
+	myShader.setInt("myTexture", 0);
 	myShader.setInt("myTexture2", 1);
 
 	// render loop (happens every frame) -----------------------------------------
 	while (!glfwWindowShouldClose(window)) {
 		// -> frame time tracker
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
 		// -> input handling
 		processInput(window);
 
 		// -> rendering commands and configuration
 		glClearColor(0.5f, 0.5f, 0.9f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		myShader.use();
 
@@ -171,7 +210,23 @@ int main() {
 
 		// ---> space configurations and rendering
 		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+		glm::mat4 projection = glm::perspective
+			(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
+		myShader.setMat4("projection", projection);
+
+		glm::mat4 view = camera.GetViewMatrix();
+		myShader.setMat4("view", view);
+
+		for (unsigned int i = 0; i < 10; i++) {
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, cubeTransformations[i]);
+			float angle = 20.0f * i;
+			model = glm::rotate (model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+			myShader.setMat4("model", model);
+
+			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		}
 
 		// -> check and call events and swap the buffers
 		glfwSwapBuffers(window);
@@ -187,8 +242,38 @@ int main() {
 void processInput(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+
+	const float cameraSpeed = 2.5f * deltaTime;
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		camera.ProcessKeyboard(FORWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		camera.ProcessKeyboard(BACKWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		camera.ProcessKeyboard(LEFT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		camera.ProcessKeyboard(RIGHT, deltaTime);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
+}
+
+void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
+	if (firstMouse) {
+		lastX = xPos;
+		lastY = yPos;
+		firstMouse = false;
+	}
+
+	float xOffset = xPos - lastX;
+	float yOffset = lastY - yPos;
+
+	lastX = xPos;
+	lastY = yPos;
+
+	camera.ProcessMouseMovement(xOffset, yOffset);
+}
+
+void scroll_callback(GLFWwindow* window, double xOffset, double yOffset) {
+	camera.ProcessMouseScroll(yOffset);
 }
