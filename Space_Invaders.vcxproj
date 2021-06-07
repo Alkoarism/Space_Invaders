@@ -75,7 +75,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\include\;$(SolutionDir)dep\include\OpenGL\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dep\include\;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
@@ -91,7 +91,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\include\;$(SolutionDir)dep\include\OpenGL\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dep\include\;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
@@ -105,7 +105,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\include\;$(SolutionDir)dep\include\OpenGL\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dep\include\;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)dep\lib\</AdditionalLibraryDirectories>
@@ -114,7 +114,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\include\;$(SolutionDir)dep\include\OpenGL\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dep\include\;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)dep\lib\</AdditionalLibraryDirectories>
@@ -122,6 +122,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="builds\0_02- getting_started\res\shaders\fragment.shader" />
+    <None Include="builds\0_02- getting_started\res\shaders\vertex.shader" />
     <None Include="README.md" />
     <None Include="res\shaders\fragment.shader" />
     <None Include="res\shaders\vertex.shader" />
@@ -138,39 +140,41 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dep\include\Camera.h" />
-    <ClInclude Include="dep\include\OpenGL\glm\common.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\exponential.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\ext.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\fwd.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\geometric.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\glm.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\integer.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\mat2x2.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\mat2x3.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\mat2x4.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\mat3x2.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\mat3x3.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\mat3x4.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\mat4x2.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\mat4x3.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\mat4x4.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\matrix.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\packing.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\trigonometric.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\vec2.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\vec3.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\vec4.hpp" />
-    <ClInclude Include="dep\include\OpenGL\glm\vector_relational.hpp" />
-    <ClInclude Include="dep\include\OpenGL\KHR\khrplatform.h" />
+    <ClInclude Include="dep\include\glm\common.hpp" />
+    <ClInclude Include="dep\include\glm\exponential.hpp" />
+    <ClInclude Include="dep\include\glm\ext.hpp" />
+    <ClInclude Include="dep\include\glm\fwd.hpp" />
+    <ClInclude Include="dep\include\glm\geometric.hpp" />
+    <ClInclude Include="dep\include\glm\glm.hpp" />
+    <ClInclude Include="dep\include\glm\integer.hpp" />
+    <ClInclude Include="dep\include\glm\mat2x2.hpp" />
+    <ClInclude Include="dep\include\glm\mat2x3.hpp" />
+    <ClInclude Include="dep\include\glm\mat2x4.hpp" />
+    <ClInclude Include="dep\include\glm\mat3x2.hpp" />
+    <ClInclude Include="dep\include\glm\mat3x3.hpp" />
+    <ClInclude Include="dep\include\glm\mat3x4.hpp" />
+    <ClInclude Include="dep\include\glm\mat4x2.hpp" />
+    <ClInclude Include="dep\include\glm\mat4x3.hpp" />
+    <ClInclude Include="dep\include\glm\mat4x4.hpp" />
+    <ClInclude Include="dep\include\glm\matrix.hpp" />
+    <ClInclude Include="dep\include\glm\packing.hpp" />
+    <ClInclude Include="dep\include\glm\trigonometric.hpp" />
+    <ClInclude Include="dep\include\glm\vec2.hpp" />
+    <ClInclude Include="dep\include\glm\vec3.hpp" />
+    <ClInclude Include="dep\include\glm\vec4.hpp" />
+    <ClInclude Include="dep\include\glm\vector_relational.hpp" />
+    <ClInclude Include="dep\include\KHR\khrplatform.h" />
     <ClInclude Include="dep\include\Shader.h" />
     <ClInclude Include="dep\include\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="builds\0_02- getting_started\res\awesomeface.png" />
+    <Image Include="builds\0_02- getting_started\res\container.jpg" />
     <Image Include="res\awesomeface.png" />
     <Image Include="res\container.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="dep\include\OpenGL\glm\CMakeLists.txt" />
+    <Text Include="dep\include\glm\CMakeLists.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -46,7 +46,7 @@ int main() {
 
 	// glfw: window creation and setup -------------------------------------------
 	GLFWwindow* window = glfwCreateWindow
-		(screenWidth,  screenHeight, "OpenGL standard template", NULL, NULL);
+		(screenWidth,  screenHeight, "OpenGL Space_Invaders", NULL, NULL);
 	if (!window) {
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
