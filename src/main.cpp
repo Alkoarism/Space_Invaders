@@ -72,38 +72,18 @@ int main() {
 	Shader myShader("res\\shaders\\vertex.shader", "res\\shaders\\fragment.shader");
 
 	// vertices definition -------------------------------------------------------
-	float vertices_cube[] = {
+	float vertices_quad[] = {
 		//vertex			//texture		
-		// Bottom vertices
-		0.5f,  0.5f,  0.5f,  1.0f, 1.0f,	//top right
-		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,	//bottom right
-	   -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,	//bottom left
-	   -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,	//top left
-
-		// Top vertices
-		0.5f,  0.5f,  -0.5f,  1.0f, 1.0f,	//top right
-		0.5f, -0.5f,  -0.5f,  1.0f, 0.0f,	//bottom right
-	   -0.5f, -0.5f,  -0.5f,  0.0f, 0.0f,	//bottom left
-	   -0.5f,  0.5f,  -0.5f,  0.0f, 1.0f,	//top left
+		0.6f,  0.4f,  0.0f,  1.0f, 1.0f,	//top right
+		0.6f, -0.4f,  0.0f,  1.0f, 0.0f,	//bottom right
+	   -0.6f, -0.4f,  0.0f,  0.0f, 0.0f,	//bottom left
+	   -0.6f,  0.4f,  0.0f,  0.0f, 1.0f,	//top left
 	};
 
 	unsigned int indices[] = {
-		//top		//bottom	//right		//left		//front		//back
-		0, 1, 3,	4, 5, 7,	0, 1, 4,	2, 3, 6,	1, 2, 5,	0, 3, 4,
-		1, 2, 3,	5, 6, 7, 	1, 4, 5,	3, 6, 7,	2, 5, 6,	4, 3, 7
-	};
-
-	glm::vec3 cubeTransformations[] = {
-		glm::vec3(0.0f,  0.0f,  0.0f),
-		glm::vec3(2.0f,  5.0f, -15.0f),
-		glm::vec3(-1.5f, -2.2f, -2.5f),
-		glm::vec3(-3.8f, -2.0f, -12.3f),
-		glm::vec3(2.4f, -0.4f, -3.5f),
-		glm::vec3(-1.7f,  3.0f, -7.5f),
-		glm::vec3(1.3f, -2.0f, -2.5f),
-		glm::vec3(1.5f,  2.0f, -2.5f),
-		glm::vec3(1.5f,  0.2f, -1.5f),
-		glm::vec3(-1.3f,  1.0f, -1.5f)
+		//squad indices
+		0, 1, 2,
+		0, 2, 3
 	};
 
 	// objects and buffer configurations -----------------------------------------
@@ -119,7 +99,7 @@ int main() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices_cube), vertices_cube, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices_quad), vertices_quad, GL_STATIC_DRAW);
 
 	//AttribPointer(attribute, components, type, ???, total size of components, offset)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
@@ -141,8 +121,8 @@ int main() {
 	//procedure refering to texture 1
 	//set the texture wrapping / filtering options		glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture[0]);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -150,9 +130,9 @@ int main() {
 	int img_width, img_height, nrChannels;
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* data = 
-		stbi_load("res\\container.jpg", &img_width, &img_height, &nrChannels, 0);
+		stbi_load("res\\textures\\big_alien_1.png", &img_width, &img_height, &nrChannels, 0);
 	if (data) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img_width, img_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img_width, img_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else {
@@ -163,14 +143,14 @@ int main() {
 
 	//procedure referring to texture 2
 	glBindTexture(GL_TEXTURE_2D, texture[1]);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	//load and generate the texture
 	stbi_set_flip_vertically_on_load(true);
-	data = stbi_load("res\\awesomeface.png", &img_width, &img_height, &nrChannels, 0);
+	data = stbi_load("res\\textures\\big_alien_0.png", &img_width, &img_height, &nrChannels, 0);
 	if (data) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img_width, img_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
@@ -185,6 +165,10 @@ int main() {
 	myShader.use();
 	myShader.setInt("myTexture", 0);
 	myShader.setInt("myTexture2", 1);
+
+	bool text_cng = false;
+	int cnt = 0;
+	float fade = 0;
 
 	// render loop (happens every frame) -----------------------------------------
 	while (!glfwWindowShouldClose(window)) {
@@ -203,10 +187,23 @@ int main() {
 		myShader.use();
 
 		// ---> texture configurations
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture[0]);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texture[1]);
+		if (text_cng) {
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, texture[0]);
+			fade = 1.0f;
+		}
+		else {
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, texture[1]);
+			fade = 0.0f;
+		}
+
+		if (cnt > 480) {
+			text_cng = !text_cng;
+			cnt = 0;
+			myShader.setFloat("fade", fade);
+		}
+		cnt++;
 
 		// ---> space configurations and rendering
 		glBindVertexArray(VAO);
@@ -218,15 +215,10 @@ int main() {
 		glm::mat4 view = camera.GetViewMatrix();
 		myShader.setMat4("view", view);
 
-		for (unsigned int i = 0; i < 10; i++) {
-			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, cubeTransformations[i]);
-			float angle = 20.0f * i;
-			model = glm::rotate (model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-			myShader.setMat4("model", model);
+		glm::mat4 model = glm::mat4(1.0f);
+		myShader.setMat4("model", model);
 
-			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-		}
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		// -> check and call events and swap the buffers
 		glfwSwapBuffers(window);

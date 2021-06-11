@@ -123,6 +123,12 @@
     <ClInclude Include="dep\include\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Screen.cpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\Screen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\awesomeface.png">
@@ -135,6 +141,24 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="builds\0_02- getting_started\res\container.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\sprite_sheet.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\sprite_samples.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\big_alien_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\black_canvas.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\big_alien_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\big_alien_sprites.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

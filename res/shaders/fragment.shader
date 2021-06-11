@@ -6,8 +6,13 @@ in vec2 textCoord;
 uniform sampler2D myTexture;
 uniform sampler2D myTexture2;
 
+uniform float fade;
+
 out vec4 fragColor;
 
 void main() {
-	fragColor = mix(texture(myTexture, textCoord), texture(myTexture2, textCoord), 0.2f);
+	vec4 textColor = mix(texture(myTexture, textCoord), texture(myTexture2, textCoord), fade);
+	if (textColor.a < 0.1)
+		discard;	
+	fragColor = textColor;
 }
