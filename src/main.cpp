@@ -74,10 +74,10 @@ int main() {
 	// vertices definition -------------------------------------------------------
 	float vertices_quad[] = {
 		//vertex			//texture		
-		0.6f,  0.4f,  0.0f,  1.0f, 1.0f,	//top right
-		0.6f, -0.4f,  0.0f,  1.0f, 0.0f,	//bottom right
-	   -0.6f, -0.4f,  0.0f,  0.0f, 0.0f,	//bottom left
-	   -0.6f,  0.4f,  0.0f,  0.0f, 1.0f,	//top left
+		0.55f,  0.4f,  0.0f,  1.0f, 1.0f,	//top right
+		0.55f, -0.4f,  0.0f,  1.0f, 0.0f,	//bottom right
+	   -0.55f, -0.4f,  0.0f,  0.0f, 0.0f,	//bottom left
+	   -0.55f,  0.4f,  0.0f,  0.0f, 1.0f,	//top left
 	};
 
 	unsigned int indices[] = {
@@ -130,7 +130,7 @@ int main() {
 	int img_width, img_height, nrChannels;
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* data = 
-		stbi_load("res\\textures\\big_alien_1.png", &img_width, &img_height, &nrChannels, 0);
+		stbi_load("res\\sprites\\alien_square_0.png", &img_width, &img_height, &nrChannels, 0);
 	if (data) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img_width, img_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
@@ -150,7 +150,7 @@ int main() {
 
 	//load and generate the texture
 	stbi_set_flip_vertically_on_load(true);
-	data = stbi_load("res\\textures\\big_alien_0.png", &img_width, &img_height, &nrChannels, 0);
+	data = stbi_load("res\\sprites\\alien_square_1.png", &img_width, &img_height, &nrChannels, 0);
 	if (data) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img_width, img_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
@@ -181,7 +181,7 @@ int main() {
 		processInput(window);
 
 		// -> rendering commands and configuration
-		glClearColor(0.5f, 0.5f, 0.9f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		myShader.use();
@@ -198,12 +198,12 @@ int main() {
 			fade = 0.0f;
 		}
 
-		if (cnt > 480) {
+		if (cnt > 1500) {
 			text_cng = !text_cng;
 			cnt = 0;
 			myShader.setFloat("fade", fade);
 		}
-		cnt++;
+		cnt += cnt++ * deltaTime;
 
 		// ---> space configurations and rendering
 		glBindVertexArray(VAO);

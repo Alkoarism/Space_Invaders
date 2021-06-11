@@ -149,16 +149,40 @@
     <Image Include="res\sprite_samples.jpg">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\textures\big_alien_0.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="res\textures\black_canvas.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\textures\big_alien_1.png">
+    <Image Include="res\textures\circle_alien_1.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\textures\big_alien_sprites.png">
+    <Image Include="res\textures\cirlce_alien_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\sprite_sheet.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\sprites\black_canvas.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\sprites\alien_circle_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\sprites\alien_circle_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\sprites\sprite_sheet.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\sprites\alien_square_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\sprites\alien_square_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\sprites\alien_triangle_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\sprites\alien_triangle_1.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

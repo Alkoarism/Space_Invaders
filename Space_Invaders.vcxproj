@@ -174,12 +174,20 @@
     <Image Include="builds\0_02- getting_started\res\container.jpg" />
     <Image Include="res\awesomeface.png" />
     <Image Include="res\container.jpg" />
+    <Image Include="res\sprites\black_canvas.png" />
+    <Image Include="res\sprites\alien_circle_1.png" />
+    <Image Include="res\sprites\alien_circle_0.png" />
+    <Image Include="res\sprites\sprite_sheet.png" />
+    <Image Include="res\sprites\alien_square_0.png" />
+    <Image Include="res\sprites\alien_square_1.png" />
+    <Image Include="res\sprites\alien_triangle_0.png" />
+    <Image Include="res\sprites\alien_triangle_1.png" />
     <Image Include="res\sprite_samples.jpg" />
     <Image Include="res\sprite_sheet.jpg" />
-    <Image Include="res\textures\big_alien_0.png" />
-    <Image Include="res\textures\big_alien_1.png" />
-    <Image Include="res\textures\big_alien_sprites.png" />
     <Image Include="res\textures\black_canvas.png" />
+    <Image Include="res\textures\circle_alien_1.png" />
+    <Image Include="res\textures\cirlce_alien_0.png" />
+    <Image Include="res\textures\sprite_sheet.png" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="dep\include\glm\CMakeLists.txt" />
