@@ -129,17 +129,18 @@
     <None Include="res\shaders\vertex.shader" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\shader.cpp" />
+    <ClCompile Include="src\vao.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="dep\lib\glfw3.lib" />
     <Library Include="dep\lib\glfw3_mt.lib" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="dep\include\Camera.h" />
+    <ClInclude Include="dep\include\camera.h" />
     <ClInclude Include="dep\include\glm\common.hpp" />
     <ClInclude Include="dep\include\glm\exponential.hpp" />
     <ClInclude Include="dep\include\glm\ext.hpp" />
@@ -164,19 +165,22 @@
     <ClInclude Include="dep\include\glm\vec4.hpp" />
     <ClInclude Include="dep\include\glm\vector_relational.hpp" />
     <ClInclude Include="dep\include\KHR\khrplatform.h" />
-    <ClInclude Include="dep\include\Screen.h" />
-    <ClInclude Include="dep\include\Shader.h" />
+    <ClInclude Include="dep\include\screen.h" />
+    <ClInclude Include="dep\include\shader.h" />
     <ClInclude Include="dep\include\stb_image.h" />
-    <ClInclude Include="src\Screen.cpp" />
+    <ClInclude Include="dep\include\vao.h" />
+    <ClInclude Include="src\screen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="builds\0_02- getting_started\res\awesomeface.png" />
     <Image Include="builds\0_02- getting_started\res\container.jpg" />
     <Image Include="res\awesomeface.png" />
     <Image Include="res\container.jpg" />
-    <Image Include="res\sprites\black_canvas.png" />
+    <Image Include="res\sprites\alien_UFO_0.png" />
+    <Image Include="res\sprites\alien_UFO_1.png" />
     <Image Include="res\sprites\alien_circle_1.png" />
     <Image Include="res\sprites\alien_circle_0.png" />
+    <Image Include="res\sprites\player.png" />
     <Image Include="res\sprites\sprite_sheet.png" />
     <Image Include="res\sprites\alien_square_0.png" />
     <Image Include="res\sprites\alien_square_1.png" />

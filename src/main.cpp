@@ -1,17 +1,18 @@
-#include "glad/glad.h"
-#include "GLFW/glfw3.h"
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtc/type_ptr.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include <stb_image.h>
 #define STBI_FAILURE_USERMSG
 #define STBI_ONLYJPEG
 
-#include "Shader.h"
-#include "Camera.h"
+#include "shader.h"
+#include "camera.h"
+#include "vao.h"
 
 #include <iostream>
 
