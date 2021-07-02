@@ -16,7 +16,8 @@ public:
 
 private:
 	int hi_score;
-	int player_score;
+	int player_lifes;
+	int credits;
 	Scene screen_state;
 };
 

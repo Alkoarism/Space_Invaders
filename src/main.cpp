@@ -12,7 +12,9 @@
 
 #include "shader.h"
 #include "camera.h"
-#include "vao.h"
+#include "vertex_array.h"
+#include "vertex_buffer.h"
+#include "index_buffer.h"
 
 #include <iostream>
 
@@ -24,7 +26,7 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos);
 void scroll_callback(GLFWwindow* window, double xOffset, double yOffset);
 
 // global variables -----------------------------------------------------------
-const int screenWidth = 800, screenHeight = 600;
+const int screenWidth = 600, screenHeight = 800;
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = screenWidth / 2, lastY = screenHeight / 2;
@@ -60,7 +62,7 @@ int main() {
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// glad: load all OpenGL function pointers
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -70,7 +72,7 @@ int main() {
 
 	glEnable(GL_DEPTH_TEST);
 
-	Shader myShader("res\\shaders\\vertex.shader", "res\\shaders\\fragment.shader");
+	Shader myShader("dep\\shaders\\vertex.shader", "dep\\shaders\\fragment.shader");
 
 	// vertices definition -------------------------------------------------------
 	float vertices_quad[] = {
@@ -87,20 +89,14 @@ int main() {
 		0, 2, 3
 	};
 
-	// objects and buffer configurations -----------------------------------------
-	unsigned int VBO, VAO, EBO;
+	// vertex and buffers configurations -----------------------------------------
+	unsigned int VAO;
 
 	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &EBO);
-	glGenBuffers(1, &VBO);
-
 	glBindVertexArray(VAO);
-	
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices_quad), vertices_quad, GL_STATIC_DRAW);
+	VertexBuffer vb(vertices_quad, sizeof(vertices_quad));
+	IndexBuffer ib(indices, 6);
 
 	//AttribPointer(attribute, components, type, ???, total size of components, offset)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
@@ -174,7 +170,7 @@ int main() {
 	// render loop (happens every frame) -----------------------------------------
 	while (!glfwWindowShouldClose(window)) {
 		// -> frame time tracker
-		float currentFrame = glfwGetTime();
+		const float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
@@ -226,7 +222,6 @@ int main() {
 		glfwPollEvents();
 	}
 	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
 
 	glfwTerminate();
 	return 0;
