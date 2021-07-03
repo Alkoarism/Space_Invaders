@@ -1,9 +1,9 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "glad/glad.h"
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 enum Camera_Movement {
 	FORWARD,
@@ -34,7 +34,7 @@ public:
 	float MouseSensitivity;
 	float Zoom;
 
-	Camera::Camera(
+	Camera(
 		glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
 		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
 		float yaw = YAW,
@@ -51,7 +51,7 @@ public:
 		updateCameraVectors();
 	}
 
-	Camera::Camera(
+	Camera(
 		float posX, float posY, float posZ,
 		float upX, float upY, float upZ,
 		float yaw, float pitch
