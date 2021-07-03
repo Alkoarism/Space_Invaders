@@ -85,6 +85,14 @@ int main() {
 		0, 2, 3
 	};
 
+	glm::vec3 aliensTransformations[] = {
+		glm::vec3(1.5f, 0.0f, 0.0f),
+		glm::vec3(3.0f, 0.0f, 0.0f),
+		glm::vec3(4.5f, 0.0f, 0.0f),
+		glm::vec3(6.0f, 0.0f, 0.0f),
+		glm::vec3(7.5f, 0.0f, 0.0f),
+	};
+
 	// vertex and buffers configurations -----------------------------------------
 	unsigned int VAO;
 
@@ -105,8 +113,10 @@ int main() {
 	glBindVertexArray(0);
 
 	// texture handling ----------------------------------------------------------
-	Texture tx1(GL_TEXTURE_2D, "res\\sprites\\alien_square_0.png");
-	Texture tx2(GL_TEXTURE_2D, "res\\sprites\\alien_square_1.png");
+	Texture textures[] = {
+		Texture(GL_TEXTURE_2D, "res\\sprites\\alien_square_0.png"),
+		Texture(GL_TEXTURE_2D, "res\\sprites\\alien_square_1.png"),
+	};
 
 	// initialization before rendering -------------------------------------------
 	myShader.use();
@@ -142,10 +152,10 @@ int main() {
 
 		// ---> texture configurations
 		if (text_cng) {
-			tx1.Bind();
+			textures[0].Bind();
 		}
 		else {
-			tx2.Bind();
+			textures[1].Bind();
 		}
 
 		if (elapsedTime > 0.5) {
@@ -163,10 +173,13 @@ int main() {
 		glm::mat4 view = camera.GetViewMatrix();
 		myShader.setMat4("view", view);
 
-		glm::mat4 model = glm::mat4(1.0f);
-		myShader.setMat4("model", model);
+		for (unsigned int i = 0; i < 10; i++) {
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, aliensTransformations[i]);
+			myShader.setMat4("model", model);
 
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		}
 
 		// -> check and call events and swap the buffers
 		glfwSwapBuffers(window);

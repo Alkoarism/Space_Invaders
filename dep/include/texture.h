@@ -22,13 +22,9 @@ public:
 	void Bind() const;
 	void Unbind() const;
 
-	inline unsigned char* GetData() { return m_Data; }
-
 private:
 	GLuint m_TextureID;
 	GLenum m_Target;
-	unsigned char* m_Data;
-	int m_ImgWidth, m_ImgHeight, m_NrChannels;
 
 	void Release() noexcept {
 		glDeleteTextures(1, &m_TextureID);

@@ -18,16 +18,18 @@ Texture::Texture(GLenum target, const char* location) : m_Target(target) {
 	glTexParameteri(m_Target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	stbi_set_flip_vertically_on_load(true);
-	m_Data = stbi_load(location, &m_ImgWidth, &m_ImgHeight, &m_NrChannels, 0);
-	if (m_Data) {
-		glTexImage2D(m_Target, 0, GL_RGBA, m_ImgWidth, m_ImgHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_Data);
+	int imgWidth, imgHeight, nrChannels;
+	unsigned char* data
+		= stbi_load(location, &imgWidth, &imgHeight, &nrChannels, 0);
+	if (data) {
+		glTexImage2D(m_Target, 0, GL_RGBA, imgWidth, imgHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(m_Target);
 	}
 	else {
 		const char* failLog = stbi_failure_reason();
 		std::cout << "FAILED_TO_LOAD_TEXTURE\n" << failLog << std::endl;
 	}
-	stbi_image_free(m_Data);
+	stbi_image_free(data);
 }
 
 Texture::Texture(Texture&& other) noexcept
