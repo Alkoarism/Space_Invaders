@@ -5,16 +5,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-#define STBI_FAILURE_USERMSG
-#define STBI_ONLYJPEG
-
 #include "shader.h"
 #include "camera.h"
 #include "vertex_array.h"
 #include "vertex_buffer.h"
 #include "index_buffer.h"
+#include "texture.h"
 
 #include <iostream>
 
@@ -62,7 +58,7 @@ int main() {
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// glad: load all OpenGL function pointers
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -106,57 +102,11 @@ int main() {
 		(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
 	// texture handling ----------------------------------------------------------
-	// this section could be reduced to a function or a specialized class
-	unsigned int texture[2];
-	glGenTextures(1, &texture[0]);
-	glGenTextures(1, &texture[1]);
-	
-	//procedure refering to texture 1
-	//set the texture wrapping / filtering options		glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	//load and generate the texture
-	int img_width, img_height, nrChannels;
-	stbi_set_flip_vertically_on_load(true);
-	unsigned char* data = 
-		stbi_load("res\\sprites\\alien_square_0.png", &img_width, &img_height, &nrChannels, 0);
-	if (data) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img_width, img_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else {
-		const char* failLog = stbi_failure_reason();
-		std::cout << "FAILED_TO_LOAD_TEXTURE\n" << failLog << std::endl;
-	}
-	stbi_image_free(data);
-
-	//procedure referring to texture 2
-	glBindTexture(GL_TEXTURE_2D, texture[1]);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	//load and generate the texture
-	stbi_set_flip_vertically_on_load(true);
-	data = stbi_load("res\\sprites\\alien_square_1.png", &img_width, &img_height, &nrChannels, 0);
-	if (data) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img_width, img_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else {
-		const char* failLog = stbi_failure_reason();
-		std::cout << "FAILED_TO_LOAD_TEXTURE\n" << failLog << std::endl;
-	}
-	stbi_image_free(data);
+	Texture tx1(GL_TEXTURE_2D, "res\\sprites\\alien_square_0.png");
+	Texture tx2(GL_TEXTURE_2D, "res\\sprites\\alien_square_1.png");
 
 	// initialization before rendering -------------------------------------------
 	myShader.use();
@@ -164,8 +114,13 @@ int main() {
 	myShader.setInt("myTexture2", 1);
 
 	bool text_cng = false;
-	int cnt = 0;
-	float fade = 0;
+	float elapsedTime = glfwGetTime();
+	myShader.setFloat("fade", 0.0f);
+
+	glActiveTexture(GL_TEXTURE0);
+	//glBindTexture(GL_TEXTURE_2D, texture[0]);
+	//glActiveTexture(GL_TEXTURE1);
+	//glBindTexture(GL_TEXTURE_2D, texture[1]);
 
 	// render loop (happens every frame) -----------------------------------------
 	while (!glfwWindowShouldClose(window)) {
@@ -173,6 +128,8 @@ int main() {
 		const float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
+
+		elapsedTime += deltaTime;
 
 		// -> input handling
 		processInput(window);
@@ -185,22 +142,16 @@ int main() {
 
 		// ---> texture configurations
 		if (text_cng) {
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, texture[0]);
-			fade = 1.0f;
+			tx1.Bind();
 		}
 		else {
-			glActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, texture[1]);
-			fade = 0.0f;
+			tx2.Bind();
 		}
 
-		if (cnt > 1500) {
+		if (elapsedTime > 0.5) {
 			text_cng = !text_cng;
-			cnt = 0;
-			myShader.setFloat("fade", fade);
+			elapsedTime = 0;
 		}
-		cnt += cnt++ * deltaTime;
 
 		// ---> space configurations and rendering
 		glBindVertexArray(VAO);

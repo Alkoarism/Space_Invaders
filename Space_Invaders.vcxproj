@@ -136,6 +136,7 @@
     <ClCompile Include="src\index_buffer.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\shader.cpp" />
+    <ClCompile Include="src\texture.cpp" />
     <ClCompile Include="src\vertex_array.cpp" />
     <ClCompile Include="src\vertex_buffer.cpp" />
   </ItemGroup>
@@ -172,6 +173,7 @@
     <ClInclude Include="dep\include\screen.h" />
     <ClInclude Include="dep\include\shader.h" />
     <ClInclude Include="dep\include\stb_image.h" />
+    <ClInclude Include="dep\include\texture.h" />
     <ClInclude Include="dep\include\vertex_array.h" />
     <ClInclude Include="src\screen.cpp" />
   </ItemGroup>
