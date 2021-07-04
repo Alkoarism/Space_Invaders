@@ -17,7 +17,8 @@ Texture::Texture(TextureLayout layout, const char* location) : m_Layout(layout) 
 	unsigned char* data
 		= stbi_load(location, &imgWidth, &imgHeight, &nrChannels, 0);
 	if (data) {
-		glTexImage2D(m_Layout.GetType(), 0, GL_RGBA, imgWidth, imgHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(m_Layout.GetType(), 0, m_Layout.GetFormat(), 
+			imgWidth, imgHeight, 0, m_Layout.GetFormat(), GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(m_Layout.GetType());
 	}
 	else {

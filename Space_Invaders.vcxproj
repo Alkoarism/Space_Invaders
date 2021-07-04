@@ -137,6 +137,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\shader.cpp" />
     <ClCompile Include="src\texture.cpp" />
+    <ClCompile Include="src\text_renderer.cpp" />
     <ClCompile Include="src\vertex_array.cpp" />
     <ClCompile Include="src\vertex_buffer.cpp" />
   </ItemGroup>
@@ -174,6 +175,7 @@
     <ClInclude Include="dep\include\shader.h" />
     <ClInclude Include="dep\include\stb_image.h" />
     <ClInclude Include="dep\include\texture.h" />
+    <ClInclude Include="dep\include\text_renderer.h" />
     <ClInclude Include="dep\include\vertex_array.h" />
     <ClInclude Include="dep\include\texture_layout.h" />
     <ClInclude Include="src\screen.cpp" />
@@ -181,8 +183,7 @@
   <ItemGroup>
     <Image Include="builds\0_02- getting_started\res\awesomeface.png" />
     <Image Include="builds\0_02- getting_started\res\container.jpg" />
-    <Image Include="res\awesomeface.png" />
-    <Image Include="res\container.jpg" />
+    <Image Include="res\bitmap\bitmap_font.tga" />
     <Image Include="res\sprites\alien_UFO_0.png" />
     <Image Include="res\sprites\alien_UFO_1.png" />
     <Image Include="res\sprites\alien_circle_1.png" />

@@ -14,6 +14,9 @@
 #include "texture_layout.h"
 
 #include <iostream>
+#include <vector>
+
+using std::vector;
 
 // function declarations ------------------------------------------------------
 void processInput(GLFWwindow* window);
@@ -86,12 +89,18 @@ int main() {
 		0, 2, 3
 	};
 
-	glm::vec3 aliensTransformations[] = {
+	vector<glm::vec3> aliensTransformations = {
 		glm::vec3(1.5f, 0.0f, 0.0f),
 		glm::vec3(3.0f, 0.0f, 0.0f),
 		glm::vec3(4.5f, 0.0f, 0.0f),
 		glm::vec3(6.0f, 0.0f, 0.0f),
 		glm::vec3(7.5f, 0.0f, 0.0f),
+		glm::vec3(1.5f, 1.5f, 0.0f),
+		glm::vec3(3.0f, 1.5f, 0.0f),
+		glm::vec3(4.5f, 1.5f, 0.0f),
+		glm::vec3(6.0f, 1.5f, 0.0f),
+		glm::vec3(7.5f, 1.5f, 0.0f),
+		glm::vec3(0.0f, 3.0f, 0.0f),
 	};
 
 	// vertex and buffers configurations -----------------------------------------
@@ -114,7 +123,7 @@ int main() {
 	glBindVertexArray(0);
 
 	// texture handling ----------------------------------------------------------
-	TextureLayout tl(GL_TEXTURE_2D);
+	TextureLayout tl(GL_TEXTURE_2D, GL_RGBA);
 
 	tl.AddPar(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	tl.AddPar(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -136,14 +145,6 @@ int main() {
 	myShader.setFloat("fade", 0.0f);
 
 	glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, texture[0]);
-	//glActiveTexture(GL_TEXTURE1);
-	//glBindTexture(GL_TEXTURE_2D, texture[1]);
-
-	//glTexParameteri(m_Layout.GetType(), GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	//glTexParameteri(m_Layout.GetType(), GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	//glTexParameteri(m_Layout.GetType(), GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	//glTexParameteri(m_Layout.GetType(), GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	// render loop (happens every frame) -----------------------------------------
 	while (!glfwWindowShouldClose(window)) {
@@ -186,7 +187,7 @@ int main() {
 		glm::mat4 view = camera.GetViewMatrix();
 		myShader.setMat4("view", view);
 
-		for (unsigned int i = 0; i < 5; i++) {
+		for (size_t i = 0; i < aliensTransformations.size(); i++) {
 			glm::mat4 model = glm::mat4(1.0f);
 			model = glm::translate(model, aliensTransformations[i]);
 			myShader.setMat4("model", model);

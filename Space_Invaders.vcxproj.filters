@@ -54,6 +54,9 @@
     <ClCompile Include="src\texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\text_renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="dep\lib\glfw3.lib" />
@@ -156,14 +159,11 @@
     <ClInclude Include="dep\include\texture_layout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="dep\include\text_renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\awesomeface.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\container.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="builds\0_02- getting_started\res\awesomeface.png">
       <Filter>Resource Files</Filter>
     </Image>
@@ -218,6 +218,7 @@
     <Image Include="res\sprites\player.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\bitmap\bitmap_font.tga" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="dep\include\glm\CMakeLists.txt" />
