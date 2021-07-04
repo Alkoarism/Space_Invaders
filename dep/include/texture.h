@@ -3,19 +3,21 @@
 
 #include <glad/glad.h>
 
+#include "texture_layout.h"
+
 //The glTexParameteri on the texture constructor needs to be
 //further analyzed and improved in order to make the class
 //more corret relating to it´s configuration
 
 class Texture {
+//	friend class TextureLayout;
 public:
-	Texture(GLenum, const char*);
+	Texture(TextureLayout, const char*);
 
 	~Texture() { Release(); }
 
 	Texture(const Texture&) = delete;
 	Texture& operator=(const Texture&) = delete;
-
 	Texture(Texture&& other) noexcept;
 	Texture& operator=(Texture&& other) noexcept;
 
@@ -24,7 +26,7 @@ public:
 
 private:
 	GLuint m_TextureID;
-	GLenum m_Target;
+	TextureLayout m_Layout;
 
 	void Release() noexcept {
 		glDeleteTextures(1, &m_TextureID);

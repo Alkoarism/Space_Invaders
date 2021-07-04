@@ -11,6 +11,7 @@
 #include "vertex_buffer.h"
 #include "index_buffer.h"
 #include "texture.h"
+#include "texture_layout.h"
 
 #include <iostream>
 
@@ -113,9 +114,16 @@ int main() {
 	glBindVertexArray(0);
 
 	// texture handling ----------------------------------------------------------
+	TextureLayout tl(GL_TEXTURE_2D);
+
+	tl.AddPar(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	tl.AddPar(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	tl.AddPar(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	tl.AddPar(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 	Texture textures[] = {
-		Texture(GL_TEXTURE_2D, "res\\sprites\\alien_square_0.png"),
-		Texture(GL_TEXTURE_2D, "res\\sprites\\alien_square_1.png"),
+		Texture(tl, "res\\sprites\\alien_square_0.png"),
+		Texture(tl, "res\\sprites\\alien_square_1.png"),
 	};
 
 	// initialization before rendering -------------------------------------------
@@ -131,6 +139,11 @@ int main() {
 	//glBindTexture(GL_TEXTURE_2D, texture[0]);
 	//glActiveTexture(GL_TEXTURE1);
 	//glBindTexture(GL_TEXTURE_2D, texture[1]);
+
+	//glTexParameteri(m_Layout.GetType(), GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	//glTexParameteri(m_Layout.GetType(), GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	//glTexParameteri(m_Layout.GetType(), GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	//glTexParameteri(m_Layout.GetType(), GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	// render loop (happens every frame) -----------------------------------------
 	while (!glfwWindowShouldClose(window)) {
@@ -173,7 +186,7 @@ int main() {
 		glm::mat4 view = camera.GetViewMatrix();
 		myShader.setMat4("view", view);
 
-		for (unsigned int i = 0; i < 10; i++) {
+		for (unsigned int i = 0; i < 5; i++) {
 			glm::mat4 model = glm::mat4(1.0f);
 			model = glm::translate(model, aliensTransformations[i]);
 			myShader.setMat4("model", model);

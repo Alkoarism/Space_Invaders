@@ -8,32 +8,29 @@
 
 #include "texture.h"
 
-Texture::Texture(GLenum target, const char* location) : m_Target(target) {
+Texture::Texture(TextureLayout layout, const char* location) : m_Layout(layout) {
 	glGenTextures(1, &m_TextureID);
-	glBindTexture(GL_TEXTURE_2D, m_TextureID);
-
-	glTexParameteri(m_Target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(m_Target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(m_Target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(m_Target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(m_Layout.GetType(), m_TextureID);
 
 	stbi_set_flip_vertically_on_load(true);
 	int imgWidth, imgHeight, nrChannels;
 	unsigned char* data
 		= stbi_load(location, &imgWidth, &imgHeight, &nrChannels, 0);
 	if (data) {
-		glTexImage2D(m_Target, 0, GL_RGBA, imgWidth, imgHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(m_Target);
+		glTexImage2D(m_Layout.GetType(), 0, GL_RGBA, imgWidth, imgHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(m_Layout.GetType());
 	}
 	else {
 		const char* failLog = stbi_failure_reason();
 		std::cout << "FAILED_TO_LOAD_TEXTURE\n" << failLog << std::endl;
 	}
 	stbi_image_free(data);
+
+	m_Layout.Run();
 }
 
 Texture::Texture(Texture&& other) noexcept
-	: m_TextureID(other.m_TextureID) {
+	: m_TextureID(other.m_TextureID), m_Layout(other.m_Layout) {
 	other.m_TextureID = 0;
 }
 
@@ -41,14 +38,15 @@ Texture& Texture::operator=(Texture&& other) noexcept {
 	if (this != &other) {
 		Release();
 		std::swap(m_TextureID, other.m_TextureID);
+		m_Layout = other.m_Layout;
 	}
 	return *this;
 }
 
 void Texture::Bind() const {
-	glBindTexture(m_Target, m_TextureID);
+	glBindTexture(m_Layout.GetType(), m_TextureID);
 }
 
 void Texture::Unbind() const {
-	glBindTexture(m_Target, 0);
+	glBindTexture(m_Layout.GetType(), 0);
 }
