@@ -3,19 +3,21 @@
 
 #include <glad/glad.h>
 
-#include <utility>
+#include "vertex_buffer.h"
+//#include "vertex_buffer_layout.h"
 
 class VertexArray {
 public:
 	VertexArray();
-
-	~VertexArray() { Release(); }
+	~VertexArray();
 
 	VertexArray(const VertexArray&) = delete;
 	VertexArray& operator=(const VertexArray&) = delete;
 
 	VertexArray(VertexArray&& other) noexcept;
 	VertexArray& operator=(VertexArray&& other) noexcept;
+
+	void AddBuffer(const VertexBuffer&);
 
 	void Bind() const;
 	void Unbind() const;

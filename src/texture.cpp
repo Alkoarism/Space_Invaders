@@ -8,16 +8,48 @@
 
 #include "texture.h"
 
-Texture::Texture(TextureLayout layout, const char* location) : m_Layout(layout) {
+Texture::Texture() {
 	glGenTextures(1, &m_TextureID);
 	glBindTexture(m_Layout.GetType(), m_TextureID);
+}
+
+Texture::Texture(const TextureLayout& layout, const char* location) : m_Layout(layout) {
+	Texture();
+	Load(location);
+}
+
+Texture::Texture(Texture&& other) noexcept
+	: m_TextureID(other.m_TextureID), m_Layout(other.m_Layout) {
+	other.m_TextureID = 0;
+}
+
+Texture::~Texture() {
+	Release();
+}
+
+
+Texture& Texture::operator=(Texture&& other) noexcept {
+	if (this != &other) {
+		Release();
+		std::swap(m_TextureID, other.m_TextureID);
+		std::swap(m_Layout, other.m_Layout);
+	}
+	return *this;
+}
+
+void Texture::SetLayout(const TextureLayout& layout) {
+	m_Layout = layout;
+}
+
+
+void Texture::Load(const char* location) {
 
 	stbi_set_flip_vertically_on_load(true);
 	int imgWidth, imgHeight, nrChannels;
 	unsigned char* data
 		= stbi_load(location, &imgWidth, &imgHeight, &nrChannels, 0);
 	if (data) {
-		glTexImage2D(m_Layout.GetType(), 0, m_Layout.GetFormat(), 
+		glTexImage2D(m_Layout.GetType(), 0, m_Layout.GetFormat(),
 			imgWidth, imgHeight, 0, m_Layout.GetFormat(), GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(m_Layout.GetType());
 	}
@@ -28,20 +60,6 @@ Texture::Texture(TextureLayout layout, const char* location) : m_Layout(layout) 
 	stbi_image_free(data);
 
 	m_Layout.Run();
-}
-
-Texture::Texture(Texture&& other) noexcept
-	: m_TextureID(other.m_TextureID), m_Layout(other.m_Layout) {
-	other.m_TextureID = 0;
-}
-
-Texture& Texture::operator=(Texture&& other) noexcept {
-	if (this != &other) {
-		Release();
-		std::swap(m_TextureID, other.m_TextureID);
-		m_Layout = other.m_Layout;
-	}
-	return *this;
 }
 
 void Texture::Bind() const {

@@ -5,13 +5,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <bitmap_font.h>
+
 #include "shader.h"
 #include "camera.h"
 #include "vertex_array.h"
 #include "vertex_buffer.h"
 #include "index_buffer.h"
 #include "texture.h"
-#include "texture_layout.h"
 
 #include <iostream>
 #include <vector>
@@ -104,23 +105,13 @@ int main() {
 	};
 
 	// vertex and buffers configurations -----------------------------------------
-	unsigned int VAO;
-
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
+	VertexArray va;
 
 	VertexBuffer vb(vertices_quad, sizeof(vertices_quad));
 	IndexBuffer ib(indices, 6);
 
-	//AttribPointer(attribute, components, type, ???, total size of components, offset)
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer
-		(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	glBindVertexArray(0);
+	va.AddBuffer(vb);
+	va.Unbind();
 
 	// texture handling ----------------------------------------------------------
 	TextureLayout tl(GL_TEXTURE_2D, GL_RGBA);
@@ -178,7 +169,7 @@ int main() {
 		}
 
 		// ---> space configurations and rendering
-		glBindVertexArray(VAO);
+		va.Bind();
 
 		glm::mat4 projection = glm::perspective
 			(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
@@ -199,7 +190,6 @@ int main() {
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-	glDeleteVertexArrays(1, &VAO);
 
 	glfwTerminate();
 	return 0;

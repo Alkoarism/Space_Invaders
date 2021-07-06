@@ -10,17 +10,19 @@
 //more corret relating to it´s configuration
 
 class Texture {
-//	friend class TextureLayout;
 public:
-	Texture(TextureLayout, const char*);
-
-	~Texture() { Release(); }
+	Texture();
+	Texture(const TextureLayout&, const char*);
+	~Texture();
 
 	Texture(const Texture&) = delete;
 	Texture& operator=(const Texture&) = delete;
 	Texture(Texture&& other) noexcept;
 	Texture& operator=(Texture&& other) noexcept;
 
+	void SetLayout(const TextureLayout&);
+
+	void Load(const char*);
 	void Bind() const;
 	void Unbind() const;
 

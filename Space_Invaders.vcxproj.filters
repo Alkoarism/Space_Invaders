@@ -54,7 +54,7 @@
     <ClCompile Include="src\texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\text_renderer.cpp">
+    <ClCompile Include="src\bitmap_font.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -159,7 +159,7 @@
     <ClInclude Include="dep\include\texture_layout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dep\include\text_renderer.h">
+    <ClInclude Include="dep\include\bitmap_font.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
