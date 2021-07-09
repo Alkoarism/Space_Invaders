@@ -126,13 +126,19 @@ int main() {
 		Texture(tl, "res\\sprites\\alien_square_1.png"),
 	};
 
+	for (unsigned int t = 0; t < 2; t++)
+		textures[t].Unbind();
+
 	// initialization before rendering -------------------------------------------
+	CBitmapFont font;
+	font.Load("res\\bitmap\\bitmap_font.bff");
+
 	myShader.use();
 	myShader.setInt("myTexture", 0);
 	myShader.setInt("myTexture2", 1);
 
 	bool text_cng = false;
-	float elapsedTime = glfwGetTime();
+	float elapsedTime = 0;
 	myShader.setFloat("fade", 0.0f);
 
 	glActiveTexture(GL_TEXTURE0);
@@ -153,14 +159,12 @@ int main() {
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		myShader.use();
-
 		// ---> texture configurations
 		if (text_cng) {
 			textures[0].Bind();
 		}
 		else {
-			textures[1].Bind();
+			font.Bind();
 		}
 
 		if (elapsedTime > 0.5) {
@@ -172,19 +176,16 @@ int main() {
 		va.Bind();
 
 		glm::mat4 projection = glm::perspective
-			(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
+		(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
 		myShader.setMat4("projection", projection);
 
 		glm::mat4 view = camera.GetViewMatrix();
 		myShader.setMat4("view", view);
 
-		for (size_t i = 0; i < aliensTransformations.size(); i++) {
-			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, aliensTransformations[i]);
-			myShader.setMat4("model", model);
+		glm::mat4 model = glm::mat4(1.0f);
+		myShader.setMat4("model", model);
 
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		}
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		// -> check and call events and swap the buffers
 		glfwSwapBuffers(window);

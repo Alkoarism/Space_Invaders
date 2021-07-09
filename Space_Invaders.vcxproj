@@ -127,6 +127,7 @@
     <None Include="README.md" />
     <None Include="dep\shaders\fragment.shader" />
     <None Include="dep\shaders\vertex.shader" />
+    <None Include="res\bitmap\bitmap_font.bff" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dep\include\index_buffer.h" />
@@ -203,6 +204,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="dep\include\glm\CMakeLists.txt" />
+    <Text Include="res\usefull code\Usefull_code.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

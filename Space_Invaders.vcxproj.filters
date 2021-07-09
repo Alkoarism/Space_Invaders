@@ -22,6 +22,7 @@
     <None Include="dep\shaders\fragment.shader" />
     <None Include="builds\0_02- getting_started\res\shaders\fragment.shader" />
     <None Include="builds\0_02- getting_started\res\shaders\vertex.shader" />
+    <None Include="res\bitmap\bitmap_font.bff" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -222,5 +223,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="dep\include\glm\CMakeLists.txt" />
+    <Text Include="res\usefull code\Usefull_code.txt" />
   </ItemGroup>
 </Project>

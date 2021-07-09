@@ -11,7 +11,7 @@
 
 class Texture {
 public:
-	Texture();
+	Texture() { }
 	Texture(const TextureLayout&, const char*);
 	~Texture();
 
@@ -23,6 +23,7 @@ public:
 	void SetLayout(const TextureLayout&);
 
 	void Load(const char*);
+	void DirectLoad(const void*, const int&, const int&);
 	void Bind() const;
 	void Unbind() const;
 
