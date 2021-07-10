@@ -4,9 +4,8 @@ using namespace std;
 
 CBitmapFont::CBitmapFont()
 {
-    CurX = CurY = 0;
-    Rd = Gr = Bl = 1.0f;
-    InvertYAxis = false;
+    m_CurX = m_CurY = 0;
+    m_InvertYAxis = false;
 }
 
 bool CBitmapFont::Load(char* fname)
@@ -52,7 +51,7 @@ bool CBitmapFont::Load(char* fname)
     memcpy(&m_CellX, &dat.get()[10], sizeof(int));
     memcpy(&m_CellY, &dat.get()[14], sizeof(int));
     bpp = dat.get()[18];
-    Base = dat.get()[19];
+    m_Base = dat.get()[19];
 
     // Check filesize
     if (fileSize != ((MAP_DATA_OFFSET)+((ImgX * ImgY) * (bpp / 8))))
@@ -60,8 +59,8 @@ bool CBitmapFont::Load(char* fname)
 
     // Calculate font params
     m_RowPitch = ImgX / m_CellX;
-    ColFactor = (float)m_CellX / (float)ImgX;
-    RowFactor = (float)m_CellY / (float)ImgY;
+    m_ColFactor = (float)m_CellX / (float)ImgX;
+    m_RowFactor = (float)m_CellY / (float)ImgY;
     m_YOffset = m_CellY;
 
     // Determine blending options based on BPP
@@ -92,7 +91,7 @@ bool CBitmapFont::Load(char* fname)
         return false;
 
     // Grab char widths
-    memcpy(Width, &dat.get()[WIDTH_DATA_OFFSET], 256);
+    memcpy(m_Width, &dat.get()[WIDTH_DATA_OFFSET], 256);
 
     // Grab image data
     memcpy(img.get(), &dat.get()[MAP_DATA_OFFSET], (ImgX * ImgY) * (bpp / 8));
@@ -108,15 +107,83 @@ bool CBitmapFont::Load(char* fname)
 
     m_Texture.SetLayout(m_Layout);
     m_Texture.DirectLoad(img.get(), ImgX, ImgY);
+    Unbind();
 
     return true;
+}
+
+// Returns the width in pixels of the specified text
+int CBitmapFont::GetWidth(char* Text)
+{
+    int size = 0;
+    size_t sLen = strnlen(Text, BFG_MAXSTRING);
+
+    for (size_t loop = 0; loop != sLen; loop++)
+    {
+        size += m_Width[Text[loop]];
+    }
+
+    return size;
 }
 
 // Set the position for text output, this will be updated as text is printed
 void CBitmapFont::SetCursor(int x, int y)
 {
-    CurX = x;
-    CurY = y;
+    m_CurX = x;
+    m_CurY = y;
+}
+
+void CBitmapFont::ReverseYAxis(bool State)
+{
+    if (State)
+        m_YOffset = -m_CellY;
+    else
+        m_YOffset = m_CellY;
+
+    m_InvertYAxis = State;
+}
+
+void CBitmapFont::Print(const char* text) {
+    //texture mapping, top and bottom
+    float u, v, u1, v1;
+    int row, col;
+    size_t sLen = strnlen(text, BFG_MAXSTRING);
+
+    Bind();
+
+    for (size_t i = 0; i != sLen; i++) {
+        row = (text[i] - m_Base) / m_RowPitch;
+        col = (text[i] - m_Base) - (row * m_RowPitch);
+
+        u = col * m_ColFactor;
+        v = row * m_RowFactor;
+        u1 = u * m_ColFactor;
+        v1 = v * m_RowFactor;
+        
+        float coords[] = {
+            //vertex coords			                       //texture		
+           (m_CurX + m_CellX),  m_CurY,              0.0f, u1, v,	//top right
+           (m_CurX + m_CellX), (m_CurY + m_YOffset), 0.0f, u1, v1,	//bottom right
+            m_CurX,             m_CurY,              0.0f, u,  v1,	//bottom left
+            m_CurX,            (m_CurY + m_YOffset), 0.0f, u,  v    //top left
+        };
+
+        m_CurX += m_Width[text[i]];
+
+        VertexArray va;
+        VertexBuffer vb(coords, sizeof(coords));
+        va.AddBuffer(vb);
+
+        std::cout << text[i] << std::endl;
+
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        va.Unbind();
+    }
+}
+
+void CBitmapFont::Print(const char* text, int x, int y) {
+    SetCursor(x, y);
+    Print(text);
 }
 
 void CBitmapFont::Bind()
@@ -128,144 +195,3 @@ void CBitmapFont::Unbind()
 {
     m_Texture.Unbind();
 }
-
-void CBitmapFont::ReverseYAxis(bool State)
-{
-    if (State)
-        m_YOffset = -m_CellY;
-    else
-        m_YOffset = m_CellY;
-
-    InvertYAxis = State;
-}
-
-//// Prints text at the cursor position, cursor is moved to end of text
-//void CBitmapFont::Print(char* Text)
-//{
-//    int sLen, Loop;
-//    int Row, Col;
-//    float U, V, U1, V1;
-//
-//    sLen = (int)strnlen(Text, BFG_MAXSTRING);
-//
-//    glBegin(GL_QUADS);
-//
-//    for (Loop = 0; Loop != sLen; ++Loop)
-//    {
-//        Row = (Text[Loop] - Base) / m_RowPitch;
-//        Col = (Text[Loop] - Base) - Row * m_RowPitch;
-//
-//        U = Col * ColFactor;
-//        V = Row * RowFactor;
-//        U1 = U + ColFactor;
-//        V1 = V + RowFactor;
-//
-//        glTexCoord2f(U, V1); glVertex2i(CurX, CurY);
-//        glTexCoord2f(U1, V1); glVertex2i(CurX + m_CellX, CurY);
-//        glTexCoord2f(U1, V); glVertex2i(CurX + m_CellX, CurY + m_YOffset);
-//        glTexCoord2f(U, V); glVertex2i(CurX, CurY + m_YOffset);
-//
-//        CurX += Width[Text[Loop]];
-//    }
-//    glEnd();
-//
-//}
-
-//// Prints text at a specifed position, again cursor is updated
-//void CBitmapFont::Print(char* Text, int x, int y)
-//{
-//    int sLen, Loop;
-//    int Row, Col;
-//    float U, V, U1, V1;
-//
-//    CurX = x;
-//    CurY = y;
-//
-//    sLen = (int)strnlen(Text, BFG_MAXSTRING);
-//
-//    glBegin(GL_QUADS);
-//
-//    for (Loop = 0; Loop != sLen; ++Loop)
-//    {
-//        Row = (Text[Loop] - Base) / m_RowPitch;
-//        Col = (Text[Loop] - Base) - Row * m_RowPitch;
-//
-//        U = Col * ColFactor;
-//        V = Row * RowFactor;
-//        U1 = U + ColFactor;
-//        V1 = V + RowFactor;
-//
-//        glTexCoord2f(U, V1);  glVertex2i(CurX, CurY);
-//        glTexCoord2f(U1, V1);  glVertex2i(CurX + m_CellX, CurY);
-//        glTexCoord2f(U1, V); glVertex2i(CurX + m_CellX, CurY + m_CellY);
-//        glTexCoord2f(U, V); glVertex2i(CurX, CurY + m_CellY);
-//
-//        CurX += Width[Text[Loop]];
-//    }
-//    glEnd();
-//}
-//
-//// Lazy way to draw text.
-//// Preserves all GL attributes and does everything for you.
-//// Performance could be an issue.
-//void CBitmapFont::ezPrint(char* Text, int x, int y)
-//{
-//    GLint CurMatrixMode;
-//    GLint ViewPort[4];
-//
-//    // Save current setup
-//    glGetIntegerv(GL_MATRIX_MODE, &CurMatrixMode);
-//    glGetIntegerv(GL_VIEWPORT, ViewPort);
-//    glPushAttrib(GL_ALL_ATTRIB_BITS);
-//
-//    // Setup projection
-//    glMatrixMode(GL_PROJECTION);
-//    glPushMatrix();
-//    glLoadIdentity();
-//    if (InvertYAxis)
-//        glOrtho(0, ViewPort[2], ViewPort[3], 0, -1, 1);
-//    else
-//        glOrtho(0, ViewPort[2], 0, ViewPort[3], -1, 1);
-//    glDisable(GL_DEPTH_TEST);
-//    glDepthMask(false);
-//
-//    // Setup Modelview
-//    glMatrixMode(GL_MODELVIEW);
-//    glPushMatrix();
-//    glLoadIdentity();
-//
-//    // Setup Texture, color and blend options
-//    glEnable(GL_TEXTURE_2D);
-//    glBindTexture(GL_TEXTURE_2D, TexID);
-//    SetBlend();
-//
-//    // Render text
-//    Print(Text, x, y);
-//
-//    // Restore previous state
-//    glPopAttrib();
-//
-//    glMatrixMode(GL_PROJECTION);
-//    glPopMatrix();
-//    glMatrixMode(GL_MODELVIEW);
-//    glPopMatrix();
-//
-//    glMatrixMode(CurMatrixMode);
-//}
-//
-//// Returns the width in pixels of the specified text
-//int CBitmapFont::GetWidth(char* Text)
-//{
-//    int Size = 0, sLen, Loop;
-//
-//    // How many chars in string?
-//    sLen = (int)strnlen(Text, BFG_MAXSTRING);
-//
-//    // Add up all width values
-//    for (Loop = 0; Loop != sLen; ++Loop)
-//    {
-//        Size += Width[Text[Loop]];
-//    }
-//
-//    return Size;
-//}

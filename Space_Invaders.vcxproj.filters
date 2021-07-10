@@ -40,15 +40,6 @@
     <ClCompile Include="src\vertex_array.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dep\include\vertex_buffer.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\vertex_buffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dep\include\index_buffer.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\index_buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -56,6 +47,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\bitmap_font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vertex_buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -161,6 +155,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dep\include\bitmap_font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\vertex_buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\index_buffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

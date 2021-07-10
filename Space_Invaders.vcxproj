@@ -130,15 +130,13 @@
     <None Include="res\bitmap\bitmap_font.bff" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dep\include\index_buffer.h" />
-    <ClCompile Include="dep\include\vertex_buffer.h" />
+    <ClCompile Include="src\bitmap_font.cpp" />
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\index_buffer.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\shader.cpp" />
     <ClCompile Include="src\texture.cpp" />
-    <ClCompile Include="src\bitmap_font.cpp" />
     <ClCompile Include="src\vertex_array.cpp" />
     <ClCompile Include="src\vertex_buffer.cpp" />
   </ItemGroup>
@@ -147,6 +145,7 @@
     <Library Include="dep\lib\glfw3_mt.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dep\include\bitmap_font.h" />
     <ClInclude Include="dep\include\camera.h" />
     <ClInclude Include="dep\include\glm\common.hpp" />
     <ClInclude Include="dep\include\glm\exponential.hpp" />
@@ -171,14 +170,15 @@
     <ClInclude Include="dep\include\glm\vec3.hpp" />
     <ClInclude Include="dep\include\glm\vec4.hpp" />
     <ClInclude Include="dep\include\glm\vector_relational.hpp" />
+    <ClInclude Include="dep\include\index_buffer.h" />
     <ClInclude Include="dep\include\KHR\khrplatform.h" />
     <ClInclude Include="dep\include\screen.h" />
     <ClInclude Include="dep\include\shader.h" />
     <ClInclude Include="dep\include\stb_image.h" />
     <ClInclude Include="dep\include\texture.h" />
-    <ClInclude Include="dep\include\bitmap_font.h" />
     <ClInclude Include="dep\include\vertex_array.h" />
     <ClInclude Include="dep\include\texture_layout.h" />
+    <ClInclude Include="dep\include\vertex_buffer.h" />
     <ClInclude Include="src\screen.cpp" />
   </ItemGroup>
   <ItemGroup>

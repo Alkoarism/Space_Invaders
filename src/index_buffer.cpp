@@ -1,8 +1,8 @@
-#include <glad/glad.h>
-
 #include "index_buffer.h"
 
-IndexBuffer::IndexBuffer(const GLuint* data, GLuint count) : m_indexCount(count) {
+#include <utility>
+
+IndexBuffer::IndexBuffer(const GLuint* data,const GLuint count) : m_indexCount(count) {
 	glGenBuffers(1, &m_indexBufferID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBufferID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(GLuint), data, GL_STATIC_DRAW);

@@ -1,10 +1,10 @@
-#ifndef _BITMAPFONTCLASS_H
-#define _BITMAPFONTCLASS_H
+#ifndef _BITMAP_FONTCLASS_H
+#define _BITMAP_FONTCLASS_H
 
+#include <iostream>
 #include <fstream>
 #include <string>
 #include <memory>
-#include <glad\glad.h>
 
 #include "texture.h"
 #include "vertex_array.h"
@@ -26,45 +26,28 @@ class CBitmapFont
 {
 public:
 	CBitmapFont();
-	~CBitmapFont() = default;
+
 	bool Load(char* fname);
+	int  GetWidth(char* Text);
+
 	void SetCursor(int x, int y);
 	void ReverseYAxis(bool State);
-	void Bind();
-	void Unbind();
-	//void Print(char* Text);
-	//void Print(char* Text, int x, int y);
-	//void ezPrint(char* Text, int x, int y);
-	//int  GetWidth(char* Text);
-
-	//Functions i´ve removed
-	/*
-	void Select();
-	void SetBlend();
-	void SetColor(float Red, float Green, float Blue);
-	void SetScreen(int x, int y);
-
-	*/
+	void Print(const char* Text);
+	void Print(const char* Text, int x, int y);
 
 private:
-	//base stuff I should change with caution
 	int m_CellX, m_CellY, m_YOffset, m_RowPitch;
-	char Base;
-	char Width[256];
-	int CurX, CurY;
-	float RowFactor, ColFactor;
-	float Rd, Gr, Bl;
-	bool InvertYAxis;
+	char m_Base;
+	char m_Width[256];
+	int m_CurX, m_CurY;
+	float m_RowFactor, m_ColFactor;
+	bool m_InvertYAxis;
 
-	//things i´ve added
 	Texture m_Texture;
 	TextureLayout m_Layout;
 
-	//variables i´ve removed
-	/*
-	GLuint TexID;
-	int RenderStyle;
-	*/
+	void Bind();
+	void Unbind();
 };
 
 #endif

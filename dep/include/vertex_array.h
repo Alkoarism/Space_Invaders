@@ -17,7 +17,7 @@ public:
 	VertexArray(VertexArray&& other) noexcept;
 	VertexArray& operator=(VertexArray&& other) noexcept;
 
-	void AddBuffer(const VertexBuffer&);
+	void AddBuffer(VertexBuffer&);
 
 	void Bind() const;
 	void Unbind() const;

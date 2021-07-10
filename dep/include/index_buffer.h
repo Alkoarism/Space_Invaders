@@ -3,11 +3,9 @@
 
 #include <glad/glad.h>
 
-#include <utility>
-
 class IndexBuffer {
 public:
-	IndexBuffer(const GLuint*, GLuint);
+	IndexBuffer(const GLuint*,const GLuint);
 
 	~IndexBuffer() { Release(); }
 

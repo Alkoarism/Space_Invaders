@@ -1,6 +1,6 @@
-#include <glad/glad.h>
-
 #include "vertex_array.h"
+
+#include <utility>
 
 VertexArray::VertexArray() {
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -24,7 +24,7 @@ VertexArray& VertexArray::operator=(VertexArray&& other) noexcept {
 	return *this;
 }
 
-void VertexArray::AddBuffer(const VertexBuffer& vb) {
+void VertexArray::AddBuffer(VertexBuffer& vb) {
 	Bind();
 	vb.Bind();
 

@@ -5,14 +5,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <bitmap_font.h>
-
-#include "shader.h"
 #include "camera.h"
-#include "vertex_array.h"
-#include "vertex_buffer.h"
-#include "index_buffer.h"
+#include "shader.h"
 #include "texture.h"
+#include "index_buffer.h"
+#include "vertex_array.h"
+#include "bitmap_font.h"
 
 #include <iostream>
 #include <vector>
@@ -132,6 +130,7 @@ int main() {
 	// initialization before rendering -------------------------------------------
 	CBitmapFont font;
 	font.Load("res\\bitmap\\bitmap_font.bff");
+	font.ReverseYAxis(true);
 
 	myShader.use();
 	myShader.setInt("myTexture", 0);
@@ -156,7 +155,7 @@ int main() {
 		processInput(window);
 
 		// -> rendering commands and configuration
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// ---> texture configurations
@@ -164,7 +163,7 @@ int main() {
 			textures[0].Bind();
 		}
 		else {
-			font.Bind();
+			textures[1].Bind();
 		}
 
 		if (elapsedTime > 0.5) {
@@ -173,8 +172,6 @@ int main() {
 		}
 
 		// ---> space configurations and rendering
-		va.Bind();
-
 		glm::mat4 projection = glm::perspective
 		(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
 		myShader.setMat4("projection", projection);
@@ -185,7 +182,10 @@ int main() {
 		glm::mat4 model = glm::mat4(1.0f);
 		myShader.setMat4("model", model);
 
+		va.Bind();
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+		font.Print("lies in april");
 
 		// -> check and call events and swap the buffers
 		glfwSwapBuffers(window);

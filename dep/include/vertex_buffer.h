@@ -3,17 +3,13 @@
 
 #include <glad/glad.h>
 
-#include <utility>
-
 class VertexBuffer {
 public:
 	VertexBuffer(const void*, unsigned int);
-
-	~VertexBuffer() { Release(); }
+	~VertexBuffer();
 
 	VertexBuffer(const VertexBuffer&) = delete;
 	VertexBuffer& operator=(const VertexBuffer&) = delete;
-
 	VertexBuffer(VertexBuffer&& other) noexcept;
 	VertexBuffer& operator=(VertexBuffer&& other) noexcept;
 
