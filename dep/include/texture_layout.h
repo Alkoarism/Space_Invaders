@@ -8,9 +8,15 @@
 
 class TextureLayout {
 public:
-	TextureLayout(GLenum state) : m_Type(state) { }
+	TextureLayout() = default;
+	TextureLayout(GLenum type, GLenum format) 
+		: m_Type(type), m_Format(format) { }
 
-	GLenum GetType() const { return m_Type; }
+	inline GLenum GetType() const { return m_Type; }
+	inline GLenum GetFormat() const { return m_Format; }
+
+	inline void SetType(GLenum type) { m_Type = type; }
+	inline void SetFormat(GLenum format) { m_Format = format; }
 
 	void AddPar(GLenum first, GLenum second)
 		{ m_Layout.push_back(std::make_pair(first, second)); }
@@ -24,6 +30,7 @@ public:
 
 private:
 	GLenum m_Type;
+	GLenum m_Format;
 	std::vector<std::pair<GLenum, GLenum>> m_Layout;
 };
 

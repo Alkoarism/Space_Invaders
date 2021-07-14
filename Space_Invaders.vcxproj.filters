@@ -22,6 +22,10 @@
     <None Include="dep\shaders\fragment.shader" />
     <None Include="builds\0_02- getting_started\res\shaders\fragment.shader" />
     <None Include="builds\0_02- getting_started\res\shaders\vertex.shader" />
+    <None Include="res\bitmap\bitmap_font.bff" />
+    <None Include="res\bitmap\newTest.bff" />
+    <None Include="res\bitmap\font.bff" />
+    <None Include="res\bitmap\font_RGBA.bff" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -39,19 +43,16 @@
     <ClCompile Include="src\vertex_array.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dep\include\vertex_buffer.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\vertex_buffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dep\include\index_buffer.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\index_buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bitmap_font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vertex_buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -156,14 +157,17 @@
     <ClInclude Include="dep\include\texture_layout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="dep\include\bitmap_font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\vertex_buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\index_buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\awesomeface.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\container.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="builds\0_02- getting_started\res\awesomeface.png">
       <Filter>Resource Files</Filter>
     </Image>
@@ -218,8 +222,16 @@
     <Image Include="res\sprites\player.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\bitmap\bitmap_font.tga" />
+    <Image Include="res\txt_test.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\another_test.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="dep\include\glm\CMakeLists.txt" />
+    <Text Include="res\usefull code\Usefull_code.txt" />
   </ItemGroup>
 </Project>

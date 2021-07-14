@@ -5,15 +5,17 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "shader.h"
 #include "camera.h"
-#include "vertex_array.h"
-#include "vertex_buffer.h"
-#include "index_buffer.h"
+#include "shader.h"
 #include "texture.h"
-#include "texture_layout.h"
+#include "index_buffer.h"
+#include "vertex_array.h"
+#include "bitmap_font.h"
 
 #include <iostream>
+#include <vector>
+
+using std::vector;
 
 // function declarations ------------------------------------------------------
 void processInput(GLFWwindow* window);
@@ -23,9 +25,9 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos);
 void scroll_callback(GLFWwindow* window, double xOffset, double yOffset);
 
 // global variables -----------------------------------------------------------
-const int screenWidth = 600, screenHeight = 800;
+const int screenWidth = 800, screenHeight = 600;
 
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
 float lastX = screenWidth / 2, lastY = screenHeight / 2;
 float fov = 45.0;
 bool firstMouse = true;
@@ -86,35 +88,31 @@ int main() {
 		0, 2, 3
 	};
 
-	glm::vec3 aliensTransformations[] = {
+	vector<glm::vec3> aliensTransformations = {
 		glm::vec3(1.5f, 0.0f, 0.0f),
 		glm::vec3(3.0f, 0.0f, 0.0f),
 		glm::vec3(4.5f, 0.0f, 0.0f),
 		glm::vec3(6.0f, 0.0f, 0.0f),
 		glm::vec3(7.5f, 0.0f, 0.0f),
+		glm::vec3(1.5f, 1.5f, 0.0f),
+		glm::vec3(3.0f, 1.5f, 0.0f),
+		glm::vec3(4.5f, 1.5f, 0.0f),
+		glm::vec3(6.0f, 1.5f, 0.0f),
+		glm::vec3(7.5f, 1.5f, 0.0f),
+		glm::vec3(0.0f, 3.0f, 0.0f),
 	};
 
 	// vertex and buffers configurations -----------------------------------------
-	unsigned int VAO;
-
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
+	VertexArray va;
 
 	VertexBuffer vb(vertices_quad, sizeof(vertices_quad));
 	IndexBuffer ib(indices, 6);
 
-	//AttribPointer(attribute, components, type, ???, total size of components, offset)
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer
-		(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	glBindVertexArray(0);
+	va.AddBuffer(vb);
+	va.Unbind();
 
 	// texture handling ----------------------------------------------------------
-	TextureLayout tl(GL_TEXTURE_2D);
+	TextureLayout tl(GL_TEXTURE_2D, GL_RGBA);
 
 	tl.AddPar(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	tl.AddPar(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -126,24 +124,23 @@ int main() {
 		Texture(tl, "res\\sprites\\alien_square_1.png"),
 	};
 
+	for (unsigned int t = 0; t < 2; t++)
+		textures[t].Unbind();
+
 	// initialization before rendering -------------------------------------------
+	BitmapFont font;
+	font.Load("res\\bitmap\\bitmap_font.bff");
+
 	myShader.use();
 	myShader.setInt("myTexture", 0);
 	myShader.setInt("myTexture2", 1);
 
-	bool text_cng = false;
-	float elapsedTime = glfwGetTime();
+	bool text_cng = false, read = true;
+	float elapsedTime = 0;
+	int text = 0, texture = 0;
 	myShader.setFloat("fade", 0.0f);
 
 	glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, texture[0]);
-	//glActiveTexture(GL_TEXTURE1);
-	//glBindTexture(GL_TEXTURE_2D, texture[1]);
-
-	//glTexParameteri(m_Layout.GetType(), GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	//glTexParameteri(m_Layout.GetType(), GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	//glTexParameteri(m_Layout.GetType(), GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	//glTexParameteri(m_Layout.GetType(), GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	// render loop (happens every frame) -----------------------------------------
 	while (!glfwWindowShouldClose(window)) {
@@ -156,19 +153,25 @@ int main() {
 
 		// -> input handling
 		processInput(window);
+		if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS)
+			text = 0;
+		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+			text = 1;
+		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+			text = 2;
+		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+			text = 3;
 
 		// -> rendering commands and configuration
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		myShader.use();
-
 		// ---> texture configurations
 		if (text_cng) {
-			textures[0].Bind();
+			texture = 0;
 		}
 		else {
-			textures[1].Bind();
+			texture = 1;
 		}
 
 		if (elapsedTime > 0.5) {
@@ -177,28 +180,60 @@ int main() {
 		}
 
 		// ---> space configurations and rendering
-		glBindVertexArray(VAO);
-
 		glm::mat4 projection = glm::perspective
-			(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
+		(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
 		myShader.setMat4("projection", projection);
 
 		glm::mat4 view = camera.GetViewMatrix();
 		myShader.setMat4("view", view);
 
-		for (unsigned int i = 0; i < 5; i++) {
-			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, aliensTransformations[i]);
-			myShader.setMat4("model", model);
+		glm::mat4 model = glm::mat4(1.0f);
+		myShader.setMat4("model", model);
 
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		textures[texture].Bind();
+		va.Bind();
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		textures[texture].Unbind();
+		va.Unbind();
+
+		model = glm::scale(model, glm::vec3(0.01, 0.01, 0.0));
+		myShader.setMat4("model", model);
+
+		// the Print function on Bitmap needs some debugging...
+		switch (text) {
+			case 0:
+			{
+				font.Print("\"Renderizar texto usando", 100, 0);
+				font.Print("OpenGL e complicado...!\"", 100, -40);
+				break;
+			}
+			case 1:
+			{
+				font.Print("\"mas agora, eu tenho controle total", 100, 0);
+				font.Print("e absoluto sobre o que renderizar\"", 100, -40);
+				break;
+			}
+			case 2:
+			{
+				font.Print("\"So precisei gastar uma", 100, 0);
+				font.Print("semana da minha vida fazendo", 100, -40);
+				font.Print("algo que alguem ja fez...\"", 100, -80);
+				break;
+			}
+			case 3:
+			{
+				font.Print("\"Eu amo meu hobby...", 100, 0);
+				break;
+			}
+			default:
+				text = 1;
+				break;
 		}
 
 		// -> check and call events and swap the buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-	glDeleteVertexArrays(1, &VAO);
 
 	glfwTerminate();
 	return 0;
