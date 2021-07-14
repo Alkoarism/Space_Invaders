@@ -71,7 +71,7 @@ int main() {
 
 	glEnable(GL_DEPTH_TEST);
 
-	Shader myShader("dep\\shaders\\vertex.shader", "dep\\shaders\\fragment.shader");
+	Shader myShader("res\\shaders\\vertex.shader", "res\\shaders\\fragment.shader");
 
 	// vertices definition -------------------------------------------------------
 	float vertices_quad[] = {
@@ -203,26 +203,26 @@ int main() {
 		switch (text) {
 			case 0:
 			{
-				font.Print("\"Renderizar texto usando", 100, 0);
-				font.Print("OpenGL e complicado...!\"", 100, -40);
+				font.Print("\"Text rendering using", 100, 0);
+				font.Print("OpenGL is really hard...!\"", 100, -40);
 				break;
 			}
 			case 1:
 			{
-				font.Print("\"mas agora, eu tenho controle total", 100, 0);
-				font.Print("e absoluto sobre o que renderizar\"", 100, -40);
+				font.Print("\"Well, now I have total and", 100, 0);
+				font.Print("absolute control over what to render\"", 100, -40);
 				break;
 			}
 			case 2:
 			{
-				font.Print("\"So precisei gastar uma", 100, 0);
-				font.Print("semana da minha vida fazendo", 100, -40);
-				font.Print("algo que alguem ja fez...\"", 100, -80);
+				font.Print("\"Just needed a full week to", 100, 0);
+				font.Print("understand how to use someone", 100, -40);
+				font.Print("else s code and adapt it...\"", 100, -80);
 				break;
 			}
 			case 3:
 			{
-				font.Print("\"Eu amo meu hobby...", 100, 0);
+				font.Print("\"I love what I do...", 100, 0);
 				break;
 			}
 			default:
