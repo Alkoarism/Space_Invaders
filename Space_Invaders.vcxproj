@@ -128,6 +128,9 @@
     <None Include="dep\shaders\fragment.shader" />
     <None Include="dep\shaders\vertex.shader" />
     <None Include="res\bitmap\bitmap_font.bff" />
+    <None Include="res\bitmap\font.bff" />
+    <None Include="res\bitmap\font_RGBA.bff" />
+    <None Include="res\bitmap\newTest.bff" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\bitmap_font.cpp" />
@@ -184,6 +187,7 @@
   <ItemGroup>
     <Image Include="builds\0_02- getting_started\res\awesomeface.png" />
     <Image Include="builds\0_02- getting_started\res\container.jpg" />
+    <Image Include="res\another_test.png" />
     <Image Include="res\bitmap\bitmap_font.tga" />
     <Image Include="res\sprites\alien_UFO_0.png" />
     <Image Include="res\sprites\alien_UFO_1.png" />
@@ -201,6 +205,7 @@
     <Image Include="res\textures\circle_alien_1.png" />
     <Image Include="res\textures\cirlce_alien_0.png" />
     <Image Include="res\textures\sprite_sheet.png" />
+    <Image Include="res\txt_test.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="dep\include\glm\CMakeLists.txt" />

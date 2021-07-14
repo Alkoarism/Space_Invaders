@@ -23,6 +23,9 @@
     <None Include="builds\0_02- getting_started\res\shaders\fragment.shader" />
     <None Include="builds\0_02- getting_started\res\shaders\vertex.shader" />
     <None Include="res\bitmap\bitmap_font.bff" />
+    <None Include="res\bitmap\newTest.bff" />
+    <None Include="res\bitmap\font.bff" />
+    <None Include="res\bitmap\font_RGBA.bff" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -220,6 +223,12 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\bitmap\bitmap_font.tga" />
+    <Image Include="res\txt_test.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\another_test.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="dep\include\glm\CMakeLists.txt" />

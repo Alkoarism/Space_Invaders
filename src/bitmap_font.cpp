@@ -2,13 +2,14 @@
 
 using namespace std;
 
-CBitmapFont::CBitmapFont()
+BitmapFont::BitmapFont()
 {
-    m_CurX = m_CurY = 0;
+    m_CurX = 0;
+    m_CurY = 0;
     m_InvertYAxis = false;
 }
 
-bool CBitmapFont::Load(char* fname)
+bool BitmapFont::Load(char* fname)
 {
     fstream in;
     char bpp;
@@ -107,13 +108,14 @@ bool CBitmapFont::Load(char* fname)
 
     m_Texture.SetLayout(m_Layout);
     m_Texture.DirectLoad(img.get(), ImgX, ImgY);
+
     Unbind();
 
     return true;
 }
 
 // Returns the width in pixels of the specified text
-int CBitmapFont::GetWidth(char* Text)
+int BitmapFont::GetWidth(char* Text)
 {
     int size = 0;
     size_t sLen = strnlen(Text, BFG_MAXSTRING);
@@ -127,13 +129,13 @@ int CBitmapFont::GetWidth(char* Text)
 }
 
 // Set the position for text output, this will be updated as text is printed
-void CBitmapFont::SetCursor(int x, int y)
+void BitmapFont::SetCursor(int x, int y)
 {
     m_CurX = x;
     m_CurY = y;
 }
 
-void CBitmapFont::ReverseYAxis(bool State)
+void BitmapFont::ReverseYAxis(bool State)
 {
     if (State)
         m_YOffset = -m_CellY;
@@ -143,7 +145,7 @@ void CBitmapFont::ReverseYAxis(bool State)
     m_InvertYAxis = State;
 }
 
-void CBitmapFont::Print(const char* text) {
+void BitmapFont::Print(const char* text) {
     //texture mapping, top and bottom
     float u, v, u1, v1;
     int row, col;
@@ -151,19 +153,26 @@ void CBitmapFont::Print(const char* text) {
 
     Bind();
 
+    unsigned int indices[] = {
+        0, 1, 2,
+        0, 2, 3
+    };
+    IndexBuffer ib(indices, 6);
+    ib.Unbind();
+
     for (size_t i = 0; i != sLen; i++) {
         row = (text[i] - m_Base) / m_RowPitch;
         col = (text[i] - m_Base) - (row * m_RowPitch);
 
         u = col * m_ColFactor;
         v = row * m_RowFactor;
-        u1 = u * m_ColFactor;
-        v1 = v * m_RowFactor;
+        u1 = u + m_ColFactor;
+        v1 = v + m_RowFactor;
         
         float coords[] = {
             //vertex coords			                       //texture		
-           (m_CurX + m_CellX),  m_CurY,              0.0f, u1, v,	//top right
-           (m_CurX + m_CellX), (m_CurY + m_YOffset), 0.0f, u1, v1,	//bottom right
+           (m_CurX + m_CellX), (m_CurY + m_YOffset), 0.0f, u1, v,	//top right
+           (m_CurX + m_CellX),  m_CurY,              0.0f, u1, v1,	//bottom right
             m_CurX,             m_CurY,              0.0f, u,  v1,	//bottom left
             m_CurX,            (m_CurY + m_YOffset), 0.0f, u,  v    //top left
         };
@@ -171,27 +180,32 @@ void CBitmapFont::Print(const char* text) {
         m_CurX += m_Width[text[i]];
 
         VertexArray va;
+
         VertexBuffer vb(coords, sizeof(coords));
         va.AddBuffer(vb);
+        ib.Bind();
 
-        std::cout << text[i] << std::endl;
-
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-        va.Unbind();
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
+
+    Unbind();
 }
 
-void CBitmapFont::Print(const char* text, int x, int y) {
+void BitmapFont::Print(const char* text, int x, int y) {
     SetCursor(x, y);
     Print(text);
 }
 
-void CBitmapFont::Bind()
+void BitmapFont::Select() {
+    Bind();
+}
+
+void BitmapFont::Bind()
 {
     m_Texture.Bind();
 }
 
-void CBitmapFont::Unbind()
+void BitmapFont::Unbind()
 {
     m_Texture.Unbind();
 }

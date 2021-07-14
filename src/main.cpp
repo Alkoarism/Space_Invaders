@@ -25,9 +25,9 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos);
 void scroll_callback(GLFWwindow* window, double xOffset, double yOffset);
 
 // global variables -----------------------------------------------------------
-const int screenWidth = 600, screenHeight = 800;
+const int screenWidth = 800, screenHeight = 600;
 
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
 float lastX = screenWidth / 2, lastY = screenHeight / 2;
 float fov = 45.0;
 bool firstMouse = true;
@@ -128,16 +128,16 @@ int main() {
 		textures[t].Unbind();
 
 	// initialization before rendering -------------------------------------------
-	CBitmapFont font;
+	BitmapFont font;
 	font.Load("res\\bitmap\\bitmap_font.bff");
-	font.ReverseYAxis(true);
 
 	myShader.use();
 	myShader.setInt("myTexture", 0);
 	myShader.setInt("myTexture2", 1);
 
-	bool text_cng = false;
+	bool text_cng = false, read = true;
 	float elapsedTime = 0;
+	int text = 0, texture = 0;
 	myShader.setFloat("fade", 0.0f);
 
 	glActiveTexture(GL_TEXTURE0);
@@ -153,17 +153,25 @@ int main() {
 
 		// -> input handling
 		processInput(window);
+		if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS)
+			text = 0;
+		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+			text = 1;
+		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+			text = 2;
+		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+			text = 3;
 
 		// -> rendering commands and configuration
-		glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// ---> texture configurations
 		if (text_cng) {
-			textures[0].Bind();
+			texture = 0;
 		}
 		else {
-			textures[1].Bind();
+			texture = 1;
 		}
 
 		if (elapsedTime > 0.5) {
@@ -182,10 +190,45 @@ int main() {
 		glm::mat4 model = glm::mat4(1.0f);
 		myShader.setMat4("model", model);
 
+		textures[texture].Bind();
 		va.Bind();
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		textures[texture].Unbind();
+		va.Unbind();
 
-		font.Print("lies in april");
+		model = glm::scale(model, glm::vec3(0.01, 0.01, 0.0));
+		myShader.setMat4("model", model);
+
+		// the Print function on Bitmap needs some debugging...
+		switch (text) {
+			case 0:
+			{
+				font.Print("\"Renderizar texto usando", 100, 0);
+				font.Print("OpenGL e complicado...!\"", 100, -40);
+				break;
+			}
+			case 1:
+			{
+				font.Print("\"mas agora, eu tenho controle total", 100, 0);
+				font.Print("e absoluto sobre o que renderizar\"", 100, -40);
+				break;
+			}
+			case 2:
+			{
+				font.Print("\"So precisei gastar uma", 100, 0);
+				font.Print("semana da minha vida fazendo", 100, -40);
+				font.Print("algo que alguem ja fez...\"", 100, -80);
+				break;
+			}
+			case 3:
+			{
+				font.Print("\"Eu amo meu hobby...", 100, 0);
+				break;
+			}
+			default:
+				text = 1;
+				break;
+		}
 
 		// -> check and call events and swap the buffers
 		glfwSwapBuffers(window);

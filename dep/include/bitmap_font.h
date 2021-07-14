@@ -8,6 +8,7 @@
 
 #include "texture.h"
 #include "vertex_array.h"
+#include "index_buffer.h"
 
 #define BFG_MAXSTRING 255     // Maximum string length
 
@@ -22,10 +23,10 @@ typedef struct
 	unsigned char StartPoint;
 }FontFileHeader;
 
-class CBitmapFont
+class BitmapFont
 {
 public:
-	CBitmapFont();
+	BitmapFont();
 
 	bool Load(char* fname);
 	int  GetWidth(char* Text);
@@ -34,6 +35,7 @@ public:
 	void ReverseYAxis(bool State);
 	void Print(const char* Text);
 	void Print(const char* Text, int x, int y);
+	void Select();
 
 private:
 	int m_CellX, m_CellY, m_YOffset, m_RowPitch;
