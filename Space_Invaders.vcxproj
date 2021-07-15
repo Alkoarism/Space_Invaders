@@ -122,11 +122,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="builds\0_02- getting_started\res\shaders\fragment.shader" />
-    <None Include="builds\0_02- getting_started\res\shaders\vertex.shader" />
     <None Include="README.md" />
-    <None Include="dep\shaders\fragment.shader" />
-    <None Include="dep\shaders\vertex.shader" />
+    <None Include="res\shaders\fragment.shader" />
+    <None Include="res\shaders\vertex.shader" />
     <None Include="res\bitmap\bitmap_font.bff" />
     <None Include="res\bitmap\font.bff" />
     <None Include="res\bitmap\font_RGBA.bff" />
@@ -185,8 +183,6 @@
     <ClInclude Include="src\screen.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="builds\0_02- getting_started\res\awesomeface.png" />
-    <Image Include="builds\0_02- getting_started\res\container.jpg" />
     <Image Include="res\another_test.png" />
     <Image Include="res\bitmap\bitmap_font.tga" />
     <Image Include="res\sprites\alien_UFO_0.png" />
