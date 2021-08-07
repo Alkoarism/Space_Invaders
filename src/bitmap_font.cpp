@@ -157,6 +157,10 @@ void BitmapFont::Print(const char* text) {
         0, 1, 2,
         0, 2, 3
     };
+    VertexBufferLayout vbl;
+    vbl.Push<float>(3);
+    vbl.Push<float>(2);
+
     IndexBuffer ib(indices, 6);
     ib.Unbind();
 
@@ -182,7 +186,7 @@ void BitmapFont::Print(const char* text) {
         VertexArray va;
 
         VertexBuffer vb(coords, sizeof(coords));
-        va.AddBuffer(vb);
+        va.AddBuffer(vb, vbl);
         ib.Bind();
 
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

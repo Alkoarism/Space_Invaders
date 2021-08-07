@@ -106,9 +106,12 @@ int main() {
 	VertexArray va;
 
 	VertexBuffer vb(vertices_quad, sizeof(vertices_quad));
+	VertexBufferLayout vbl;
+	vbl.Push<float>(3);
+	vbl.Push<float>(2);
 	IndexBuffer ib(indices, 6);
 
-	va.AddBuffer(vb);
+	va.AddBuffer(vb, vbl);
 	va.Unbind();
 
 	// texture handling ----------------------------------------------------------
@@ -119,12 +122,11 @@ int main() {
 	tl.AddPar(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	tl.AddPar(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	Texture textures[] = {
-		Texture(tl, "res\\sprites\\alien_square_0.png"),
-		Texture(tl, "res\\sprites\\alien_square_1.png"),
-	};
+	vector<Texture> textures;
+	textures.push_back(Texture(tl, "res\\sprites\\alien_square_0.png"));
+	textures.push_back(Texture(tl, "res\\sprites\\alien_square_1.png"));
 
-	for (unsigned int t = 0; t < 2; t++)
+	for (size_t t = 0; t < textures.size(); t++)
 		textures[t].Unbind();
 
 	// initialization before rendering -------------------------------------------

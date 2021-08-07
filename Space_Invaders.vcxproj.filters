@@ -164,6 +164,9 @@
     <ClInclude Include="dep\include\index_buffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="dep\include\vertex_buffer_layout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\sprite_sheet.jpg">

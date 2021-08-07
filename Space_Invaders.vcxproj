@@ -180,6 +180,7 @@
     <ClInclude Include="dep\include\vertex_array.h" />
     <ClInclude Include="dep\include\texture_layout.h" />
     <ClInclude Include="dep\include\vertex_buffer.h" />
+    <ClInclude Include="dep\include\vertex_buffer_layout.h" />
     <ClInclude Include="src\screen.cpp" />
   </ItemGroup>
   <ItemGroup>

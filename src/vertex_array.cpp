@@ -24,16 +24,18 @@ VertexArray& VertexArray::operator=(VertexArray&& other) noexcept {
 	return *this;
 }
 
-void VertexArray::AddBuffer(VertexBuffer& vb) {
+void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout) {
 	Bind();
 	vb.Bind();
-
-	//in this project, all the objects will have this configuration of pointers
-	//AttribPointer(attribute, components, type, ???, total size of components, offset)
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+	const auto& elements = layout.GetElements();
+	unsigned int offset = 0;
+	for (size_t i = 0; i < elements.size(); i++) {
+		const auto& element = elements[i];
+		glVertexAttribPointer(i, element.count, element.type,
+			element.normalized, layout.GetStride(), (const void*)offset);
+		glEnableVertexAttribArray(i);
+		offset += element.count * VertexAttribute::GetSizeOfType(element.type);
+	}
 }
 
 void VertexArray::Bind() const {
