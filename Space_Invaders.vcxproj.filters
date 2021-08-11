@@ -18,12 +18,14 @@
     <None Include="README.md">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="res\shaders\vertex.shader" />
-    <None Include="res\shaders\fragment.shader" />
+    <None Include="res\shaders\main_vert.shader" />
+    <None Include="res\shaders\main_frag.shader" />
     <None Include="res\bitmap\bitmap_font.bff" />
     <None Include="res\bitmap\newTest.bff" />
     <None Include="res\bitmap\font.bff" />
     <None Include="res\bitmap\font_RGBA.bff" />
+    <None Include="res\shaders\bitmap_frag.shader" />
+    <None Include="res\shaders\bitmap_vert.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -51,6 +53,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\vertex_buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -165,6 +170,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dep\include\vertex_buffer_layout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\headers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

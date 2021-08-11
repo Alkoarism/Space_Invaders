@@ -1,10 +1,7 @@
 #ifndef VERTEX_BUFFER_LAYOUT_H
 #define VERTEX_BUFFER_LAYOUT_H
 
-#include <glad/glad.h>
-
-#include <vector>
-#include <cassert>
+#include "headers.h"
 
 //more types can be added to this code as the need arises.
 

@@ -1,13 +1,7 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include <glad/glad.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include <string>
+#include "headers.h"
 
 class Shader {
 public:
@@ -15,19 +9,19 @@ public:
 
 	Shader(const char* vertexPath, const char* fragmentPath);
 
-	void use();
+	void Use() const;
 
 	//utility uniform functions
-	void setBool(const std::string& name, bool value) const;
-	void setInt(const std::string& name, int value) const;
-	void setFloat(const std::string& name, float value) const;
-	void setMat4(const std::string& name, glm::mat4 value) const;
+	void SetBool(const std::string&, const bool&) const;
+	void SetInt(const std::string&, const int&) const;
+	void SetFloat(const std::string&, const float&) const;
+	void SetMat4(const std::string&, const glm::mat4&) const;
 
-	void getInt(const std::string& name, int& value) const;
-	void getFloat(const std::string& name, float& value) const;
+	void GetInt(const std::string&, int&) const;
+	void GetFloat(const std::string&, float&) const;
 
 private:
-	void checkCompileErrors(unsigned int shader, std::string type);
+	void CheckCompileErrors(unsigned int shader, std::string type);
 };
 
 #endif

@@ -2,7 +2,8 @@
 
 using namespace std;
 
-BitmapFont::BitmapFont()
+BitmapFont::BitmapFont(const char* vertexPath, const char* fragmentPath)
+    : m_Shader(vertexPath, fragmentPath)
 {
     m_CurX = 0;
     m_CurY = 0;
@@ -207,9 +208,22 @@ void BitmapFont::Select() {
 void BitmapFont::Bind()
 {
     m_Texture.Bind();
+    //m_Shader.Use();
 }
 
 void BitmapFont::Unbind()
 {
     m_Texture.Unbind();
+}
+
+void BitmapFont::SetCamera(const glm::mat4& camera) const{
+    m_Shader.SetMat4("view", camera);
+}
+
+void BitmapFont::SetView(const glm::mat4& view) const{
+    m_Shader.SetMat4("view", view);
+}
+
+void BitmapFont::SetModel(const glm::mat4& model) const{
+    m_Shader.SetMat4("view", model);
 }

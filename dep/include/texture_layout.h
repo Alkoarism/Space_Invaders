@@ -1,10 +1,7 @@
 #ifndef TEXTURE_LAYOUT_H
 #define TEXTURE_LAYOUT_H
 
-#include <glad/glad.h>
-
-#include <vector>
-#include <utility>
+#include "headers.h"
 
 class TextureLayout {
 public:

@@ -1,6 +1,8 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
+#include "renderer.h"
+
 enum Scene {
 	MAIN_MENU,
 	SCORE_TABLE,

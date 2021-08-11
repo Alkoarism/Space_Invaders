@@ -1,8 +1,6 @@
 #ifndef VERTEX_ARRAY_H
 #define VERTEX_ARRAY_H
 
-#include <glad/glad.h>
-
 #include "vertex_buffer.h"
 #include "vertex_buffer_layout.h"
 
