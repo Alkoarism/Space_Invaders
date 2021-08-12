@@ -1,19 +1,7 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
+#include "renderer.h"
 #include "camera.h"
-#include "shader.h"
 #include "texture.h"
-#include "index_buffer.h"
-#include "vertex_array.h"
 #include "bitmap_font.h"
-
-#include <iostream>
-#include <vector>
 
 using std::vector;
 
@@ -71,7 +59,7 @@ int main() {
 
 	glEnable(GL_DEPTH_TEST);
 
-	Shader myShader("res\\shaders\\vertex.shader", "res\\shaders\\fragment.shader");
+	Shader myShader("res\\shaders\\main_vert.shader", "res\\shaders\\main_frag.shader");
 
 	// vertices definition -------------------------------------------------------
 	float vertices_quad[] = {
@@ -106,9 +94,12 @@ int main() {
 	VertexArray va;
 
 	VertexBuffer vb(vertices_quad, sizeof(vertices_quad));
+	VertexBufferLayout vbl;
+	vbl.Push<float>(3);
+	vbl.Push<float>(2);
 	IndexBuffer ib(indices, 6);
 
-	va.AddBuffer(vb);
+	va.AddBuffer(vb, vbl);
 	va.Unbind();
 
 	// texture handling ----------------------------------------------------------
@@ -119,26 +110,25 @@ int main() {
 	tl.AddPar(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	tl.AddPar(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	Texture textures[] = {
-		Texture(tl, "res\\sprites\\alien_square_0.png"),
-		Texture(tl, "res\\sprites\\alien_square_1.png"),
-	};
+	vector<Texture> textures;
+	textures.push_back(Texture(tl, "res\\sprites\\alien_square_0.png")); 
+	textures.push_back(Texture(tl, "res\\sprites\\alien_square_1.png"));
 
-	for (unsigned int t = 0; t < 2; t++)
+	for (size_t t = 0; t < textures.size(); t++)
 		textures[t].Unbind();
 
-	// initialization before rendering -------------------------------------------
-	BitmapFont font;
+	BitmapFont font
+		("res\\shaders\\bitmap_vert.shader", "res\\shaders\\bitmap_frag.shader");
 	font.Load("res\\bitmap\\bitmap_font.bff");
 
-	myShader.use();
-	myShader.setInt("myTexture", 0);
-	myShader.setInt("myTexture2", 1);
+	// initialization before rendering -------------------------------------------
+	myShader.SetUniform("myTexture", 0);
+	myShader.SetUniform("myTexture2", 1);
+	myShader.SetUniform("fade", 0.0f);
 
 	bool text_cng = false, read = true;
 	float elapsedTime = 0;
 	int text = 0, texture = 0;
-	myShader.setFloat("fade", 0.0f);
 
 	glActiveTexture(GL_TEXTURE0);
 
@@ -151,6 +141,9 @@ int main() {
 
 		elapsedTime += deltaTime;
 
+		// -> rendering commands and configuration
+		Renderer::RenderConfig();
+
 		// -> input handling
 		processInput(window);
 		if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS)
@@ -162,16 +155,14 @@ int main() {
 		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
 			text = 3;
 
-		// -> rendering commands and configuration
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 		// ---> texture configurations
 		if (text_cng) {
 			texture = 0;
+			font.SetColor(1.0f, 0.0f, 0.0f);
 		}
 		else {
 			texture = 1;
+			font.SetColor(0.0f, 0.0f, 1.0f);
 		}
 
 		if (elapsedTime > 0.5) {
@@ -182,22 +173,20 @@ int main() {
 		// ---> space configurations and rendering
 		glm::mat4 projection = glm::perspective
 		(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
-		myShader.setMat4("projection", projection);
+		Renderer::SetProjection(projection);
 
 		glm::mat4 view = camera.GetViewMatrix();
-		myShader.setMat4("view", view);
+		Renderer::SetView(view);
 
 		glm::mat4 model = glm::mat4(1.0f);
-		myShader.setMat4("model", model);
+		Renderer::SetModel(model);
 
 		textures[texture].Bind();
-		va.Bind();
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		Renderer::Render(va, ib, myShader);
 		textures[texture].Unbind();
-		va.Unbind();
 
 		model = glm::scale(model, glm::vec3(0.01, 0.01, 0.0));
-		myShader.setMat4("model", model);
+		Renderer::SetModel(model);
 
 		// the Print function on Bitmap needs some debugging...
 		switch (text) {

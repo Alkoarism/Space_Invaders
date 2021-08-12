@@ -3,9 +3,6 @@
 #define STBI_FAILURE_USERMSG
 #define STBI_ONLYJPEG
 
-#include <iostream>
-#include <utility>
-
 #include "texture.h"
 
 Texture::Texture(const TextureLayout& layout, const char* location) : m_Layout(layout) {

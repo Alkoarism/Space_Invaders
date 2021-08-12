@@ -1,13 +1,7 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include <glad/glad.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include <string>
+#include "headers.h"
 
 class Shader {
 public:
@@ -15,19 +9,61 @@ public:
 
 	Shader(const char* vertexPath, const char* fragmentPath);
 
-	void use();
+	void Use() const;
 
-	//utility uniform functions
-	void setBool(const std::string& name, bool value) const;
-	void setInt(const std::string& name, int value) const;
-	void setFloat(const std::string& name, float value) const;
-	void setMat4(const std::string& name, glm::mat4 value) const;
-
-	void getInt(const std::string& name, int& value) const;
-	void getFloat(const std::string& name, float& value) const;
+	template <typename T>
+	bool SetUniform(const std::string&, const T&) const;
+	template <typename T>
+	bool GetUniform(const std::string&, T&) const;
 
 private:
-	void checkCompileErrors(unsigned int shader, std::string type);
+	//utility uniform functions- template classes to avoid nondefined types to compile
+	template <typename T>
+	void SetGLUniform(const std::string&, const T&) const {
+		throw std::invalid_argument("ERROR::SHADER::INVALID_UNIFORM_TYPE");
+	}
+	void SetGLUniform(const std::string&, const bool&) const;
+	void SetGLUniform(const std::string&, const int&) const;
+	void SetGLUniform(const std::string&, const float&) const;
+	void SetGLUniform(const std::string&, const glm::mat4&) const;
+
+	template <typename T>
+	void GetGLUniform(const std::string&, const T&) const {
+		throw std::invalid_argument("ERROR::SHADER::UNIFORM_TYPE_NOT_FOUND");
+	}
+	void GetGLUniform(const std::string&, int&) const;
+	void GetGLUniform(const std::string&, float&) const;
+
+	void CheckCompileErrors(unsigned int shader, std::string type);
 };
+
+template <typename T>
+bool Shader::SetUniform(const std::string& name, const T& value) const {
+	this->Use();
+	try {
+		SetGLUniform(name, value);
+		return true;
+	}
+	catch (std::invalid_argument err) {
+		std::cout << "COULD_NOT_DEFINE_UNIFORM: \"" << name << "\"\n"
+			<< err.what() << std::endl;
+		return false;
+	}
+}
+
+template <typename T>
+bool Shader::GetUniform(const std::string& name, T& value) const {
+	this->Use();
+	try {
+		GetGLUniform(name, value);
+		return true;
+	}
+	catch (std::invalid_argument err) {
+		std::cout << "COULD_NOT_FIND_UNIFORM: \"" << name << "\"\n"
+			<< err.what() << std::endl;
+		return false;
+	}
+}
+
 
 #endif

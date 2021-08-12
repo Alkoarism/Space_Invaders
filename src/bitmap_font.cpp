@@ -2,14 +2,15 @@
 
 using namespace std;
 
-BitmapFont::BitmapFont()
+BitmapFont::BitmapFont(const char* vertexPath, const char* fragmentPath)
+    : m_Shader(vertexPath, fragmentPath)
 {
-    m_CurX = 0;
-    m_CurY = 0;
+    m_CurX = m_CurY = 0;
+    m_Red = m_Green = m_Blue = m_Alpha = 1.0f;
     m_InvertYAxis = false;
 }
 
-bool BitmapFont::Load(char* fname)
+bool BitmapFont::Load(const char* fname)
 {
     fstream in;
     char bpp;
@@ -115,7 +116,7 @@ bool BitmapFont::Load(char* fname)
 }
 
 // Returns the width in pixels of the specified text
-int BitmapFont::GetWidth(char* Text)
+int BitmapFont::GetWidth(const char* Text)
 {
     int size = 0;
     size_t sLen = strnlen(Text, BFG_MAXSTRING);
@@ -129,13 +130,22 @@ int BitmapFont::GetWidth(char* Text)
 }
 
 // Set the position for text output, this will be updated as text is printed
-void BitmapFont::SetCursor(int x, int y)
+void BitmapFont::SetCursor(const int& x, const int& y)
 {
     m_CurX = x;
     m_CurY = y;
 }
 
-void BitmapFont::ReverseYAxis(bool State)
+void BitmapFont::SetColor
+    (const float& r, const float& g,
+     const float& b, const float& a) {
+    m_Red = r;
+    m_Green = g;
+    m_Blue = b;
+    m_Alpha = a;
+}
+
+void BitmapFont::ReverseYAxis(const bool& State)
 {
     if (State)
         m_YOffset = -m_CellY;
@@ -157,8 +167,12 @@ void BitmapFont::Print(const char* text) {
         0, 1, 2,
         0, 2, 3
     };
+    VertexBufferLayout vbl;
+    vbl.Push<float>(3);
+    vbl.Push<float>(2);
+    vbl.Push<float>(4);
+
     IndexBuffer ib(indices, 6);
-    ib.Unbind();
 
     for (size_t i = 0; i != sLen; i++) {
         row = (text[i] - m_Base) / m_RowPitch;
@@ -170,11 +184,11 @@ void BitmapFont::Print(const char* text) {
         v1 = v + m_RowFactor;
         
         float coords[] = {
-            //vertex coords			                       //texture		
-           (m_CurX + m_CellX), (m_CurY + m_YOffset), 0.0f, u1, v,	//top right
-           (m_CurX + m_CellX),  m_CurY,              0.0f, u1, v1,	//bottom right
-            m_CurX,             m_CurY,              0.0f, u,  v1,	//bottom left
-            m_CurX,            (m_CurY + m_YOffset), 0.0f, u,  v    //top left
+            //vertex coords			                       //texture	//colors	
+           (m_CurX + m_CellX), (m_CurY + m_YOffset), 0.0f, u1, v,	    m_Red, m_Green, m_Blue, m_Alpha,    //top right
+           (m_CurX + m_CellX),  m_CurY,              0.0f, u1, v1,	    m_Red, m_Green, m_Blue, m_Alpha,    //bottom right
+            m_CurX,             m_CurY,              0.0f, u,  v1,	    m_Red, m_Green, m_Blue, m_Alpha,    //bottom left
+            m_CurX,            (m_CurY + m_YOffset), 0.0f, u,  v,       m_Red, m_Green, m_Blue, m_Alpha     //top left
         };
 
         m_CurX += m_Width[text[i]];
@@ -182,22 +196,16 @@ void BitmapFont::Print(const char* text) {
         VertexArray va;
 
         VertexBuffer vb(coords, sizeof(coords));
-        va.AddBuffer(vb);
-        ib.Bind();
-
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        va.AddBuffer(vb, vbl);
+        Renderer::Render(va, ib, m_Shader);
     }
 
     Unbind();
 }
 
-void BitmapFont::Print(const char* text, int x, int y) {
+void BitmapFont::Print(const char* text, const int& x, const int& y) {
     SetCursor(x, y);
     Print(text);
-}
-
-void BitmapFont::Select() {
-    Bind();
 }
 
 void BitmapFont::Bind()

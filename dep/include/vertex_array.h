@@ -1,10 +1,8 @@
 #ifndef VERTEX_ARRAY_H
 #define VERTEX_ARRAY_H
 
-#include <glad/glad.h>
-
 #include "vertex_buffer.h"
-//#include "vertex_buffer_layout.h"
+#include "vertex_buffer_layout.h"
 
 class VertexArray {
 public:
@@ -17,7 +15,7 @@ public:
 	VertexArray(VertexArray&& other) noexcept;
 	VertexArray& operator=(VertexArray&& other) noexcept;
 
-	void AddBuffer(VertexBuffer&);
+	void AddBuffer(const VertexBuffer&, const VertexBufferLayout&);
 
 	void Bind() const;
 	void Unbind() const;

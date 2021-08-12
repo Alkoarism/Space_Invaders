@@ -123,12 +123,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="README.md" />
-    <None Include="res\shaders\fragment.shader" />
-    <None Include="res\shaders\vertex.shader" />
+    <None Include="res\shaders\main_frag.shader" />
+    <None Include="res\shaders\bitmap_frag.shader" />
+    <None Include="res\shaders\main_vert.shader" />
     <None Include="res\bitmap\bitmap_font.bff" />
     <None Include="res\bitmap\font.bff" />
     <None Include="res\bitmap\font_RGBA.bff" />
     <None Include="res\bitmap\newTest.bff" />
+    <None Include="res\shaders\bitmap_vert.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\bitmap_font.cpp" />
@@ -136,6 +138,7 @@
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\index_buffer.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\renderer.cpp" />
     <ClCompile Include="src\shader.cpp" />
     <ClCompile Include="src\texture.cpp" />
     <ClCompile Include="src\vertex_array.cpp" />
@@ -171,8 +174,10 @@
     <ClInclude Include="dep\include\glm\vec3.hpp" />
     <ClInclude Include="dep\include\glm\vec4.hpp" />
     <ClInclude Include="dep\include\glm\vector_relational.hpp" />
+    <ClInclude Include="dep\include\headers.h" />
     <ClInclude Include="dep\include\index_buffer.h" />
     <ClInclude Include="dep\include\KHR\khrplatform.h" />
+    <ClInclude Include="dep\include\renderer.h" />
     <ClInclude Include="dep\include\screen.h" />
     <ClInclude Include="dep\include\shader.h" />
     <ClInclude Include="dep\include\stb_image.h" />
@@ -180,6 +185,7 @@
     <ClInclude Include="dep\include\vertex_array.h" />
     <ClInclude Include="dep\include\texture_layout.h" />
     <ClInclude Include="dep\include\vertex_buffer.h" />
+    <ClInclude Include="dep\include\vertex_buffer_layout.h" />
     <ClInclude Include="src\screen.cpp" />
   </ItemGroup>
   <ItemGroup>

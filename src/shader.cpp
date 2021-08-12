@@ -1,10 +1,5 @@
 #include "shader.h"
 
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-
 // constructor generates the shader on the fly
 // ------------------------------------------------------------------------
 Shader::Shader(const char* vertexPath, const char* fragmentPath) {
@@ -51,20 +46,20 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
     vertex = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex, 1, &vShaderCode, NULL);
     glCompileShader(vertex);
-    checkCompileErrors(vertex, "VERTEX");
+    CheckCompileErrors(vertex, "VERTEX");
 
     // fragment Shader and it´s error handling
     fragment = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragment, 1, &fShaderCode, NULL);
     glCompileShader(fragment);
-    checkCompileErrors(fragment, "FRAGMENT");
+    CheckCompileErrors(fragment, "FRAGMENT");
 
     // shader Program
     ID = glCreateProgram();
     glAttachShader(ID, vertex);
     glAttachShader(ID, fragment);
     glLinkProgram(ID);
-    checkCompileErrors(ID, "PROGRAM");
+    CheckCompileErrors(ID, "PROGRAM");
 
     // delete the shaders as they're linked
     // into the program and are no longer necessary
@@ -74,40 +69,40 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 
 // activate the shader
 // ------------------------------------------------------------------------
-void Shader::use() {
+void Shader::Use() const{
     glUseProgram(ID);
 }
 
 // utility uniform functions
 // ------------------------------------------------------------------------
-void Shader::setBool(const std::string& name, bool value) const {
+void Shader::SetGLUniform(const std::string& name, const bool& value) const {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
 }
 
-void Shader::setInt(const std::string& name, int value) const {
+void Shader::SetGLUniform(const std::string& name, const int& value) const {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
 
-void Shader::setFloat(const std::string& name, float value) const {
+void Shader::SetGLUniform(const std::string& name, const float& value) const {
     glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
 
-void Shader::setMat4(const std::string& name, glm::mat4 value) const {
+void Shader::SetGLUniform(const std::string& name, const glm::mat4& value) const {
     glUniformMatrix4fv
         (glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
-void Shader::getInt(const std::string& name, int& value) const {
+void Shader::GetGLUniform(const std::string& name, int& value) const {
     glGetUniformiv(ID, glGetUniformLocation(ID, name.c_str()), &value);
 }
 
-void Shader::getFloat(const std::string& name, float& value) const {
+void Shader::GetGLUniform(const std::string& name, float& value) const {
     glGetUniformfv(ID, glGetUniformLocation(ID, name.c_str()), &value);
 }
 
 // utility function for checking shader compilation/linking errors.
 // ------------------------------------------------------------------------
-void Shader::checkCompileErrors(unsigned int shader, std::string type) {
+void Shader::CheckCompileErrors(unsigned int shader, std::string type) {
     int success;
     char infoLog[1024];
     if (type != "PROGRAM")

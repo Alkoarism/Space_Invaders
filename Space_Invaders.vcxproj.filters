@@ -18,21 +18,17 @@
     <None Include="README.md">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="res\shaders\vertex.shader" />
-    <None Include="res\shaders\fragment.shader" />
+    <None Include="res\shaders\main_vert.shader" />
+    <None Include="res\shaders\main_frag.shader" />
     <None Include="res\bitmap\bitmap_font.bff" />
     <None Include="res\bitmap\newTest.bff" />
     <None Include="res\bitmap\font.bff" />
     <None Include="res\bitmap\font_RGBA.bff" />
+    <None Include="res\shaders\bitmap_frag.shader" />
+    <None Include="res\shaders\bitmap_vert.shader" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\glad.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\camera.cpp">
@@ -47,10 +43,19 @@
     <ClCompile Include="src\texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\vertex_buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\bitmap_font.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\vertex_buffer.cpp">
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -60,9 +65,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dep\include\KHR\khrplatform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dep\include\shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dep\include\glm\common.hpp">
@@ -155,13 +157,25 @@
     <ClInclude Include="dep\include\texture_layout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dep\include\bitmap_font.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="dep\include\vertex_buffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dep\include\index_buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\vertex_buffer_layout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\bitmap_font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\headers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
