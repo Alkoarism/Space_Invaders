@@ -163,7 +163,6 @@ void BitmapFont::Print(const char* text) {
     vbl.Push<float>(2);
 
     IndexBuffer ib(indices, 6);
-    ib.Unbind();
 
     for (size_t i = 0; i != sLen; i++) {
         row = (text[i] - m_Base) / m_RowPitch;
@@ -188,9 +187,7 @@ void BitmapFont::Print(const char* text) {
 
         VertexBuffer vb(coords, sizeof(coords));
         va.AddBuffer(vb, vbl);
-        ib.Bind();
-
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        Renderer::Render(va, ib, m_Shader);
     }
 
     Unbind();
@@ -208,7 +205,6 @@ void BitmapFont::Select() {
 void BitmapFont::Bind()
 {
     m_Texture.Bind();
-    //m_Shader.Use();
 }
 
 void BitmapFont::Unbind()
@@ -216,14 +212,14 @@ void BitmapFont::Unbind()
     m_Texture.Unbind();
 }
 
-void BitmapFont::SetCamera(const glm::mat4& camera) const{
-    m_Shader.SetMat4("view", camera);
+void BitmapFont::SetProjection(const glm::mat4& camera) const{
+    m_Shader.SetUniform("projection", camera);
 }
 
 void BitmapFont::SetView(const glm::mat4& view) const{
-    m_Shader.SetMat4("view", view);
+    m_Shader.SetUniform("view", view);
 }
 
 void BitmapFont::SetModel(const glm::mat4& model) const{
-    m_Shader.SetMat4("view", model);
+    m_Shader.SetUniform("model", model);
 }

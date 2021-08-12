@@ -122,13 +122,13 @@ int main() {
 	font.Load("res\\bitmap\\bitmap_font.bff");
 
 	// initialization before rendering -------------------------------------------
-	myShader.SetInt("myTexture", 0);
-	myShader.SetInt("myTexture2", 1);
+	myShader.SetUniform("myTexture", 0);
+	myShader.SetUniform("myTexture2", 1);
+	myShader.SetUniform("fade", 0.0f);
 
 	bool text_cng = false, read = true;
 	float elapsedTime = 0;
 	int text = 0, texture = 0;
-	myShader.SetFloat("fade", 0.0f);
 
 	glActiveTexture(GL_TEXTURE0);
 
@@ -141,6 +141,9 @@ int main() {
 
 		elapsedTime += deltaTime;
 
+		// -> rendering commands and configuration
+		Renderer::RenderConfig();
+
 		// -> input handling
 		processInput(window);
 		if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS)
@@ -151,10 +154,6 @@ int main() {
 			text = 2;
 		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
 			text = 3;
-
-		// -> rendering commands and configuration
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// ---> texture configurations
 		if (text_cng) {
@@ -170,26 +169,24 @@ int main() {
 		}
 
 		// ---> space configurations and rendering
-		myShader.Use();
-
 		glm::mat4 projection = glm::perspective
 		(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
-		myShader.SetMat4("projection", projection);
+		myShader.SetUniform("projection", projection);
 
 		glm::mat4 view = camera.GetViewMatrix();
-		myShader.SetMat4("view", view);
+		myShader.SetUniform("view", view);
 
 		glm::mat4 model = glm::mat4(1.0f);
-		myShader.SetMat4("model", model);
+		myShader.SetUniform("model", model);
 
 		textures[texture].Bind();
-		va.Bind();
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		Renderer::Render(va, ib, myShader);
 		textures[texture].Unbind();
-		va.Unbind();
 
 		model = glm::scale(model, glm::vec3(0.01, 0.01, 0.0));
-		myShader.SetMat4("model", model);
+		font.SetProjection(projection);
+		font.SetView(view);
+		font.SetModel(model);
 
 		// the Print function on Bitmap needs some debugging...
 		switch (text) {

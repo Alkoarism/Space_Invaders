@@ -1,10 +1,8 @@
 #ifndef _BITMAP_FONTCLASS_H
 #define _BITMAP_FONTCLASS_H
 
+#include "renderer.h"
 #include "texture.h"
-#include "vertex_array.h"
-#include "index_buffer.h"
-#include "shader.h"
 
 #define BFG_MAXSTRING 255     // Maximum string length
 
@@ -33,7 +31,7 @@ public:
 	void Print(const char* Text, int x, int y);
 	void Select();
 
-	void SetCamera(const glm::mat4&) const;
+	void SetProjection(const glm::mat4&) const;
 	void SetView(const glm::mat4&) const;
 	void SetModel(const glm::mat4&) const;
 

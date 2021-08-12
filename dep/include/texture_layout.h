@@ -12,12 +12,13 @@ public:
 	inline GLenum GetType() const { return m_Type; }
 	inline GLenum GetFormat() const { return m_Format; }
 
-	inline void SetType(GLenum type) { m_Type = type; }
-	inline void SetFormat(GLenum format) { m_Format = format; }
+	inline void SetType(const GLenum& type) { m_Type = type; }
+	inline void SetFormat(const GLenum& format) { m_Format = format; }
 
-	void AddPar(GLenum first, GLenum second)
-		{ m_Layout.push_back(std::make_pair(first, second)); }
-	void RemovePar() { m_Layout.pop_back(); }
+	void AddPar(const GLenum& first, const GLenum& second)
+	{ m_Layout.insert({ first, second });	}
+	void RemovePar() { m_Layout.erase(--m_Layout.end()); }
+	void RemovePar(const GLenum& par) { m_Layout.erase(par); }
 
 	void Run() const {
 		for (auto a : m_Layout) {
@@ -28,7 +29,7 @@ public:
 private:
 	GLenum m_Type;
 	GLenum m_Format;
-	std::vector<std::pair<GLenum, GLenum>> m_Layout;
+	std::map<GLenum, GLenum> m_Layout;
 };
 
 #endif
