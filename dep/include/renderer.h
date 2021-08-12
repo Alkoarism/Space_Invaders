@@ -9,28 +9,19 @@
 class Renderer {
 public:
 	static void Render
-		(const VertexArray & va, const IndexBuffer & ib, const Shader & s) {
-		va.Bind();
-		ib.Bind();
-		s.Use();
-
-		glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
-	}
-
+	(const VertexArray&, const IndexBuffer&, const Shader&);
 	static void RenderConfig
-		(const float& r = 0.0f, const float& g = 0.0f, 
-		 const float& b = 0.0f, const float& a = 0.0f) {
-
-		glClearColor(r, g, b, a);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	}
-
-	static std::pair<std::string, glm::mat4> view;
-	static std::pair<std::string, glm::mat4> projection;
-	static std::pair<std::string, glm::mat4> model;
+	(const float& r = 0.0f, const float& g = 0.0f,
+		const float& b = 0.0f, const float& a = 0.0f);
+	
+	static void SetProjection(const glm::mat4& p) { projection = p; }
+	static void SetView(const glm::mat4& v) { view = v; }
+	static void SetModel(const glm::mat4& m) { model = m; }
 
 private:
-
+	static glm::mat4 projection;
+	static glm::mat4 view;
+	static glm::mat4 model;
 };
 
 #endif

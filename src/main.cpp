@@ -158,9 +158,11 @@ int main() {
 		// ---> texture configurations
 		if (text_cng) {
 			texture = 0;
+			font.SetColor(1.0f, 0.0f, 0.0f);
 		}
 		else {
 			texture = 1;
+			font.SetColor(0.0f, 0.0f, 1.0f);
 		}
 
 		if (elapsedTime > 0.5) {
@@ -171,22 +173,20 @@ int main() {
 		// ---> space configurations and rendering
 		glm::mat4 projection = glm::perspective
 		(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
-		myShader.SetUniform("projection", projection);
+		Renderer::SetProjection(projection);
 
 		glm::mat4 view = camera.GetViewMatrix();
-		myShader.SetUniform("view", view);
+		Renderer::SetView(view);
 
 		glm::mat4 model = glm::mat4(1.0f);
-		myShader.SetUniform("model", model);
+		Renderer::SetModel(model);
 
 		textures[texture].Bind();
 		Renderer::Render(va, ib, myShader);
 		textures[texture].Unbind();
 
 		model = glm::scale(model, glm::vec3(0.01, 0.01, 0.0));
-		font.SetProjection(projection);
-		font.SetView(view);
-		font.SetModel(model);
+		Renderer::SetModel(model);
 
 		// the Print function on Bitmap needs some debugging...
 		switch (text) {
