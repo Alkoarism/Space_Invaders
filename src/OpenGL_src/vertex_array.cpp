@@ -1,4 +1,4 @@
-#include "vertex_array.h"
+#include "OpenGL/vertex_array.h"
 
 VertexArray::VertexArray() {
 	glGenVertexArrays(1, &m_vertexArrayID);

@@ -1,4 +1,4 @@
-#include "index_buffer.h"
+#include "OpenGL/index_buffer.h"
 
 IndexBuffer::IndexBuffer(const GLuint* data,const GLuint count) : m_indexCount(count) {
 	glGenBuffers(1, &m_indexBufferID);

@@ -1,7 +1,7 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include "texture_layout.h"
+#include "OpenGL\texture_layout.h"
 
 //The glTexParameteri on the texture constructor needs to be
 //further analyzed and improved in order to make the class

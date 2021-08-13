@@ -2,9 +2,9 @@
 #define RENDERER_H
 
 #include "headers.h"
-#include "vertex_array.h"
-#include "index_buffer.h"
-#include "shader.h"
+#include "OpenGL\vertex_array.h"
+#include "OpenGL\index_buffer.h"
+#include "OpenGL\shader.h"
 
 class Renderer {
 public:

@@ -1,4 +1,4 @@
-#include "shader.h"
+#include "OpenGL/shader.h"
 
 // constructor generates the shader on the fly
 // ------------------------------------------------------------------------

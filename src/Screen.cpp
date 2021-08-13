@@ -1,4 +1,4 @@
-#include "screen.h"
+#include "OpenGL/screen.h"
 
 Screen::Screen() {
 
