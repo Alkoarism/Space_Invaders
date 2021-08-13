@@ -1,3 +1,8 @@
+//if you copy and paste this into a main file with the proper headers,
+//src files and res folders, it should compile and run properly into a
+//vs Community 2018 project, with the output being the 0_04-base_framework_demo
+//build (the res folder in that build should be enough to use with this example code)
+
 #include "OpenGL\renderer.h"
 #include "OpenGL\camera.h"
 #include "OpenGL\texture.h"
@@ -74,20 +79,6 @@ int main() {
 		//squad indices
 		0, 1, 2,
 		0, 2, 3
-	};
-
-	vector<glm::vec3> aliensTransformations = {
-		glm::vec3(1.5f, 0.0f, 0.0f),
-		glm::vec3(3.0f, 0.0f, 0.0f),
-		glm::vec3(4.5f, 0.0f, 0.0f),
-		glm::vec3(6.0f, 0.0f, 0.0f),
-		glm::vec3(7.5f, 0.0f, 0.0f),
-		glm::vec3(1.5f, 1.5f, 0.0f),
-		glm::vec3(3.0f, 1.5f, 0.0f),
-		glm::vec3(4.5f, 1.5f, 0.0f),
-		glm::vec3(6.0f, 1.5f, 0.0f),
-		glm::vec3(7.5f, 1.5f, 0.0f),
-		glm::vec3(0.0f, 3.0f, 0.0f),
 	};
 
 	// vertex and buffers configurations -----------------------------------------
