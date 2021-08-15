@@ -23,6 +23,8 @@
     <None Include="res\bitmap\bitmap_font.bff" />
     <None Include="res\shaders\bitmap_frag.shader" />
     <None Include="res\shaders\bitmap_vert.shader" />
+    <None Include="res\bitmap\vrinda.bff" />
+    <None Include="res\bitmap\timesNewRoman.bff" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenGL_src\glad.c">
@@ -166,10 +168,10 @@
     <ClInclude Include="dep\include\bitmap_font.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dep\include\OpenGL\renderer.h">
+    <ClInclude Include="dep\include\headers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dep\include\headers.h">
+    <ClInclude Include="dep\include\OpenGL\renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dep\include\space_invaders.h">

@@ -123,6 +123,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="README.md" />
+    <None Include="res\bitmap\timesNewRoman.bff" />
+    <None Include="res\bitmap\vrinda.bff" />
     <None Include="res\shaders\main_frag.shader" />
     <None Include="res\shaders\bitmap_frag.shader" />
     <None Include="res\shaders\main_vert.shader" />

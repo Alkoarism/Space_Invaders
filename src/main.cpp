@@ -61,14 +61,12 @@ int main() {
 
 	SpaceInvaders game
 		("res\\shaders\\bitmap_vert.shader", "res\\shaders\\bitmap_frag.shader");
-	game.LoadFont("res\\bitmap\\bitmap_font.bff");
+	game.LoadFont("res\\bitmap\\timesNewRoman.bff");
 
 	// render loop (happens every frame) -----------------------------------------
 	while (!glfwWindowShouldClose(window)) {
 		// -> frame time tracker
-		const float currentFrame = glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
+		Renderer::FrameTimeTracker();
 
 		elapsedTime += deltaTime;
 

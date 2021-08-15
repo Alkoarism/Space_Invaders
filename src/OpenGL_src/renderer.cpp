@@ -19,6 +19,14 @@ void Renderer::RenderConfig
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+void Renderer::FrameTimeTracker() {
+	const float currentFrame = glfwGetTime();
+	deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
+}
+
+float Renderer::lastFrame = 0.0f;
+float Renderer::deltaTime = 0.0f;
 glm::mat4 Renderer::projection = glm::mat4(1.0f);
 glm::mat4 Renderer::view = glm::mat4(1.0f);
 glm::mat4 Renderer::model = glm::mat4(1.0f);
