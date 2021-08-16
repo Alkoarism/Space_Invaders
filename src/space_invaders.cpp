@@ -6,15 +6,37 @@ SpaceInvaders::SpaceInvaders(const char* vertexPath, const char* fragmentPath)
 	: m_Font(vertexPath, fragmentPath) {
 	m_Model = glm::mat4(1.0f);
 	m_GameState = MAIN_MENU;
-	//open file with hi-score
-	//if fail to open, create a file to hold hi-score
-	//for now the scores will be initialized as 0000
-	m_HiScore = 0;
 	m_P1Score = m_P2Score = 0;
+	m_P2Join = false;
+
+	std::ifstream ReadFile;
+	ReadFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	try {
+		ReadFile.open("res\\score.dat");
+		ReadFile >> m_HiScore;
+		ReadFile.close();
+	}
+	catch (std::ifstream::failure e) {
+		std::cout << "ERROR::SAVE_FILE_NOT_FOUND" << std::endl;
+		ReadFile.clear();
+		m_HiScore = 0;
+	}
 
 	//debug variables initialization
 	m_Scale = 0.01f;
 	m_X = m_Y = m_OffSet = 0.0f;
+}
+
+SpaceInvaders::~SpaceInvaders() {
+	std::ofstream WriteToFile;
+	WriteToFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	try {
+		WriteToFile.open("res\\score.dat");
+		WriteToFile << m_HiScore;
+	}
+	catch (std::ifstream::failure e) {
+		std::cout << "ERROR::RESOURCES_FOLDER_NOT_FOUND" << std::endl;
+	}
 }
 
 void SpaceInvaders::Run(GLFWwindow* window) {
@@ -60,6 +82,10 @@ void SpaceInvaders::TopScores() {
 
 void SpaceInvaders::MainMenu() {
 	TopScores();
+	
+	Print(0.011, WHITE, "<1 or 2 players?>", -0.62, 0.3);
+	Print(0.011, m_P2Join ? WHITE : GREEN , "1 player", -0.30, -0.2);
+	Print(0.011, m_P2Join ? GREEN : WHITE , "2 players", -0.35, -0.7);
 }
 
 void SpaceInvaders::ScoreTable() {
@@ -102,6 +128,26 @@ void SpaceInvaders::ProcessInput(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
+	switch (m_GameState) {
+		case MAIN_MENU:
+		{
+			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+				m_P2Join = true;
+			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+				m_P2Join = false;
+			break;
+		}
+		case SCORE_TABLE:
+
+			break;
+		case GAME:
+
+			break;
+		default:
+			NotYetImplemented();
+	}
+
+	//Debug keys - Can be deleted later
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		m_Scale += 0.001 * Renderer::GetDeltaTime();
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -110,19 +156,16 @@ void SpaceInvaders::ProcessInput(GLFWwindow* window) {
 		else
 			m_Scale = 0;
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		if (m_OffSet > 0)
-			m_OffSet -= 1 * Renderer::GetDeltaTime();
-		else
-			m_OffSet = 0;
+		m_OffSet -= 1 * Renderer::GetDeltaTime();
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		m_OffSet += 1 * Renderer::GetDeltaTime();
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
 		m_Y += 1 * Renderer::GetDeltaTime();
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
 		m_Y -= 1 * Renderer::GetDeltaTime();
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
 		m_X -= 1 * Renderer::GetDeltaTime();
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
 		m_X += 1 * Renderer::GetDeltaTime();
 
 
@@ -148,7 +191,7 @@ string SimpleDebug(const float& value) {
 }
 
 void SpaceInvaders::NotYetImplemented() {
-
+	assert(false);
 }
 
 

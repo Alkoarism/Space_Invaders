@@ -21,6 +21,7 @@ enum Color {
 class SpaceInvaders {
 public:
 	SpaceInvaders(const char*, const char*);
+	~SpaceInvaders();
 
 	void LoadFont(const char*);
 	void Run(GLFWwindow*);
@@ -29,6 +30,7 @@ private:
 	int m_HiScore, m_P1Score, m_P2Score;
 	int m_PlayerLifes;
 	int m_Credits;
+	bool m_P2Join;
 	glm::mat4 m_Model;
 
 	State m_GameState;
