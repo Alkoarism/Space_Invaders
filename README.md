@@ -4,7 +4,7 @@ With this I intend to use all the knowledge acquired after reading through the c
 
 In it´s current state, the menu screen has been finished:
 
-https://user-images.githubusercontent.com/69710741/130006878-e1cda6f2-63a3-4e0e-b4dc-07d6be13dfe2.mp4
+![SpaceInvaders_MenuGIF](https://user-images.githubusercontent.com/69710741/130007608-205f6ac5-25f5-4507-a4c7-789d460ea34a.gif)
 
 If you want to download the .exe file, you can find on "/builds/0_05- menu_showcase", simply download the entire folder and run the .exe file inside of it. It should run as demonstrated on the GIF.
 
