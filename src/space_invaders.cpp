@@ -8,6 +8,7 @@ SpaceInvaders::SpaceInvaders(const char* vertexPath, const char* fragmentPath)
 	m_GameState = MAIN_MENU;
 	m_P1Score = m_P2Score = 0;
 	m_P2Join = false;
+	m_ScreenXLimit = 1.2f;
 
 	std::ifstream ReadFile;
 	ReadFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -64,20 +65,21 @@ void SpaceInvaders::LoadFont(const char* bffPath) {
 }
 
 void SpaceInvaders::TopScores() {
-	auto ZeroFilling = [](string s) -> string {
-		if (s.size() < 4) {
-			string temp((4 - s.size()), '0');
+	auto ZeroFilling = [](string& s, int& zeros) -> string {
+		if (s.size() < zeros) {
+			string temp((zeros - s.size()), '0');
 			s = temp + s;
 		}
 		return s;
 	};
+	int zero_Number = 4;
 
 	Print(0.011, WHITE, "Score<1>", -1.28, 1.55);
 	Print(0.011, WHITE, "Hi-Score", -0.33, 1.55);
 	Print(0.011, WHITE, "Score<2>", 0.62, 1.55);
-	Print(0.011, WHITE, ZeroFilling(ToString(m_P1Score)) , -1.18, 1.35);
-	Print(0.011, WHITE, ZeroFilling(ToString(m_HiScore)), -0.20, 1.35);
-	Print(0.011, WHITE, ZeroFilling(ToString(m_P2Score)), 0.75, 1.35);
+	Print(0.011, WHITE, ZeroFilling(std::to_string(m_P1Score), zero_Number) , -1.18, 1.35);
+	Print(0.011, WHITE, ZeroFilling(std::to_string(m_HiScore), zero_Number), -0.20, 1.35);
+	Print(0.011, WHITE, ZeroFilling(std::to_string(m_P2Score), zero_Number), 0.75, 1.35);
 }
 
 void SpaceInvaders::MainMenu() {
@@ -93,6 +95,68 @@ void SpaceInvaders::ScoreTable() {
 }
 
 void SpaceInvaders::Game() {
+	//size_t playersDefeated = 0;
+	//int deadAliens = 0;
+	//int players = 0;
+
+	//for (auto& e : m_Entitys) {
+	//	if (e.IsDestroyed() == 0) {
+	//		if (e.GetType() == PLAYER) {
+	//			playersDefeated++;
+	//		}
+	//		else if (e.GetTYpe() == ALIEN) {
+	//			deadAliens++;
+	//		}
+	//		continue;
+	//	}
+
+	//	switch (e.GetType()) {
+	//		case PLAYER:
+	//		{
+	//			if (players == 0) {
+	//				e.Move(m_P1Move);
+	//				if (m_P1Shoot)
+	//					e.Shoot();
+	//				m_P1Score = e.GetScore();
+	//			}
+	//			else {
+	//				e.Move(m_P2Move);
+	//				if (m_P2Shoot)
+	//					e.Shoot();
+	//				m_P2Score = e.GetScore();
+	//			}
+	//			players++;
+	//		}
+	//		case ALIEN:
+	//		{
+	//			if (e.GetX().first() == -m_ScreenXLimit)
+	//				m_AliensDirection = 1;
+	//			if (e.GetX().second() == m_ScreenXLimit)
+	//				m_AliensDirection = -1;
+
+	//			e.Move(m_AliensDirection);
+	//			e.Shoot();
+	//		}
+	//		case UFO:
+	//		{
+	//			e.Move();
+	//		}
+	//	}
+
+	//	e.Render();
+	//	e.DetectColision();
+	//}
+
+	//if (players == playersDefeated) {
+	//	m_GameState = ENDGAME;
+	//	m_Victory = false;
+	//} else if (m_AliensAlive == 0) {
+	//	m_GameState = ENDGAME;
+	//	m_Victory = true;
+	//}
+}
+
+void SpaceInvaders::EndGame() {
 
 }
 

@@ -1,0 +1,6 @@
+the naming convension for global variables and change:
+	projection, view and camera accordingly (located at render.h)
+
+how to improve the state machine SpaceInvaders in order to reduce
+	enums usage. (Recomended Read: https://en.wikipedia.org/wiki/State_pattern)
+

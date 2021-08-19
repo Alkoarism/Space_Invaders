@@ -4,7 +4,6 @@ in vec2 textCoord;
 in vec4 vertexColor;
 
 uniform sampler2D myTexture;
-uniform sampler2D myTexture2;
 
 out vec4 fragColor;
 

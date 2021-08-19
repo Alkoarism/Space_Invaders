@@ -4,10 +4,13 @@
 #include "OpenGL\renderer.h"
 #include "bitmap_font.h"
 
+//Read about state pattern to remove all these enum from the code and
+//reduce the coupling relating the SpaceInvaders, State and Color classes.
 enum State {
 	MAIN_MENU,
 	SCORE_TABLE,
-	GAME
+	GAME,
+	ENDGAME
 };
 
 enum Color {
@@ -27,20 +30,29 @@ public:
 	void Run(GLFWwindow*);
 
 private:
+	int m_Credits;
+	int m_AliensAlive;
+	int m_AliensDirection;
+	int m_ScreenXLimit;
 	int m_HiScore, m_P1Score, m_P2Score;
 	int m_PlayerLifes;
-	int m_Credits;
+	int m_P1Move, m_P2Move;
+	bool m_P1Shoot, m_P2Shoot;
 	bool m_P2Join;
+	bool m_Victory;
 	glm::mat4 m_Model;
 
 	State m_GameState;
 	BitmapFont m_Font;
 
+	//std::vector<Entity> m_Entitys;
+
 	void TopScores();
 	void MainMenu();
 	void ScoreTable();
 	void Game();
-	template<typename T> std::string ToString(const T&, const std::size_t size = 0);
+	void EndGame();
+
 	void Print(const float&, const Color&, const std::string&, const float&, const float&);
 	void ProcessInput(GLFWwindow*);
 
@@ -51,15 +63,5 @@ private:
 	void NotYetImplemented();
 	void Debug();
 };
-
-template<typename T>
-std::string SpaceInvaders::ToString(const T& value, std::size_t size) {
-	std::ostringstream temp;
-	temp << value;
-	std::string s(temp.str());
-	if ((s.size() > size) && (size != 0))
-		s.erase(5, s.back());
-	return s;
-}
 
 #endif
