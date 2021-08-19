@@ -123,26 +123,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="README.md" />
+    <None Include="res\bitmap\timesNewRoman.bff" />
+    <None Include="res\bitmap\vrinda.bff" />
     <None Include="res\shaders\main_frag.shader" />
     <None Include="res\shaders\bitmap_frag.shader" />
     <None Include="res\shaders\main_vert.shader" />
     <None Include="res\bitmap\bitmap_font.bff" />
-    <None Include="res\bitmap\font.bff" />
-    <None Include="res\bitmap\font_RGBA.bff" />
-    <None Include="res\bitmap\newTest.bff" />
     <None Include="res\shaders\bitmap_vert.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\bitmap_font.cpp" />
-    <ClCompile Include="src\camera.cpp" />
-    <ClCompile Include="src\glad.c" />
-    <ClCompile Include="src\index_buffer.cpp" />
+    <ClCompile Include="src\OpenGL_src\camera.cpp" />
+    <ClCompile Include="src\OpenGL_src\glad.c" />
+    <ClCompile Include="src\OpenGL_src\index_buffer.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\renderer.cpp" />
-    <ClCompile Include="src\shader.cpp" />
-    <ClCompile Include="src\texture.cpp" />
-    <ClCompile Include="src\vertex_array.cpp" />
-    <ClCompile Include="src\vertex_buffer.cpp" />
+    <ClCompile Include="src\OpenGL_src\renderer.cpp" />
+    <ClCompile Include="src\OpenGL_src\shader.cpp" />
+    <ClCompile Include="src\OpenGL_src\texture.cpp" />
+    <ClCompile Include="src\OpenGL_src\vertex_array.cpp" />
+    <ClCompile Include="src\OpenGL_src\vertex_buffer.cpp" />
+    <ClCompile Include="src\space_invaders.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="dep\lib\glfw3.lib" />
@@ -150,7 +150,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dep\include\bitmap_font.h" />
-    <ClInclude Include="dep\include\camera.h" />
+    <ClInclude Include="dep\include\Entitys\entity.h" />
+    <ClInclude Include="dep\include\Entitys\ufo.h" />
+    <ClInclude Include="dep\include\OpenGL\camera.h" />
     <ClInclude Include="dep\include\glm\common.hpp" />
     <ClInclude Include="dep\include\glm\exponential.hpp" />
     <ClInclude Include="dep\include\glm\ext.hpp" />
@@ -175,22 +177,19 @@
     <ClInclude Include="dep\include\glm\vec4.hpp" />
     <ClInclude Include="dep\include\glm\vector_relational.hpp" />
     <ClInclude Include="dep\include\headers.h" />
-    <ClInclude Include="dep\include\index_buffer.h" />
+    <ClInclude Include="dep\include\OpenGL\index_buffer.h" />
     <ClInclude Include="dep\include\KHR\khrplatform.h" />
-    <ClInclude Include="dep\include\renderer.h" />
-    <ClInclude Include="dep\include\screen.h" />
-    <ClInclude Include="dep\include\shader.h" />
+    <ClInclude Include="dep\include\OpenGL\renderer.h" />
+    <ClInclude Include="dep\include\OpenGL\shader.h" />
+    <ClInclude Include="dep\include\space_invaders.h" />
     <ClInclude Include="dep\include\stb_image.h" />
-    <ClInclude Include="dep\include\texture.h" />
-    <ClInclude Include="dep\include\vertex_array.h" />
-    <ClInclude Include="dep\include\texture_layout.h" />
-    <ClInclude Include="dep\include\vertex_buffer.h" />
-    <ClInclude Include="dep\include\vertex_buffer_layout.h" />
-    <ClInclude Include="src\screen.cpp" />
+    <ClInclude Include="dep\include\OpenGL\texture.h" />
+    <ClInclude Include="dep\include\OpenGL\vertex_array.h" />
+    <ClInclude Include="dep\include\OpenGL\texture_layout.h" />
+    <ClInclude Include="dep\include\OpenGL\vertex_buffer.h" />
+    <ClInclude Include="dep\include\OpenGL\vertex_buffer_layout.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\another_test.png" />
-    <Image Include="res\bitmap\bitmap_font.tga" />
     <Image Include="res\sprites\alien_UFO_0.png" />
     <Image Include="res\sprites\alien_UFO_1.png" />
     <Image Include="res\sprites\alien_circle_1.png" />
@@ -201,17 +200,14 @@
     <Image Include="res\sprites\alien_square_1.png" />
     <Image Include="res\sprites\alien_triangle_0.png" />
     <Image Include="res\sprites\alien_triangle_1.png" />
-    <Image Include="res\sprite_samples.jpg" />
     <Image Include="res\sprite_sheet.jpg" />
     <Image Include="res\textures\black_canvas.png" />
     <Image Include="res\textures\circle_alien_1.png" />
     <Image Include="res\textures\cirlce_alien_0.png" />
     <Image Include="res\textures\sprite_sheet.png" />
-    <Image Include="res\txt_test.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="dep\include\glm\CMakeLists.txt" />
-    <Text Include="res\usefull code\Usefull_code.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
