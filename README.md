@@ -2,16 +2,14 @@
 This is a clone project of the game Space Invaders.
 With this I intend to use all the knowledge acquired after reading through the chapter "Getting Started" of the "Learn OpenGL" book and practice and further improve my skills with OOP, while also learning more about the C++ language.
 
-In it´s current state, there is not mutch done but there is something to be shown. This is the curret state of the project:
+In it´s current state, the menu screen has been finished:
 
-![Text_Demo2En](https://user-images.githubusercontent.com/69710741/125581253-7d386791-afa8-4192-adce-2df2b6e8cd92.gif)
+https://user-images.githubusercontent.com/69710741/130006878-e1cda6f2-63a3-4e0e-b4dc-07d6be13dfe2.mp4
 
-If you want to download the .exe file, you can find on "/builds/0_03- text_rendering_demo", download it as well as the "res" folder, put both on the same folder and it should run like the video.
+If you want to download the .exe file, you can find on "/builds/0_05- menu_showcase", simply download the entire folder and run the .exe file inside of it. It should run as demonstrated on the GIF.
 
 The used keys are:
-- WASD: Wander around;
-- 0, 1, 2 and 3: Change the text;
-- Mouse: Move the camera;
+- UP/Down;
 - ESC: Close application.
 
 External sources:
@@ -22,5 +20,5 @@ https://github.com/CodeheadUK/CBFG
 The Learn OpenGL book site:
 https://learnopengl.com/
 
-Book used to learn C++:
-C++ Primer
+Aside from the learOpenGL website, i´ve also used the OpenGL series from the Cherno´s youtube channel:
+https://www.youtube.com/channel/UCQ-W1KE9EYfdxhL6S4twUNw
