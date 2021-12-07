@@ -7,9 +7,10 @@ class Shader {
 public:
 	unsigned int ID;
 
-	Shader(const char* vertexPath, const char* fragmentPath);
+	Shader() { }
 
 	void Use() const;
+	void Compile(const char* vertexPath, const char* fragmentPath);
 
 	template <typename T>
 	bool SetUniform(const std::string&, const T&) const;

@@ -1,26 +1,24 @@
 #include "OpenGL\renderer.h"
 #include "OpenGL\camera.h"
 #include "OpenGL\texture.h"
-#include "bitmap_font.h"
 
 #include "space_invaders.h"
 
 using std::vector;
 
 // function declarations ------------------------------------------------------
-void processInput(GLFWwindow* window);
-
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void mouse_callback(GLFWwindow* window, double xPos, double yPos);
-void scroll_callback(GLFWwindow* window, double xOffset, double yOffset);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
 // global variables -----------------------------------------------------------
-const int screenWidth = 600, screenHeight = 800;
+const unsigned int screenWidth = 600, screenHeight = 800;
 
 Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+
+SpaceInvaders spaceInvaders(screenWidth, screenHeight);
 
 int main() {
 	// glfw: initialize and configure --------------------------------------------
@@ -28,7 +26,6 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
 #ifdef __APPLE__
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
@@ -52,16 +49,19 @@ int main() {
 		return -1;
 	}
 
-	glEnable(GL_DEPTH_TEST);
+	glViewport(0, 0, screenWidth, screenHeight);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// initialization before rendering -------------------------------------------
 	float elapsedTime = 0;
 
-	glActiveTexture(GL_TEXTURE0);
+	spaceInvaders.LoadFont(
+		"res\\bitmap\\timesNewRoman.bff",
+		"res\\shaders\\bitmap_vert.shader",
+		"res\\shaders\\bitmap_frag.shader");
 
-	SpaceInvaders game
-		("res\\shaders\\bitmap_vert.shader", "res\\shaders\\bitmap_frag.shader");
-	game.LoadFont("res\\bitmap\\timesNewRoman.bff");
+	glActiveTexture(GL_TEXTURE0);
 
 	// render loop (happens every frame) -----------------------------------------
 	while (!glfwWindowShouldClose(window)) {
@@ -82,7 +82,7 @@ int main() {
 		Renderer::SetView(view);
 
 		//The model global variable is used to render stuff on the right place
-		game.Run(window);
+		spaceInvaders.Run(window);
 
 		// -> check and call events and swap the buffers
 		glfwSwapBuffers(window);
@@ -91,6 +91,17 @@ int main() {
 
 	glfwTerminate();
 	return 0;
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+	//if (key >= 0 && key < 1024) {
+	//	if (action == GLFW_PRESS)
+	//		spaceInvaders.Keys[key] = true;
+	//	else if (action = GLFW_RELEASE)
+	//		spaceInvaders.Keys[key] = false;
+	//}
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {

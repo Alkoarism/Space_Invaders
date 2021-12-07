@@ -23,10 +23,12 @@ enum Color {
 
 class SpaceInvaders {
 public:
-	SpaceInvaders(const char*, const char*);
+	unsigned int width, height;
+
+	SpaceInvaders(unsigned int gameWidth, unsigned int gameHeight);
 	~SpaceInvaders();
 
-	void LoadFont(const char*);
+	void LoadFont(const char*, const char*, const char*);
 	void Run(GLFWwindow*);
 
 private:

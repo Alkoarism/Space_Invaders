@@ -2,8 +2,8 @@
 
 using std::string;
 
-SpaceInvaders::SpaceInvaders(const char* vertexPath, const char* fragmentPath)
-	: m_Font(vertexPath, fragmentPath) {
+SpaceInvaders::SpaceInvaders(unsigned int gameWidth, unsigned int gameHeight) 
+	:	width(gameWidth), height(gameHeight){
 	m_Model = glm::mat4(1.0f);
 	m_GameState = MAIN_MENU;
 	m_P1Score = m_P2Score = 0;
@@ -60,7 +60,10 @@ void SpaceInvaders::Run(GLFWwindow* window) {
 	Debug();
 }
 
-void SpaceInvaders::LoadFont(const char* bffPath) {
+void SpaceInvaders::LoadFont(const char* bffPath, const char* vShaderPath, const char* fShaderPath) {
+	std::string fontShaderName = "fontShader";
+	Renderer::LoadShader(fontShaderName, vShaderPath, fShaderPath);
+	m_Font.shaderName = fontShaderName;
 	m_Font.Load(bffPath);
 }
 
