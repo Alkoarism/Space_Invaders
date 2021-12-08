@@ -74,8 +74,8 @@ int main() {
 		Renderer::RenderConfig();
 
 		// ---> space configurations and rendering
-		glm::mat4 projection = glm::perspective
-		(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
+		glm::mat4 projection = glm::ortho
+			(0.0f, (float)screenWidth, (float)screenHeight, 0.0f);
 		Renderer::SetProjection(projection);
 
 		glm::mat4 view = camera.GetViewMatrix();

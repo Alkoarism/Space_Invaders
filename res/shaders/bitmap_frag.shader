@@ -1,15 +1,12 @@
 #version 330 core
 
 in vec2 textCoord;
-in vec4 vertexColor;
 
-uniform sampler2D myTexture;
+uniform sampler2D image;
+uniform vec4 textColor;
 
 out vec4 fragColor;
 
 void main() {
-	vec4 textColor = texture(myTexture, textCoord) * vertexColor;
-	if (textColor.a < 0.1)
-		discard;
-	fragColor = textColor;
+	fragColor = texture(image, textCoord) * textColor;
 }

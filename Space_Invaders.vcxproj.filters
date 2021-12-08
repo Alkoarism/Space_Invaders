@@ -18,13 +18,15 @@
     <None Include="README.md">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="res\shaders\main_vert.shader" />
-    <None Include="res\shaders\main_frag.shader" />
+    <None Include="res\shaders\main_vert_3D.shader" />
+    <None Include="res\shaders\main_frag_3D.shader" />
     <None Include="res\bitmap\bitmap_font.bff" />
     <None Include="res\shaders\bitmap_frag.shader" />
     <None Include="res\shaders\bitmap_vert.shader" />
     <None Include="res\bitmap\vrinda.bff" />
     <None Include="res\bitmap\timesNewRoman.bff" />
+    <None Include="res\shaders\main_vert_2D.shader" />
+    <None Include="res\shaders\main_frag_2D.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenGL_src\glad.c">
