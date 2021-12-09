@@ -16,8 +16,8 @@ public:
 		const float& b = 0.0f, const float& a = 0.0f);
 	static void FrameTimeTracker();
 
-	static Shader LoadShader(std::string name, const char* vertexPath, const char* fragmentPath);
-	static Shader GetShader(const std::string name);
+	static Shader LoadShader
+	(std::string name, const char* vertexPath, const char* fragmentPath);
 
 	static void Clear();
 
@@ -27,11 +27,14 @@ public:
 
 	static float GetLastFrame() { return lastFrame; }
 	static float GetDeltaTime() { return deltaTime; }
+	static Shader GetShader(const std::string name) { return shaders[name]; }
 
+	static bool depthBuffer;
 private:
 	Renderer() { };
 
-	static Shader LoadShaderFromFile(const char* vertexPath, const char* fragmentPath);
+	static Shader LoadShaderFromFile
+	(const char* vertexPath, const char* fragmentPath);
 
 	static float lastFrame;
 	static float deltaTime;

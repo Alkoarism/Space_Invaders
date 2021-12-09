@@ -54,14 +54,7 @@ int main() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// initialization before rendering -------------------------------------------
-	float elapsedTime = 0;
-
-	spaceInvaders.LoadFont(
-		"res\\bitmap\\timesNewRoman.bff",
-		"res\\shaders\\bitmap_vert.shader",
-		"res\\shaders\\bitmap_frag.shader");
-
-	glActiveTexture(GL_TEXTURE0);
+	spaceInvaders.Init();
 
 	std::cout << "Test text for pushes on github" << std::endl;
 
@@ -70,21 +63,19 @@ int main() {
 		// -> frame time tracker
 		Renderer::FrameTimeTracker();
 
-		elapsedTime += deltaTime;
-
-		// -> rendering commands and configuration
-		Renderer::RenderConfig();
-
 		// ---> space configurations and rendering
 		glm::mat4 projection = glm::ortho
 			(0.0f, (float)screenWidth, (float)screenHeight, 0.0f);
 		Renderer::SetProjection(projection);
 
-		glm::mat4 view = camera.GetViewMatrix();
-		Renderer::SetView(view);
-
 		//The model global variable is used to render stuff on the right place
-		spaceInvaders.Run(window);
+		spaceInvaders.ProcessInput(Renderer::GetDeltaTime());
+
+		spaceInvaders.Update(Renderer::GetDeltaTime());
+
+		// -> rendering commands and configuration
+		Renderer::RenderConfig();
+		spaceInvaders.Render();
 
 		// -> check and call events and swap the buffers
 		glfwSwapBuffers(window);
@@ -98,12 +89,12 @@ int main() {
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
-	//if (key >= 0 && key < 1024) {
-	//	if (action == GLFW_PRESS)
-	//		spaceInvaders.Keys[key] = true;
-	//	else if (action = GLFW_RELEASE)
-	//		spaceInvaders.Keys[key] = false;
-	//}
+	if (key >= 0 && key < 1024) {
+		if (action == GLFW_PRESS)
+			spaceInvaders.keys[key] = true;
+		else if (action = GLFW_RELEASE)
+			spaceInvaders.keys[key] = false;
+	}
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {

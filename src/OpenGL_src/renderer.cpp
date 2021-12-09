@@ -17,7 +17,9 @@ void Renderer::RenderConfig
 	 const float& b, const float& a) {
 
 	glClearColor(r, g, b, a);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT);
+    if (depthBuffer)
+        glClear(GL_DEPTH_BUFFER_BIT);
 }
 
 void Renderer::FrameTimeTracker() {
@@ -28,10 +30,6 @@ void Renderer::FrameTimeTracker() {
 
 Shader Renderer::LoadShader(std::string name, const char* vertexPath, const char* fragmentPath) {
     shaders[name] = LoadShaderFromFile(vertexPath, fragmentPath);
-    return shaders[name];
-}
-
-Shader Renderer::GetShader(const std::string name) {
     return shaders[name];
 }
 
@@ -82,6 +80,7 @@ Shader Renderer::LoadShaderFromFile(const char* vertexPath, const char* fragment
     return shader;
 }
 
+bool Renderer::depthBuffer = false;
 float Renderer::lastFrame = 0.0f;
 float Renderer::deltaTime = 0.0f;
 glm::mat4 Renderer::projection = glm::mat4(1.0f);

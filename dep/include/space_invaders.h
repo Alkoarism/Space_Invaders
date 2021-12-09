@@ -6,62 +6,30 @@
 
 //Read about state pattern to remove all these enum from the code and
 //reduce the coupling relating the SpaceInvaders, State and Color classes.
-enum State {
-	MAIN_MENU,
-	SCORE_TABLE,
-	GAME,
-	ENDGAME
-};
-
-enum Color {
-	WHITE,
-	RED,
-	BLUE,
-	GREEN,
-	YELLOW,
+enum GameState {
+	GAME_MENU,
+	GAME_SCORE_TABLE,
+	GAME_ACTIVE,
 };
 
 class SpaceInvaders {
 public:
+	GameState state;
+	bool keys[1024];
 	unsigned int width, height;
 
-	SpaceInvaders(unsigned int gameWidth, unsigned int gameHeight);
+	SpaceInvaders(unsigned int, unsigned int);
 	~SpaceInvaders();
 
-	void LoadFont(const char*, const char*, const char*);
-	void Run(GLFWwindow*);
+	//initialize game state (load all shaders/textures/levels)
+	void Init();
+
+	//game loop
+	void ProcessInput(float);
+	void Update(float);
+	void Render();
 
 private:
-	int m_Credits;
-	int m_AliensAlive;
-	int m_AliensDirection;
-	int m_ScreenXLimit;
-	int m_HiScore, m_P1Score, m_P2Score;
-	int m_PlayerLifes;
-	int m_P1Move, m_P2Move;
-	bool m_P1Shoot, m_P2Shoot;
-	bool m_P2Join;
-	bool m_Victory;
-	glm::mat4 m_Model;
-
-	State m_GameState;
-	BitmapFont m_Font;
-
-	//std::vector<Entity> m_Entitys;
-
-	void TopScores();
-	void MainMenu();
-	void ScoreTable();
-	void Game();
-	void EndGame();
-
-	void Print(const float&, const Color&, const std::string&, const float&, const float&);
-	void ProcessInput(GLFWwindow*);
-
-
-	//debug stuff
-	float m_Scale, m_X, m_Y, m_OffSet;
-
 	void NotYetImplemented();
 	void Debug();
 };
