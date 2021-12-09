@@ -63,6 +63,8 @@ int main() {
 
 	glActiveTexture(GL_TEXTURE0);
 
+	std::cout << "Test text for pushes on github" << std::endl;
+
 	// render loop (happens every frame) -----------------------------------------
 	while (!glfwWindowShouldClose(window)) {
 		// -> frame time tracker
