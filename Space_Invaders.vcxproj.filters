@@ -62,6 +62,9 @@
     <ClCompile Include="src\space_invaders.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\sprite_renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="dep\lib\glfw3.lib" />
@@ -179,10 +182,7 @@
     <ClInclude Include="dep\include\space_invaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dep\include\Entitys\entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dep\include\Entitys\ufo.h">
+    <ClInclude Include="dep\include\sprite_renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -202,34 +202,34 @@
     <Image Include="res\textures\sprite_sheet.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sprites\alien_circle_1.png">
+    <Image Include="res\textures\alien_circle_1.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sprites\alien_circle_0.png">
+    <Image Include="res\textures\alien_circle_0.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sprites\sprite_sheet.png">
+    <Image Include="res\textures\sprite_sheet.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sprites\alien_square_0.png">
+    <Image Include="res\textures\alien_square_0.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sprites\alien_square_1.png">
+    <Image Include="res\textures\alien_square_1.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sprites\alien_triangle_0.png">
+    <Image Include="res\textures\alien_triangle_0.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sprites\alien_triangle_1.png">
+    <Image Include="res\textures\alien_triangle_1.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sprites\alien_UFO_0.png">
+    <Image Include="res\textures\alien_UFO_0.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sprites\alien_UFO_1.png">
+    <Image Include="res\textures\alien_UFO_1.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sprites\player.png">
+    <Image Include="res\textures\player.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

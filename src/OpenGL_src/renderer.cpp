@@ -1,13 +1,10 @@
 #include "OpenGL/renderer.h"
 
 void Renderer::Render
-	(const VertexArray& va, const IndexBuffer& ib, const std::string sName) {
+	(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) {
 		va.Bind();
 		ib.Bind();
-        shaders[sName].Use();
-		shaders[sName].SetUniform("projection", projection);
-		shaders[sName].SetUniform("view", view);
-		shaders[sName].SetUniform("model", model);
+        shader.Use();
 
 		glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
 	}
@@ -17,9 +14,10 @@ void Renderer::RenderConfig
 	 const float& b, const float& a) {
 
 	glClearColor(r, g, b, a);
-	glClear(GL_COLOR_BUFFER_BIT);
-    if (depthBuffer)
-        glClear(GL_DEPTH_BUFFER_BIT);
+    if (Render3D)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    else 
+        glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void Renderer::FrameTimeTracker() {
@@ -80,10 +78,7 @@ Shader Renderer::LoadShaderFromFile(const char* vertexPath, const char* fragment
     return shader;
 }
 
-bool Renderer::depthBuffer = false;
+bool Renderer::Render3D = false;
 float Renderer::lastFrame = 0.0f;
 float Renderer::deltaTime = 0.0f;
-glm::mat4 Renderer::projection = glm::mat4(1.0f);
-glm::mat4 Renderer::view = glm::mat4(1.0f);
-glm::mat4 Renderer::model = glm::mat4(1.0f);
 std::map<std::string, Shader> Renderer::shaders;

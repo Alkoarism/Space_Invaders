@@ -64,11 +64,7 @@ int main() {
 		Renderer::FrameTimeTracker();
 
 		// ---> space configurations and rendering
-		glm::mat4 projection = glm::ortho
-			(0.0f, (float)screenWidth, (float)screenHeight, 0.0f);
-		Renderer::SetProjection(projection);
-
-		//The model global variable is used to render stuff on the right place
+		//The model, projection and camera variables are handled by the game class
 		spaceInvaders.ProcessInput(Renderer::GetDeltaTime());
 
 		spaceInvaders.Update(Renderer::GetDeltaTime());

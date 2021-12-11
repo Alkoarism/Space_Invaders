@@ -145,6 +145,7 @@
     <ClCompile Include="src\OpenGL_src\vertex_array.cpp" />
     <ClCompile Include="src\OpenGL_src\vertex_buffer.cpp" />
     <ClCompile Include="src\space_invaders.cpp" />
+    <ClCompile Include="src\sprite_renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="dep\lib\glfw3.lib" />
@@ -152,8 +153,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dep\include\bitmap_font.h" />
-    <ClInclude Include="dep\include\Entitys\entity.h" />
-    <ClInclude Include="dep\include\Entitys\ufo.h" />
     <ClInclude Include="dep\include\OpenGL\camera.h" />
     <ClInclude Include="dep\include\glm\common.hpp" />
     <ClInclude Include="dep\include\glm\exponential.hpp" />
@@ -184,6 +183,7 @@
     <ClInclude Include="dep\include\OpenGL\renderer.h" />
     <ClInclude Include="dep\include\OpenGL\shader.h" />
     <ClInclude Include="dep\include\space_invaders.h" />
+    <ClInclude Include="dep\include\sprite_renderer.h" />
     <ClInclude Include="dep\include\stb_image.h" />
     <ClInclude Include="dep\include\OpenGL\texture.h" />
     <ClInclude Include="dep\include\OpenGL\vertex_array.h" />
@@ -192,16 +192,16 @@
     <ClInclude Include="dep\include\OpenGL\vertex_buffer_layout.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\sprites\alien_UFO_0.png" />
-    <Image Include="res\sprites\alien_UFO_1.png" />
-    <Image Include="res\sprites\alien_circle_1.png" />
-    <Image Include="res\sprites\alien_circle_0.png" />
-    <Image Include="res\sprites\player.png" />
-    <Image Include="res\sprites\sprite_sheet.png" />
-    <Image Include="res\sprites\alien_square_0.png" />
-    <Image Include="res\sprites\alien_square_1.png" />
-    <Image Include="res\sprites\alien_triangle_0.png" />
-    <Image Include="res\sprites\alien_triangle_1.png" />
+    <Image Include="res\textures\alien_UFO_0.png" />
+    <Image Include="res\textures\alien_UFO_1.png" />
+    <Image Include="res\textures\alien_circle_1.png" />
+    <Image Include="res\textures\alien_circle_0.png" />
+    <Image Include="res\textures\player.png" />
+    <Image Include="res\textures\sprite_sheet.png" />
+    <Image Include="res\textures\alien_square_0.png" />
+    <Image Include="res\textures\alien_square_1.png" />
+    <Image Include="res\textures\alien_triangle_0.png" />
+    <Image Include="res\textures\alien_triangle_1.png" />
     <Image Include="res\sprite_sheet.jpg" />
     <Image Include="res\textures\black_canvas.png" />
     <Image Include="res\textures\circle_alien_1.png" />

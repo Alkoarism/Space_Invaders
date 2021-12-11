@@ -5,11 +5,12 @@
 #include "OpenGL\vertex_array.h"
 #include "OpenGL\index_buffer.h"
 #include "OpenGL\shader.h"
+#include "OpenGL\texture.h"
 
 class Renderer {
 public:
 	static void Render
-	(const VertexArray&, const IndexBuffer&, const std::string);
+	(const VertexArray&, const IndexBuffer&, const Shader&);
 
 	static void RenderConfig
 	(const float& r = 0.0f, const float& g = 0.0f,
@@ -29,7 +30,7 @@ public:
 	static float GetDeltaTime() { return deltaTime; }
 	static Shader GetShader(const std::string name) { return shaders[name]; }
 
-	static bool depthBuffer;
+	static bool Render3D;
 private:
 	Renderer() { };
 
@@ -38,9 +39,6 @@ private:
 
 	static float lastFrame;
 	static float deltaTime;
-	static glm::mat4 projection;
-	static glm::mat4 view;
-	static glm::mat4 model;
 	static std::map<std::string, Shader> shaders;
 };
 

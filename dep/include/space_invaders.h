@@ -3,6 +3,7 @@
 
 #include "OpenGL\renderer.h"
 #include "bitmap_font.h"
+#include "sprite_renderer.h"
 
 //Read about state pattern to remove all these enum from the code and
 //reduce the coupling relating the SpaceInvaders, State and Color classes.
@@ -18,11 +19,9 @@ public:
 	bool keys[1024];
 	unsigned int width, height;
 
+	//initialize game state (load all shaders/textures/levels)
 	SpaceInvaders(unsigned int, unsigned int);
 	~SpaceInvaders();
-
-	//initialize game state (load all shaders/textures/levels)
-	void Init();
 
 	//game loop
 	void ProcessInput(float);
@@ -30,6 +29,8 @@ public:
 	void Render();
 
 private:
+	std::unique_ptr<SpriteRenderer> sprite;
+
 	void NotYetImplemented();
 	void Debug();
 };
