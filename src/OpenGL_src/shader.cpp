@@ -10,7 +10,7 @@ void Shader::Use() const{
 // ------------------------------------------------------------------------
 void Shader::Compile(const char* vShaderCode, const char* fShaderCode) {
     // compile shaders
-    unsigned int vertex, fragment;
+    GLuint vertex, fragment;
 
     // vertex shader and it´s error handling
     vertex = glCreateShader(GL_VERTEX_SHADER);
@@ -25,7 +25,7 @@ void Shader::Compile(const char* vShaderCode, const char* fShaderCode) {
     CheckCompileErrors(fragment, "FRAGMENT");
 
     // shader Program
-    ID = glCreateProgram();
+    this->ID = glCreateProgram();
     glAttachShader(this->ID, vertex);
     glAttachShader(this->ID, fragment);
     glLinkProgram(this->ID);

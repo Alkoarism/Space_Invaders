@@ -14,5 +14,6 @@ public:
 private:
 	Shader m_shader;
 	std::unique_ptr<IndexBuffer> m_ibo;
+	std::unique_ptr<VertexBuffer> m_vbo;
 	VertexArray m_quadVAO;
 };

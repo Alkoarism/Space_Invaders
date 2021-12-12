@@ -18,8 +18,8 @@ SpriteRenderer::SpriteRenderer(Shader& shader) : m_shader(shader){
     vbl.Push<float>(4);
     m_quadVAO.Bind();
     m_ibo.reset(new IndexBuffer(indices, 6));
-    VertexBuffer vb(vertices, sizeof(vertices));
-    m_quadVAO.AddBuffer(vb, vbl);
+    m_vbo.reset(new VertexBuffer(vertices, sizeof(vertices)));
+    m_quadVAO.AddBuffer(*m_vbo, vbl);
     //this->quadVAO.Unbind();       //--> Usually unnecessary.
 }
 

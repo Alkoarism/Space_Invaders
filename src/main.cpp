@@ -18,7 +18,7 @@ Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-SpaceInvaders spaceInvaders(screenWidth, screenHeight);
+std::unique_ptr<SpaceInvaders> spaceInvaders;
 
 int main() {
 	// glfw: initialize and configure --------------------------------------------
@@ -54,9 +54,7 @@ int main() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// initialization before rendering -------------------------------------------
-	spaceInvaders.Init();
-
-	std::cout << "Test text for pushes on github" << std::endl;
+	spaceInvaders.reset(new SpaceInvaders(screenWidth, screenHeight));
 
 	// render loop (happens every frame) -----------------------------------------
 	while (!glfwWindowShouldClose(window)) {
@@ -65,13 +63,13 @@ int main() {
 
 		// ---> space configurations and rendering
 		//The model, projection and camera variables are handled by the game class
-		spaceInvaders.ProcessInput(Renderer::GetDeltaTime());
+		spaceInvaders->ProcessInput(Renderer::GetDeltaTime());
 
-		spaceInvaders.Update(Renderer::GetDeltaTime());
+		spaceInvaders->Update(Renderer::GetDeltaTime());
 
 		// -> rendering commands and configuration
 		Renderer::RenderConfig();
-		spaceInvaders.Render();
+		spaceInvaders->Render();
 
 		// -> check and call events and swap the buffers
 		glfwSwapBuffers(window);
@@ -87,9 +85,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		glfwSetWindowShouldClose(window, true);
 	if (key >= 0 && key < 1024) {
 		if (action == GLFW_PRESS)
-			spaceInvaders.keys[key] = true;
+			spaceInvaders->keys[key] = true;
 		else if (action = GLFW_RELEASE)
-			spaceInvaders.keys[key] = false;
+			spaceInvaders->keys[key] = false;
 	}
 }
 

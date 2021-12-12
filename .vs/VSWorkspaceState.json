@@ -1,6 +1,8 @@
 {
   "ExpandedNodes": [
     "",
+    "\\res",
+    "\\res\\textures",
     "\\src"
   ],
   "SelectedNode": "\\Space_Invaders.sln",

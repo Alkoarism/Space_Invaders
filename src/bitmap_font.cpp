@@ -197,7 +197,7 @@ void BitmapFont::Print(const char* text) {
 
         VertexBuffer vb(coords, sizeof(coords));
         va.AddBuffer(vb, vbl);
-        Renderer::Render(va, ib, this->shaderName);
+        Renderer::Render(va, ib, Renderer::GetShader(this->shaderName));
     }
 
     Unbind();

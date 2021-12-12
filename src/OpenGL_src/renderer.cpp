@@ -26,10 +26,33 @@ void Renderer::FrameTimeTracker() {
 	lastFrame = currentFrame;
 }
 
-Shader Renderer::LoadShader(std::string name, const char* vertexPath, const char* fragmentPath) {
+Shader Renderer::LoadShader
+    (std::string name, const char* vertexPath, const char* fragmentPath) {
+    
     shaders[name] = LoadShaderFromFile(vertexPath, fragmentPath);
     return shaders[name];
 }
+
+Texture& Renderer::LoadTexture
+    (const char* file, const bool alpha, const std::string name) {
+
+    textures[name] = Texture();
+    TextureLayout tl;
+    if (alpha)
+        tl.SetFormat(GL_RGBA);
+    else
+        tl.SetFormat(GL_RGB);
+
+    tl.SetType(GL_TEXTURE_2D);
+    tl.AddPar(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    tl.AddPar(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    tl.AddPar(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    tl.AddPar(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    textures[name].SetLayout(tl);
+    textures[name].Load(file);
+    return textures[name];
+}
+
 
 void Renderer::Clear() {
     // (properly) delete all shaders
@@ -37,8 +60,10 @@ void Renderer::Clear() {
         glDeleteProgram(s.second.ID);
 }
 
-Shader Renderer::LoadShaderFromFile(const char* vertexPath, const char* fragmentPath) {
-	    // 1. retrieve the vertex/fragment source code from filePath
+Shader Renderer::LoadShaderFromFile
+    (const char* vertexPath, const char* fragmentPath) {
+
+    // 1. retrieve the vertex/fragment source code from filePath
     std::string vertexCode;
     std::string fragmentCode;
     std::ifstream vShaderFile;
@@ -71,10 +96,8 @@ Shader Renderer::LoadShaderFromFile(const char* vertexPath, const char* fragment
         std::cout << "ERROR::SHADER::FAILED_TO_READ_FILE" << std::endl;
     }
 
-    const char* vShaderCode = vertexCode.c_str();
-    const char* fShaderCode = fragmentCode.c_str();
     Shader shader;
-    shader.Compile(vShaderCode, fShaderCode);
+    shader.Compile(vertexCode.c_str(), fragmentCode.c_str());
     return shader;
 }
 
@@ -82,3 +105,4 @@ bool Renderer::Render3D = false;
 float Renderer::lastFrame = 0.0f;
 float Renderer::deltaTime = 0.0f;
 std::map<std::string, Shader> Renderer::shaders;
+std::map<std::string, Texture> Renderer::textures;

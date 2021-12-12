@@ -206,7 +206,6 @@
     <Image Include="res\textures\black_canvas.png" />
     <Image Include="res\textures\circle_alien_1.png" />
     <Image Include="res\textures\cirlce_alien_0.png" />
-    <Image Include="res\textures\sprite_sheet.png" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="dep\include\glm\CMakeLists.txt" />

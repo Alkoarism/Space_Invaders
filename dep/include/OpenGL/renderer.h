@@ -19,16 +19,15 @@ public:
 
 	static Shader LoadShader
 	(std::string name, const char* vertexPath, const char* fragmentPath);
+	static Texture& LoadTexture
+	(const char* file,const bool alpha,const std::string name);
 
 	static void Clear();
-
-	static void SetProjection(const glm::mat4& p) { projection = p; }
-	static void SetView(const glm::mat4& v) { view = v; }
-	static void SetModel(const glm::mat4& m) { model = m; }
 
 	static float GetLastFrame() { return lastFrame; }
 	static float GetDeltaTime() { return deltaTime; }
 	static Shader GetShader(const std::string name) { return shaders[name]; }
+	static Texture& GetTexture(const std::string name) { return textures[name]; }
 
 	static bool Render3D;
 private:
@@ -40,6 +39,7 @@ private:
 	static float lastFrame;
 	static float deltaTime;
 	static std::map<std::string, Shader> shaders;
+	static std::map<std::string, Texture> textures;
 };
 
 #endif
