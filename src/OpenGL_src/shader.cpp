@@ -55,11 +55,11 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
     CheckCompileErrors(fragment, "FRAGMENT");
 
     // shader Program
-    ID = glCreateProgram();
-    glAttachShader(ID, vertex);
-    glAttachShader(ID, fragment);
-    glLinkProgram(ID);
-    CheckCompileErrors(ID, "PROGRAM");
+    m_shaderID = glCreateProgram();
+    glAttachShader(m_shaderID, vertex);
+    glAttachShader(m_shaderID, fragment);
+    glLinkProgram(m_shaderID);
+    CheckCompileErrors(m_shaderID, "PROGRAM");
 
     // delete the shaders as they're linked
     // into the program and are no longer necessary
@@ -67,37 +67,54 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
     glDeleteShader(fragment);
 }
 
+Shader::~Shader() {
+    Release();
+}
+
+Shader::Shader(Shader&& other) noexcept 
+    :   m_shaderID(other.m_shaderID) {
+    other.m_shaderID = 0;
+}
+
+Shader& Shader::operator=(Shader&& other) noexcept {
+    if (this != &other) {
+        Release();
+        std::swap(m_shaderID, other.m_shaderID);
+    }
+    return *this;
+}
+
 // activate the shader
 // ------------------------------------------------------------------------
 void Shader::Use() const{
-    glUseProgram(ID);
+    glUseProgram(m_shaderID);
 }
 
 // utility uniform functions
 // ------------------------------------------------------------------------
 void Shader::SetGLUniform(const std::string& name, const bool& value) const {
-    glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
+    glUniform1i(glGetUniformLocation(m_shaderID, name.c_str()), (int)value);
 }
 
 void Shader::SetGLUniform(const std::string& name, const int& value) const {
-    glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+    glUniform1i(glGetUniformLocation(m_shaderID, name.c_str()), value);
 }
 
 void Shader::SetGLUniform(const std::string& name, const float& value) const {
-    glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+    glUniform1f(glGetUniformLocation(m_shaderID, name.c_str()), value);
 }
 
 void Shader::SetGLUniform(const std::string& name, const glm::mat4& value) const {
     glUniformMatrix4fv
-        (glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+        (glGetUniformLocation(m_shaderID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
 void Shader::GetGLUniform(const std::string& name, int& value) const {
-    glGetUniformiv(ID, glGetUniformLocation(ID, name.c_str()), &value);
+    glGetUniformiv(m_shaderID, glGetUniformLocation(m_shaderID, name.c_str()), &value);
 }
 
 void Shader::GetGLUniform(const std::string& name, float& value) const {
-    glGetUniformfv(ID, glGetUniformLocation(ID, name.c_str()), &value);
+    glGetUniformfv(m_shaderID, glGetUniformLocation(m_shaderID, name.c_str()), &value);
 }
 
 // utility function for checking shader compilation/linking errors.

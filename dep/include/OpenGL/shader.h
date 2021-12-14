@@ -5,9 +5,13 @@
 
 class Shader {
 public:
-	unsigned int ID;
-
 	Shader(const char* vertexPath, const char* fragmentPath);
+	~Shader();
+
+	Shader(const Shader&) = delete;
+	Shader& operator=(const Shader&) = delete;
+	Shader(Shader&& other) noexcept;
+	Shader& operator=(Shader&& other) noexcept;
 
 	void Use() const;
 
@@ -17,6 +21,13 @@ public:
 	bool GetUniform(const std::string&, T&) const;
 
 private:
+	GLuint m_shaderID;
+
+	void Release() noexcept {
+		glDeleteProgram(m_shaderID);
+		m_shaderID = 0;
+	}
+
 	//utility uniform functions- template classes to avoid nondefined types to compile
 	template <typename T>
 	void SetGLUniform(const std::string&, const T&) const {
