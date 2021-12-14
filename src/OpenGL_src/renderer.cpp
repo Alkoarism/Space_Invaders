@@ -25,8 +25,44 @@ void Renderer::FrameTimeTracker() {
 	lastFrame = currentFrame;
 }
 
+Shader& Renderer::LoadShader
+	(const std::string name, const char* vertPath, const char* fragPath) {
+	
+    std::string vertexCode;
+    std::string fragmentCode;
+    std::ifstream vShaderFile;
+    std::ifstream fShaderFile;
+
+    vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+    fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+    try
+    {
+        vShaderFile.open(vertPath);
+        fShaderFile.open(fragPath);
+        std::stringstream vShaderStream, fShaderStream;
+
+        vShaderStream << vShaderFile.rdbuf();
+        fShaderStream << fShaderFile.rdbuf();
+
+        vShaderFile.close();
+        fShaderFile.close();
+
+        vertexCode = vShaderStream.str();
+        fragmentCode = fShaderStream.str();
+    }
+    catch (std::ifstream::failure e)
+    {
+        std::cout << "ERROR::SHADER::FILE_TO_LOAD_FILE" << std::endl;
+    }
+
+    shaders.emplace(name, Shader());
+    shaders[name].Compile(vertexCode.c_str(), fragmentCode.c_str());
+    return shaders[name];
+}
+
 float Renderer::lastFrame = 0.0f;
 float Renderer::deltaTime = 0.0f;
+std::map<std::string, Shader> Renderer::shaders;
 glm::mat4 Renderer::projection = glm::mat4(1.0f);
 glm::mat4 Renderer::view = glm::mat4(1.0f);
 glm::mat4 Renderer::model = glm::mat4(1.0f);

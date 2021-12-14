@@ -20,7 +20,9 @@ typedef struct
 class BitmapFont
 {
 public:
-	BitmapFont(const char*, const char*);
+	std::string shaderName;
+
+	BitmapFont(std::string sName = "");
 
 	bool Load(const char* fname);
 	int  GetWidth(const char* Text);
@@ -41,7 +43,6 @@ private:
 	float m_Red, m_Green, m_Blue, m_Alpha;
 	bool m_InvertYAxis;
 
-	Shader m_Shader;
 	Texture m_Texture;
 	TextureLayout m_Layout;
 

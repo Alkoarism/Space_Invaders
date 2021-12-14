@@ -5,7 +5,7 @@
 
 class Shader {
 public:
-	Shader(const char* vertexPath, const char* fragmentPath);
+	Shader() { }
 	~Shader();
 
 	Shader(const Shader&) = delete;
@@ -14,6 +14,7 @@ public:
 	Shader& operator=(Shader&& other) noexcept;
 
 	void Use() const;
+	void Compile(const char*, const char*);
 
 	template <typename T>
 	bool SetUniform(const std::string&, const T&) const;

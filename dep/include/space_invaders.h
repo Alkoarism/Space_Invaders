@@ -23,7 +23,7 @@ enum Color {
 
 class SpaceInvaders {
 public:
-	SpaceInvaders(const char*, const char*);
+	SpaceInvaders();
 	~SpaceInvaders();
 
 	void LoadFont(const char*);

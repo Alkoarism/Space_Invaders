@@ -59,9 +59,7 @@ int main() {
 
 	glActiveTexture(GL_TEXTURE0);
 
-	SpaceInvaders game
-	("res\\shaders\\bitmap_vert.shader",
-		"res\\shaders\\bitmap_frag.shader");
+	SpaceInvaders game;
 	game.LoadFont("res\\bitmap\\timesNewRoman.bff");
 
 	// render loop (happens every frame) -----------------------------------------
