@@ -150,8 +150,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dep\include\bitmap_font.h" />
-    <ClInclude Include="dep\include\Entitys\entity.h" />
-    <ClInclude Include="dep\include\Entitys\ufo.h" />
     <ClInclude Include="dep\include\OpenGL\camera.h" />
     <ClInclude Include="dep\include\glm\common.hpp" />
     <ClInclude Include="dep\include\glm\exponential.hpp" />

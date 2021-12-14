@@ -2,9 +2,7 @@
 
 using namespace std;
 
-BitmapFont::BitmapFont(const char* vertexPath, const char* fragmentPath)
-    : m_Shader(vertexPath, fragmentPath)
-{
+BitmapFont::BitmapFont(std::string sName) : shaderName(sName) {
     m_CurX = m_CurY = 0;
     m_Red = m_Green = m_Blue = m_Alpha = 1.0f;
     m_InvertYAxis = false;
@@ -197,7 +195,7 @@ void BitmapFont::Print(const char* text) {
 
         VertexBuffer vb(coords, sizeof(coords));
         va.AddBuffer(vb, vbl);
-        Renderer::Render(va, ib, m_Shader);
+        Renderer::Render(va, ib, Renderer::GetShader(this->shaderName));
     }
 
     Unbind();

@@ -2,13 +2,17 @@
 
 using std::string;
 
-SpaceInvaders::SpaceInvaders(const char* vertexPath, const char* fragmentPath)
-	: m_Font(vertexPath, fragmentPath) {
-	m_Model = glm::mat4(1.0f);
-	m_GameState = MAIN_MENU;
-	m_P1Score = m_P2Score = 0;
-	m_P2Join = false;
-	m_ScreenXLimit = 1.2f;
+SpaceInvaders::SpaceInvaders() : 
+	m_Model(glm::mat4(1.0f)), 
+	m_GameState(MAIN_MENU), 
+	m_P1Score(0), m_P2Score(0),
+	m_P2Join(false), 
+	m_ScreenXLimit(1.2f) 
+{
+	Renderer::LoadShader("bitmap",
+		"res\\shaders\\bitmap_vert.shader",
+		"res\\shaders\\bitmap_frag.shader");
+	m_Font.shaderName = "bitmap";
 
 	std::ifstream ReadFile;
 	ReadFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -95,65 +99,7 @@ void SpaceInvaders::ScoreTable() {
 }
 
 void SpaceInvaders::Game() {
-	//size_t playersDefeated = 0;
-	//int deadAliens = 0;
-	//int players = 0;
 
-	//for (auto& e : m_Entitys) {
-	//	if (e.IsDestroyed() == 0) {
-	//		if (e.GetType() == PLAYER) {
-	//			playersDefeated++;
-	//		}
-	//		else if (e.GetTYpe() == ALIEN) {
-	//			deadAliens++;
-	//		}
-	//		continue;
-	//	}
-
-	//	switch (e.GetType()) {
-	//		case PLAYER:
-	//		{
-	//			if (players == 0) {
-	//				e.Move(m_P1Move);
-	//				if (m_P1Shoot)
-	//					e.Shoot();
-	//				m_P1Score = e.GetScore();
-	//			}
-	//			else {
-	//				e.Move(m_P2Move);
-	//				if (m_P2Shoot)
-	//					e.Shoot();
-	//				m_P2Score = e.GetScore();
-	//			}
-	//			players++;
-	//		}
-	//		case ALIEN:
-	//		{
-	//			if (e.GetX().first() == -m_ScreenXLimit)
-	//				m_AliensDirection = 1;
-	//			if (e.GetX().second() == m_ScreenXLimit)
-	//				m_AliensDirection = -1;
-
-	//			e.Move(m_AliensDirection);
-	//			e.Shoot();
-	//		}
-	//		case UFO:
-	//		{
-	//			e.Move();
-	//		}
-	//	}
-
-	//	e.Render();
-	//	e.DetectColision();
-	//}
-
-	//if (players == playersDefeated) {
-	//	m_GameState = ENDGAME;
-	//	m_Victory = false;
-	//} else if (m_AliensAlive == 0) {
-	//	m_GameState = ENDGAME;
-	//	m_Victory = true;
-	//}
 }
 
 void SpaceInvaders::EndGame() {

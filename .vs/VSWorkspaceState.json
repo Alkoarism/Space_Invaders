@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\res",
+    "\\src",
+    "\\src\\OpenGL_src"
   ],
   "SelectedNode": "\\Space_Invaders.sln",
   "PreviewInSolutionExplorer": false
