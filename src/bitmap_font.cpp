@@ -141,6 +141,8 @@ void BitmapFont::SetColor
     m_Green = g;
     m_Blue = b;
     m_Alpha = a;
+    Renderer::GetShader(shaderName).SetUniform
+    ("textColor", glm::vec4(m_Red, m_Green, m_Blue, m_Alpha));
 }
 
 void BitmapFont::ReverseYAxis(const bool& State)
@@ -166,8 +168,6 @@ void BitmapFont::Print(const char* text) {
         0, 2, 3
     };
     VertexBufferLayout vbl;
-    vbl.Push<float>(3);
-    vbl.Push<float>(2);
     vbl.Push<float>(4);
 
     IndexBuffer ib(indices, 6);
@@ -182,11 +182,11 @@ void BitmapFont::Print(const char* text) {
         v1 = v + m_RowFactor;
         
         float coords[] = {
-            //vertex coords			                       //texture	//colors	
-           (m_CurX + m_CellX), (m_CurY + m_YOffset), 0.0f, u1, v,	    m_Red, m_Green, m_Blue, m_Alpha,    //top right
-           (m_CurX + m_CellX),  m_CurY,              0.0f, u1, v1,	    m_Red, m_Green, m_Blue, m_Alpha,    //bottom right
-            m_CurX,             m_CurY,              0.0f, u,  v1,	    m_Red, m_Green, m_Blue, m_Alpha,    //bottom left
-            m_CurX,            (m_CurY + m_YOffset), 0.0f, u,  v,       m_Red, m_Green, m_Blue, m_Alpha     //top left
+            //vertex coords                          //texture	
+           (m_CurX + m_CellX), (m_CurY + m_YOffset), u1, v,     //top right
+           (m_CurX + m_CellX),  m_CurY,              u1, v1,    //bottom right
+            m_CurX,             m_CurY,              u,  v1,    //bottom left
+            m_CurX,            (m_CurY + m_YOffset), u,  v,     //top left
         };
 
         m_CurX += m_Width[text[i]];

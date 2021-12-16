@@ -18,11 +18,6 @@ public:
 	static Shader& LoadShader
 	(const std::string name, const char* vertPath, const char* fragPath);
 
-	static void SetProjection(const glm::mat4& p) { projection = p; }
-	static void SetView(const glm::mat4& v) { view = v; }
-	static void SetModel(const glm::mat4& m) { model = m; }
-
-
 	static float GetLastFrame() { return lastFrame; }
 	static float GetDeltaTime() { return deltaTime; }
 	static Shader& GetShader(const std::string name) { return shaders[name]; }
@@ -31,9 +26,6 @@ private:
 	static float lastFrame;
 	static float deltaTime;
 	static std::map<std::string, Shader> shaders;
-	static glm::mat4 projection;
-	static glm::mat4 view;
-	static glm::mat4 model;
 };
 
 #endif
