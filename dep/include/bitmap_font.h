@@ -2,7 +2,6 @@
 #define _BITMAP_FONTCLASS_H
 
 #include "OpenGL\renderer.h"
-#include "OpenGL\texture.h"
 
 #define BFG_MAXSTRING 255     // Maximum string length
 
@@ -44,7 +43,6 @@ private:
 	bool m_InvertYAxis;
 
 	Texture m_Texture;
-	TextureLayout m_Layout;
 
 	void Bind();
 	void Unbind();

@@ -185,7 +185,6 @@
     <ClInclude Include="dep\include\stb_image.h" />
     <ClInclude Include="dep\include\OpenGL\texture.h" />
     <ClInclude Include="dep\include\OpenGL\vertex_array.h" />
-    <ClInclude Include="dep\include\OpenGL\texture_layout.h" />
     <ClInclude Include="dep\include\OpenGL\vertex_buffer.h" />
     <ClInclude Include="dep\include\OpenGL\vertex_buffer_layout.h" />
   </ItemGroup>
@@ -204,7 +203,6 @@
     <Image Include="res\textures\black_canvas.png" />
     <Image Include="res\textures\circle_alien_1.png" />
     <Image Include="res\textures\cirlce_alien_0.png" />
-    <Image Include="res\textures\sprite_sheet.png" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="dep\include\glm\CMakeLists.txt" />

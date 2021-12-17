@@ -68,15 +68,15 @@ bool BitmapFont::Load(const char* fname)
     {
     case 8:
         //OpenGL supports single channel images through the RED channel
-        m_Layout.SetFormat(GL_RED);
+        m_Texture.format = GL_RED;
         break;
 
     case 24:
-        m_Layout.SetFormat(GL_RGB);
+        m_Texture.format = GL_RGB;
         break;
 
     case 32:
-        m_Layout.SetFormat(GL_RGBA);
+        m_Texture.format = GL_RGBA;
         break;
 
     default: // Unsupported BPP
@@ -96,17 +96,15 @@ bool BitmapFont::Load(const char* fname)
     // Grab image data
     memcpy(img.get(), &dat.get()[MAP_DATA_OFFSET], (ImgX * ImgY) * (bpp / 8));
 
-    m_Layout.SetType(GL_TEXTURE_2D);
+    m_Texture.type = GL_TEXTURE_2D;
 
     // Fonts should be rendered at native resolution so no need for texture filtering
-    m_Layout.AddPar(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    m_Layout.AddPar(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    m_Texture.SetPar(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    m_Texture.SetPar(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     // Stop chararcters from bleeding over edges
-    m_Layout.AddPar(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    m_Layout.AddPar(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    m_Texture.SetLayout(m_Layout);
-    m_Texture.DirectLoad(img.get(), ImgX, ImgY);
+    m_Texture.SetPar(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    m_Texture.SetPar(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    m_Texture.Load(img.get(), ImgX, ImgY);
 
     Unbind();
 

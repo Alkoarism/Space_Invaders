@@ -1,16 +1,15 @@
 #include "OpenGL\renderer.h"
 #include "OpenGL\camera.h"
-#include "OpenGL\texture.h"
 #include "bitmap_font.h"
 
 using std::vector;
 
 // function declarations ------------------------------------------------------
-void processInput(GLFWwindow* window);
+//void processInput(GLFWwindow* window);
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void mouse_callback(GLFWwindow* window, double xPos, double yPos);
-void scroll_callback(GLFWwindow* window, double xOffset, double yOffset);
+//void mouse_callback(GLFWwindow* window, double xPos, double yPos);
+//void scroll_callback(GLFWwindow* window, double xOffset, double yOffset);
 
 // global variables -----------------------------------------------------------
 const int screenWidth = 600, screenHeight = 800;
@@ -56,10 +55,10 @@ int main() {
 	vector<float> simpleQuad = {
 		//vertex			//texture		
 		// Bottom vertices
-		 0.5f,  0.5f, 0.0f,	//top right
-		 0.5f, -0.5f, 0.0f,	//bottom right
-		-0.5f, -0.5f, 0.0f,	//bottom left
-		-0.5f,  0.5f, 0.0f,	//top left
+		 0.5f,  0.5f, 0.0f,	1.0f, 1.0f, //top right
+		 0.5f, -0.5f, 0.0f,	1.0f, 0.0f, //bottom right
+		-0.5f, -0.5f, 0.0f,	0.0f, 0.0f, //bottom left
+		-0.5f,  0.5f, 0.0f,	0.0f, 1.0f//top left
 	};
 
 	vector<unsigned int> indices = {
@@ -74,19 +73,17 @@ int main() {
 	VertexBuffer quad_vb(&simpleQuad[0], sizeof(simpleQuad) * simpleQuad.size());
 	VertexBufferLayout quad_vbl;
 	quad_vbl.Push<float>(3);
+	quad_vbl.Push<float>(2);
 	quadVAO.AddBuffer(quad_vb, quad_vbl);
 
 	IndexBuffer ib(&indices[0], indices.size());
 
 	// texture handling ----------------------------------------------------------
-	//TextureLayout tl(GL_TEXTURE_2D, GL_RGBA);
-
-	//tl.AddPar(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	//tl.AddPar(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	//tl.AddPar(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	//tl.AddPar(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	//Texture texture(tl, "res\\textures\\alien_triangle_0.png");
+	Renderer::LoadTexture("al_tr_0", "res\\textures\\alien_triangle_0.png", true);
+	Renderer::GetTexture("al_tr_0").SetPar(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	Renderer::GetTexture("al_tr_0").SetPar(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	Renderer::GetTexture("al_tr_0").SetPar(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	Renderer::GetTexture("al_tr_0").SetPar(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	// initialization before rendering -------------------------------------------
 	Renderer::LoadShader("test", "res\\shaders\\main_vert.shader", "res\\shaders\\main_frag.shader");
@@ -98,7 +95,10 @@ int main() {
 	glm::mat4 view = camera.GetViewMatrix();
 	Renderer::GetShader("test").SetUniform("view", view);
 	Renderer::GetShader("test").SetUniform("model", glm::mat4(1.0f));
-	//glActiveTexture(GL_TEXTURE0);
+
+	Renderer::GetShader("test").SetUniform("text", 0);
+	
+	glActiveTexture(GL_TEXTURE0);
 
 	// render loop (happens every frame) -----------------------------------------
 	while (!glfwWindowShouldClose(window)) {
@@ -112,7 +112,7 @@ int main() {
 			glfwSetWindowShouldClose(window, true);
 
 		// ---> space configurations and rendering
-		//texture.Bind();
+		Renderer::GetTexture("al_tr_0").Bind();
 		glm::vec4 color = glm::vec4(1.0f);
 		color.y = sin(glfwGetTime());
 		color.x = cos(glfwGetTime());

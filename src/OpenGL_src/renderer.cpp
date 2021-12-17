@@ -1,5 +1,10 @@
 #include "OpenGL/renderer.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+#define STBI_FAILURE_USERMSG
+#define STBI_ONLYJPEG
+
 void Renderer::Render
 	(const VertexArray& va, const IndexBuffer& ib, const Shader& s) {
 		va.Bind();
@@ -58,6 +63,31 @@ Shader& Renderer::LoadShader
     return shaders[name];
 }
 
+Texture& Renderer::LoadTexture
+    (std::string name, const char* file, bool alpha) {
+
+    textures.emplace(name, Texture());
+    if (alpha) {
+        textures[name].format = GL_RGBA;
+    }
+
+    stbi_set_flip_vertically_on_load(true);
+    int imgWidth, imgHeight, nrChannels;
+    unsigned char* data
+        = stbi_load(file, &imgWidth, &imgHeight, &nrChannels, 0);
+    if (data) {
+        textures[name].Load(data, imgWidth, imgHeight);
+    }
+    else {
+        const char* failLog = stbi_failure_reason();
+        std::cout << "ERROR::TEXTURE::FAILED_TO_LOAD_TEXTURE\n" << failLog << std::endl;
+    }
+    stbi_image_free(data);
+
+    return textures[name];
+}
+
 float Renderer::lastFrame = 0.0f;
 float Renderer::deltaTime = 0.0f;
 std::map<std::string, Shader> Renderer::shaders;
+std::map<std::string, Texture> Renderer::textures;
