@@ -41,8 +41,10 @@ private:
 	float m_RowFactor, m_ColFactor;
 	float m_Red, m_Green, m_Blue, m_Alpha;
 	bool m_InvertYAxis;
+	
+	std::string m_TextName;
 
-	Texture m_Texture;
+	static int m_TextNumber;
 
 	void Bind();
 	void Unbind();

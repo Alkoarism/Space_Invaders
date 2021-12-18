@@ -2,10 +2,17 @@
 
 using namespace std;
 
+int BitmapFont::m_TextNumber = 0;
+
 BitmapFont::BitmapFont(std::string sName) : shaderName(sName) {
     m_CurX = m_CurY = 0;
     m_Red = m_Green = m_Blue = m_Alpha = 1.0f;
     m_InvertYAxis = false;
+
+    m_TextName = "Bitmap_" + to_string(m_TextNumber);
+    ++BitmapFont::m_TextNumber;
+
+    Renderer::LoadTexture(m_TextName);
 }
 
 bool BitmapFont::Load(const char* fname)
@@ -68,15 +75,15 @@ bool BitmapFont::Load(const char* fname)
     {
     case 8:
         //OpenGL supports single channel images through the RED channel
-        m_Texture.format = GL_RED;
+        Renderer::GetTexture(m_TextName).format = GL_RED;
         break;
 
     case 24:
-        m_Texture.format = GL_RGB;
+        Renderer::GetTexture(m_TextName).format = GL_RGB;
         break;
 
     case 32:
-        m_Texture.format = GL_RGBA;
+        Renderer::GetTexture(m_TextName).format = GL_RGBA;
         break;
 
     default: // Unsupported BPP
@@ -96,15 +103,13 @@ bool BitmapFont::Load(const char* fname)
     // Grab image data
     memcpy(img.get(), &dat.get()[MAP_DATA_OFFSET], (ImgX * ImgY) * (bpp / 8));
 
-    m_Texture.type = GL_TEXTURE_2D;
-
     // Fonts should be rendered at native resolution so no need for texture filtering
-    m_Texture.SetPar(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    m_Texture.SetPar(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    Renderer::GetTexture(m_TextName).SetPar(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    Renderer::GetTexture(m_TextName).SetPar(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     // Stop chararcters from bleeding over edges
-    m_Texture.SetPar(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    m_Texture.SetPar(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    m_Texture.Load(img.get(), ImgX, ImgY);
+    Renderer::GetTexture(m_TextName).SetPar(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    Renderer::GetTexture(m_TextName).SetPar(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    Renderer::GetTexture(m_TextName).Load(img.get(), ImgX, ImgY);
 
     Unbind();
 
@@ -206,10 +211,10 @@ void BitmapFont::Print(const char* text, const int& x, const int& y) {
 
 void BitmapFont::Bind()
 {
-    m_Texture.Bind();
+    Renderer::GetTexture(m_TextName).Bind();
 }
 
 void BitmapFont::Unbind()
 {
-    m_Texture.Unbind();
+    Renderer::GetTexture(m_TextName).Unbind();
 }

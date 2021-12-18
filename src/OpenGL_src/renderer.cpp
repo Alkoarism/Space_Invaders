@@ -19,7 +19,10 @@ void Renderer::RenderConfig
 	 const float& b, const float& a) {
 
 	glClearColor(r, g, b, a);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if (render3D)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    else
+        glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void Renderer::FrameTimeTracker() {
@@ -64,21 +67,22 @@ Shader& Renderer::LoadShader
 }
 
 Texture& Renderer::LoadTexture
-    (std::string name, const char* file, bool alpha) {
+    (std::string name, const char* file, bool alpha, bool flipImage) {
 
     textures.emplace(name, Texture());
     if (alpha) {
         textures[name].format = GL_RGBA;
     }
 
-    stbi_set_flip_vertically_on_load(true);
+    if (flipImage)
+    stbi_set_flip_vertically_on_load(flipImage);
     int imgWidth, imgHeight, nrChannels;
     unsigned char* data
         = stbi_load(file, &imgWidth, &imgHeight, &nrChannels, 0);
     if (data) {
         textures[name].Load(data, imgWidth, imgHeight);
     }
-    else {
+    else if (name.size() != 0) {
         const char* failLog = stbi_failure_reason();
         std::cout << "ERROR::TEXTURE::FAILED_TO_LOAD_TEXTURE\n" << failLog << std::endl;
     }
@@ -87,6 +91,7 @@ Texture& Renderer::LoadTexture
     return textures[name];
 }
 
+bool Renderer::render3D = false;
 float Renderer::lastFrame = 0.0f;
 float Renderer::deltaTime = 0.0f;
 std::map<std::string, Shader> Renderer::shaders;

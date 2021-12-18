@@ -49,21 +49,22 @@ int main() {
 		return -1;
 	}
 
-	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// vertices definition -------------------------------------------------------
 	vector<float> simpleQuad = {
 		//vertex			//texture		
 		// Bottom vertices
-		 0.5f,  0.5f, 0.0f,	1.0f, 1.0f, //top right
-		 0.5f, -0.5f, 0.0f,	1.0f, 0.0f, //bottom right
-		-0.5f, -0.5f, 0.0f,	0.0f, 0.0f, //bottom left
-		-0.5f,  0.5f, 0.0f,	0.0f, 1.0f//top left
+		 0.0f,  1.0f, 0.0f, 1.0f, //top right
+		 1.0f,  0.0f, 1.0f, 0.0f, //bottom right
+		 0.0f,  0.0f, 0.0f, 0.0f, //bottom left
+		 1.0f,  1.0f, 1.0f, 1.0f  //top left
 	};
 
 	vector<unsigned int> indices = {
 		0, 1, 2,
-		0, 2, 3
+		0, 1, 3
 	};
 
 	// vertex and buffers configurations -----------------------------------------
@@ -72,8 +73,7 @@ int main() {
 	quadVAO.Bind();
 	VertexBuffer quad_vb(&simpleQuad[0], sizeof(simpleQuad) * simpleQuad.size());
 	VertexBufferLayout quad_vbl;
-	quad_vbl.Push<float>(3);
-	quad_vbl.Push<float>(2);
+	quad_vbl.Push<float>(4);
 	quadVAO.AddBuffer(quad_vb, quad_vbl);
 
 	IndexBuffer ib(&indices[0], indices.size());
@@ -86,15 +86,19 @@ int main() {
 	Renderer::GetTexture("al_tr_0").SetPar(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	// initialization before rendering -------------------------------------------
-	Renderer::LoadShader("test", "res\\shaders\\main_vert.shader", "res\\shaders\\main_frag.shader");
+	Renderer::LoadShader("test", "res\\shaders\\main2D.vert", "res\\shaders\\main2D.frag");
 	
-	glm::mat4 projection = glm::perspective
-	(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
+	//glm::mat4 projection = glm::perspective
+	//(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
+	glm::mat4 projection = glm::ortho(0.0f, 800.0f, 600.0f, 0.0f, -1.0f, 1.0f);
 	Renderer::GetShader("test").SetUniform("projection", projection);
 
-	glm::mat4 view = camera.GetViewMatrix();
-	Renderer::GetShader("test").SetUniform("view", view);
-	Renderer::GetShader("test").SetUniform("model", glm::mat4(1.0f));
+	//glm::mat4 view = camera.GetViewMatrix();
+	//Renderer::GetShader("test").SetUniform("view", view);
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(200.0f, 100.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(400.0f, 300.0f, 1.0f));
+	Renderer::GetShader("test").SetUniform("model", model);
 
 	Renderer::GetShader("test").SetUniform("text", 0);
 	
@@ -113,7 +117,7 @@ int main() {
 
 		// ---> space configurations and rendering
 		Renderer::GetTexture("al_tr_0").Bind();
-		glm::vec4 color = glm::vec4(1.0f);
+		glm::vec3 color = glm::vec3(1.0f);
 		color.y = sin(glfwGetTime());
 		color.x = cos(glfwGetTime());
 		Renderer::GetShader("test").SetUniform("textColor", color);
