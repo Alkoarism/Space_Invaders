@@ -136,7 +136,9 @@
     <None Include="res\shaders\main2D.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="dep\include\invaders.h" />
     <ClCompile Include="src\bitmap_font.cpp" />
+    <ClCompile Include="src\invaders.cpp" />
     <ClCompile Include="src\OpenGL_src\camera.cpp" />
     <ClCompile Include="src\OpenGL_src\glad.c" />
     <ClCompile Include="src\OpenGL_src\index_buffer.cpp" />
@@ -146,6 +148,7 @@
     <ClCompile Include="src\OpenGL_src\texture.cpp" />
     <ClCompile Include="src\OpenGL_src\vertex_array.cpp" />
     <ClCompile Include="src\OpenGL_src\vertex_buffer.cpp" />
+    <ClCompile Include="src\sprite_renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="dep\lib\glfw3.lib" />
@@ -182,6 +185,7 @@
     <ClInclude Include="dep\include\KHR\khrplatform.h" />
     <ClInclude Include="dep\include\OpenGL\renderer.h" />
     <ClInclude Include="dep\include\OpenGL\shader.h" />
+    <ClInclude Include="dep\include\sprite_renderer.h" />
     <ClInclude Include="dep\include\stb_image.h" />
     <ClInclude Include="dep\include\OpenGL\texture.h" />
     <ClInclude Include="dep\include\OpenGL\vertex_array.h" />
