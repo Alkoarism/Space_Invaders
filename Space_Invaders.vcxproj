@@ -136,9 +136,11 @@
     <None Include="res\shaders\main2D.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dep\include\invaders.h" />
+    <ClCompile Include="dep\include\game.h" />
     <ClCompile Include="src\bitmap_font.cpp" />
-    <ClCompile Include="src\invaders.cpp" />
+    <ClCompile Include="src\entity.cpp" />
+    <ClCompile Include="src\game.cpp" />
+    <ClCompile Include="src\game_level.cpp" />
     <ClCompile Include="src\OpenGL_src\camera.cpp" />
     <ClCompile Include="src\OpenGL_src\glad.c" />
     <ClCompile Include="src\OpenGL_src\index_buffer.cpp" />
@@ -156,6 +158,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dep\include\bitmap_font.h" />
+    <ClInclude Include="dep\include\entity.h" />
+    <ClInclude Include="dep\include\game_level.h" />
     <ClInclude Include="dep\include\OpenGL\camera.h" />
     <ClInclude Include="dep\include\glm\common.hpp" />
     <ClInclude Include="dep\include\glm\exponential.hpp" />

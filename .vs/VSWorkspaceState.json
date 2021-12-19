@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\res",
+    "\\dep",
+    "\\dep\\include",
+    "\\dep\\include\\OpenGL",
     "\\src",
     "\\src\\OpenGL_src"
   ],

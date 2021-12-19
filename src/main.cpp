@@ -1,7 +1,7 @@
 #include "OpenGL\renderer.h"
 #include "OpenGL\camera.h"
 
-#include "invaders.h"
+#include "game.h"
 
 using std::vector;
 
@@ -14,7 +14,7 @@ const int screenWidth = 600, screenHeight = 800;
 
 Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
 
-std::unique_ptr<Invaders> spaceInvaders;
+std::unique_ptr<Game> spaceInvaders;
 
 int main() {
 	// glfw: initialize and configure --------------------------------------------
@@ -50,7 +50,7 @@ int main() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// initialization before rendering -------------------------------------------
-	spaceInvaders.reset(new Invaders(screenWidth, screenHeight));
+	spaceInvaders.reset(new Game(screenWidth, screenHeight));
 
 	// render loop (happens every frame) -----------------------------------------
 	while (!glfwWindowShouldClose(window)) {
