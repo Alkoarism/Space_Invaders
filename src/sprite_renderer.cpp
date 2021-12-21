@@ -45,7 +45,7 @@ void SpriteRenderer::DrawSprite(std::string& textureName,
 	model = glm::scale(model, glm::vec3(size, 1.0f));
 
 	Renderer::GetShader(m_ShaderName).SetUniform("model", model);
-	Renderer::GetShader(m_ShaderName).SetUniform("spriteColor", color);
+	Renderer::GetShader(m_ShaderName).SetUniform("textColor", color);
 
 	glActiveTexture(GL_TEXTURE0);
 	Renderer::GetTexture(textureName).Bind();

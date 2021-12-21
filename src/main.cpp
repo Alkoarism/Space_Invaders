@@ -39,6 +39,7 @@ int main() {
 	// glfw: setup
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetKeyCallback(window, key_callback);
 
 	// glad: load all OpenGL function pointers
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -61,9 +62,6 @@ int main() {
 		spaceInvaders->ProcessInput(Renderer::GetDeltaTime());
 		spaceInvaders->Update(Renderer::GetDeltaTime());
 		Renderer::RenderConfig(1.0f, 1.0f, 1.0f, 1.0f);
-
-		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-			glfwSetWindowShouldClose(window, true);
 
 		// ---> space configurations and rendering
 		spaceInvaders->Render();

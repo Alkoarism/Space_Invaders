@@ -1,4 +1,4 @@
-#include "..\dep\include\game_level.h"
+#include "game_level.h"
 
 bool GameLevel::Load(const char* file, unsigned int lvlWidth, unsigned int lvlHeight) {
 	this->aliens.clear();
@@ -9,9 +9,9 @@ bool GameLevel::Load(const char* file, unsigned int lvlWidth, unsigned int lvlHe
 
 	fstream.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 	try {
-		fstream.open(file);
+		fstream.open(file, std::ios::in);
 
-		while (std::getline(fstream, line)) {
+		while (!fstream.eof() && std::getline(fstream, line)) {
 			std::istringstream sstream(line);
 			std::vector<unsigned int> row;
 			while (sstream >> alienCode)
@@ -24,7 +24,7 @@ bool GameLevel::Load(const char* file, unsigned int lvlWidth, unsigned int lvlHe
 		fstream.close();
 	}
 	catch (std::ifstream::failure e){
-		std::cout << "ERROR::GAME_LEVEL_LOADING::LEVEL_DATA_NOT_FOUND" << std::endl;
+		std::cout << "ERROR::GAME_LEVEL_LOADING::FAILED_TO_LOAD_LEVEL_DATA" << std::endl;
 		return false;
 	}
 
@@ -32,12 +32,16 @@ bool GameLevel::Load(const char* file, unsigned int lvlWidth, unsigned int lvlHe
 }
 
 void GameLevel::Draw(SpriteRenderer& renderer) {
-
+	for (Entity& alien : this->aliens)
+		if (!alien.destroyed)
+			alien.Draw(renderer);
 }
 
-bool GameLevel::IsCompleted()
-{
-	return false;
+bool GameLevel::IsCompleted() {
+	for (Entity& alien : this->aliens)
+		if (!alien.destroyed)
+			return false;
+	return true;
 }
 
 void GameLevel::init(std::vector<std::vector<unsigned int>> alienData, 
@@ -60,16 +64,20 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> alienData,
 				switch (alienData[y][x]) {
 					case 1: {
 						color = glm::vec3(0.0f, 0.0f, 1.0f);
-						type = "al_cr_0";
+						type = "al_cl_0";
+						break;
 					} case 2: {
 						color = glm::vec3(0.0f, 1.0f, 0.0f);
 						type = "al_sq_0";
+						break;
 					} case 3: {
 						color = glm::vec3(1.0f, 0.0f, 0.0f);
 						type = "al_tr_0";
+						break;
 					} default: {
 						color = glm::vec3(1.0f, 0.0f, 0.0f);
 						type = "al_UFO_0";
+						break;
 					}
 				}
 
