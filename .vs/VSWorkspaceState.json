@@ -3,10 +3,11 @@
     "",
     "\\dep",
     "\\dep\\include",
-    "\\dep\\include\\OpenGL",
+    "\\res",
+    "\\res\\levels",
     "\\src",
     "\\src\\OpenGL_src"
   ],
-  "SelectedNode": "\\src\\main.cpp",
+  "SelectedNode": "\\res\\levels\\test.lvl",
   "PreviewInSolutionExplorer": false
 }

@@ -71,7 +71,7 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> alienData,
 						type = "al_sq_0";
 						break;
 					} case 3: {
-						color = glm::vec3(1.0f, 0.0f, 0.0f);
+						color = glm::vec3(1.0f, 0.1f, 1.0f);
 						type = "al_tr_0";
 						break;
 					} default: {

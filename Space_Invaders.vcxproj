@@ -203,6 +203,7 @@
     <Image Include="res\textures\alien_circle_1.png" />
     <Image Include="res\textures\alien_circle_0.png" />
     <Image Include="res\textures\background.jpg" />
+    <Image Include="res\textures\background_1.jpg" />
     <Image Include="res\textures\player.png" />
     <Image Include="res\textures\sprite_sheet.png" />
     <Image Include="res\textures\alien_square_0.png" />

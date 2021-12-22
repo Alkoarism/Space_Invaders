@@ -247,6 +247,9 @@
     <Image Include="res\textures\background.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\textures\background_1.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="dep\include\glm\CMakeLists.txt" />

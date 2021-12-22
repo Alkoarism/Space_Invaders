@@ -20,19 +20,19 @@ Game::Game(unsigned int width, unsigned int height)
 	// Texture loading --------------------------------------------------------
 	m_TextureNames = { "background", "al_tr_0", "al_sq_0", "al_cl_0", "al_UFO_0" };
 
-	Renderer::LoadTexture("background", "res\\textures\\background.jpg");
+	Renderer::LoadTexture("background", "res\\textures\\background_1.jpg");
 	Renderer::LoadTexture("al_tr_0", "res\\textures\\alien_triangle_0.png", true);
 	Renderer::LoadTexture("al_sq_0", "res\\textures\\alien_square_0.png", true);
 	Renderer::LoadTexture("al_cl_0", "res\\textures\\alien_circle_0.png", true);
 	Renderer::LoadTexture("al_UFO_0", "res\\textures\\alien_UFO_0.png", true);
 	Renderer::LoadTexture("player", "res\\textures\\player.png", true);
 
-	//for (size_t i = 1; i != m_TextureNames.size(); i++) {
-	//	Renderer::GetTexture(m_TextureNames[i]).SetPar(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//	Renderer::GetTexture(m_TextureNames[i]).SetPar(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//	Renderer::GetTexture(m_TextureNames[i]).SetPar(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	//	Renderer::GetTexture(m_TextureNames[i]).SetPar(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	//}
+	for (size_t i = 0; i != 1; i++) {
+		Renderer::GetTexture(m_TextureNames[i]).SetPar(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		Renderer::GetTexture(m_TextureNames[i]).SetPar(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		Renderer::GetTexture(m_TextureNames[i]).SetPar(GL_TEXTURE_WRAP_S, GL_REPEAT);
+		Renderer::GetTexture(m_TextureNames[i]).SetPar(GL_TEXTURE_WRAP_T, GL_REPEAT);
+	}
 
 	// Level Loading ----------------------------------------------------------
 	GameLevel one; one.Load("res\\levels\\test.lvl", this->width, this->height / 2);
@@ -44,7 +44,7 @@ Game::Game(unsigned int width, unsigned int height)
 		(this->width / 2.0f) - (PLAYER_SIZE.x / 2.0f),
 		(this->height - PLAYER_SIZE.y));
 
-	m_Player.reset(new Entity(playerPos, PLAYER_SIZE, "player"));
+	m_Player.reset(new Entity(playerPos, PLAYER_SIZE, "player", glm::vec3(0.0f, 1.0f, 0.0f)));
 }
 
 Game::~Game() {
