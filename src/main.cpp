@@ -1,26 +1,20 @@
 #include "OpenGL\renderer.h"
 #include "OpenGL\camera.h"
-#include "OpenGL\texture.h"
-#include "bitmap_font.h"
 
-#include "space_invaders.h"
+#include "game.h"
 
 using std::vector;
 
 // function declarations ------------------------------------------------------
-void processInput(GLFWwindow* window);
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void mouse_callback(GLFWwindow* window, double xPos, double yPos);
-void scroll_callback(GLFWwindow* window, double xOffset, double yOffset);
+void framebuffer_size_callback(GLFWwindow*, int, int);
+void key_callback(GLFWwindow*, int, int, int, int);
 
 // global variables -----------------------------------------------------------
 const int screenWidth = 600, screenHeight = 800;
 
 Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
 
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
+std::unique_ptr<Game> spaceInvaders;
 
 int main() {
 	// glfw: initialize and configure --------------------------------------------
@@ -45,6 +39,7 @@ int main() {
 	// glfw: setup
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetKeyCallback(window, key_callback);
 
 	// glad: load all OpenGL function pointers
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -52,36 +47,24 @@ int main() {
 		return -1;
 	}
 
-	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// initialization before rendering -------------------------------------------
-	float elapsedTime = 0;
-
-	glActiveTexture(GL_TEXTURE0);
-
-	SpaceInvaders game;
-	game.LoadFont("res\\bitmap\\timesNewRoman.bff");
+	spaceInvaders.reset(new Game(screenWidth, screenHeight));
 
 	// render loop (happens every frame) -----------------------------------------
 	while (!glfwWindowShouldClose(window)) {
 		// -> frame time tracker
 		Renderer::FrameTimeTracker();
 
-		elapsedTime += deltaTime;
-
 		// -> rendering commands and configuration
-		Renderer::RenderConfig();
+		spaceInvaders->ProcessInput(Renderer::GetDeltaTime());
+		spaceInvaders->Update(Renderer::GetDeltaTime());
+		Renderer::RenderConfig(1.0f, 1.0f, 1.0f, 1.0f);
 
 		// ---> space configurations and rendering
-		glm::mat4 projection = glm::perspective
-		(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
-		Renderer::SetProjection(projection);
-
-		glm::mat4 view = camera.GetViewMatrix();
-		Renderer::SetView(view);
-
-		//The model global variable is used to render stuff on the right place
-		game.Run(window);
+		spaceInvaders->Render();
 
 		// -> check and call events and swap the buffers
 		glfwSwapBuffers(window);
@@ -90,6 +73,17 @@ int main() {
 
 	glfwTerminate();
 	return 0;
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+	if (key >= 0 && key < 1024) {
+		if (action == GLFW_PRESS)
+			spaceInvaders->keys[key] = true;
+		else if (action == GLFW_RELEASE)
+			spaceInvaders->keys[key] = false;
+	}
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {

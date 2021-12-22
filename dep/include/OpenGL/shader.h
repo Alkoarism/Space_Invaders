@@ -37,6 +37,8 @@ private:
 	void SetGLUniform(const std::string&, const bool&) const;
 	void SetGLUniform(const std::string&, const int&) const;
 	void SetGLUniform(const std::string&, const float&) const;
+	void SetGLUniform(const std::string&, const glm::vec3) const;
+	void SetGLUniform(const std::string&, const glm::vec4) const;
 	void SetGLUniform(const std::string&, const glm::mat4&) const;
 
 	template <typename T>

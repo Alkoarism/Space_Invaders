@@ -1,16 +1,15 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include "OpenGL\texture_layout.h"
-
-//The glTexParameteri on the texture constructor needs to be
-//further analyzed and improved in order to make the class
-//more corret relating to it´s configuration
+#include "headers.h"
 
 class Texture {
 public:
-	Texture() { }
-	Texture(const TextureLayout&, const char*);
+	GLenum type;
+	GLenum format;
+
+	Texture() : Texture(GL_TEXTURE_2D, GL_RGB) { }
+	Texture(GLenum type, GLenum format);
 	~Texture();
 
 	Texture(const Texture&) = delete;
@@ -18,16 +17,13 @@ public:
 	Texture(Texture&& other) noexcept;
 	Texture& operator=(Texture&& other) noexcept;
 
-	void SetLayout(const TextureLayout&);
-
-	void Load(const char*);
-	void DirectLoad(const void*, const int&, const int&);
+	void Load(const void*, const int&, const int&);
+	void SetPar(const GLenum& first, const GLenum& second);
 	void Bind() const;
 	void Unbind() const;
 
 private:
 	GLuint m_TextureID;
-	TextureLayout m_Layout;
 
 	void Release() noexcept {
 		glDeleteTextures(1, &m_TextureID);

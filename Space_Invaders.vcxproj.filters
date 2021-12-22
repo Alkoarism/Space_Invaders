@@ -25,6 +25,11 @@
     <None Include="res\shaders\bitmap_vert.shader" />
     <None Include="res\bitmap\vrinda.bff" />
     <None Include="res\bitmap\timesNewRoman.bff" />
+    <None Include="res\shaders\bitmap_vert2D.shader" />
+    <None Include="res\shaders\bitmap_frag2D.shader" />
+    <None Include="res\shaders\main2D.vert" />
+    <None Include="res\shaders\main2D.frag" />
+    <None Include="res\levels\test.lvl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenGL_src\glad.c">
@@ -48,16 +53,25 @@
     <ClCompile Include="src\OpenGL_src\shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\bitmap_font.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenGL_src\renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\space_invaders.cpp">
+    <ClCompile Include="src\bitmap_font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sprite_renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game_level.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -150,9 +164,6 @@
     <ClInclude Include="dep\include\OpenGL\texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dep\include\OpenGL\texture_layout.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="dep\include\OpenGL\vertex_buffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -165,16 +176,25 @@
     <ClInclude Include="dep\include\OpenGL\shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dep\include\bitmap_font.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="dep\include\headers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dep\include\OpenGL\renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dep\include\space_invaders.h">
+    <ClInclude Include="dep\include\bitmap_font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\game_level.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\sprite_renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -194,34 +214,40 @@
     <Image Include="res\textures\sprite_sheet.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sprites\alien_circle_1.png">
+    <Image Include="res\textures\alien_circle_1.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sprites\alien_circle_0.png">
+    <Image Include="res\textures\alien_circle_0.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sprites\sprite_sheet.png">
+    <Image Include="res\textures\sprite_sheet.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sprites\alien_square_0.png">
+    <Image Include="res\textures\alien_square_0.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sprites\alien_square_1.png">
+    <Image Include="res\textures\alien_square_1.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sprites\alien_triangle_0.png">
+    <Image Include="res\textures\alien_triangle_0.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sprites\alien_triangle_1.png">
+    <Image Include="res\textures\alien_triangle_1.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sprites\alien_UFO_0.png">
+    <Image Include="res\textures\alien_UFO_0.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sprites\alien_UFO_1.png">
+    <Image Include="res\textures\alien_UFO_1.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sprites\player.png">
+    <Image Include="res\textures\player.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\background.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\background_1.jpg">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

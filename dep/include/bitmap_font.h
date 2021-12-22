@@ -2,7 +2,6 @@
 #define _BITMAP_FONTCLASS_H
 
 #include "OpenGL\renderer.h"
-#include "OpenGL\texture.h"
 
 #define BFG_MAXSTRING 255     // Maximum string length
 
@@ -42,9 +41,10 @@ private:
 	float m_RowFactor, m_ColFactor;
 	float m_Red, m_Green, m_Blue, m_Alpha;
 	bool m_InvertYAxis;
+	
+	std::string m_TextName;
 
-	Texture m_Texture;
-	TextureLayout m_Layout;
+	static int m_TextNumber;
 
 	void Bind();
 	void Unbind();

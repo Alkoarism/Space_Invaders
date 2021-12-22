@@ -1,12 +1,15 @@
 #include "OpenGL/renderer.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+#define STBI_FAILURE_USERMSG
+#define STBI_ONLYJPEG
+
 void Renderer::Render
 	(const VertexArray& va, const IndexBuffer& ib, const Shader& s) {
 		va.Bind();
 		ib.Bind();
-		s.SetUniform("projection", projection);
-		s.SetUniform("view", view);
-		s.SetUniform("model", model);
+        s.Use();
 
 		glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
 	}
@@ -16,7 +19,10 @@ void Renderer::RenderConfig
 	 const float& b, const float& a) {
 
 	glClearColor(r, g, b, a);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if (render3D)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    else
+        glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void Renderer::FrameTimeTracker() {
@@ -60,9 +66,33 @@ Shader& Renderer::LoadShader
     return shaders[name];
 }
 
+Texture& Renderer::LoadTexture
+    (std::string name, const char* file, bool alpha, bool flipImage) {
+
+    textures.emplace(name, Texture());
+    if (alpha) {
+        textures[name].format = GL_RGBA;
+    }
+
+    if (flipImage)
+    stbi_set_flip_vertically_on_load(flipImage);
+    int imgWidth, imgHeight, nrChannels;
+    unsigned char* data
+        = stbi_load(file, &imgWidth, &imgHeight, &nrChannels, 0);
+    if (data) {
+        textures[name].Load(data, imgWidth, imgHeight);
+    }
+    else if (name.size() != 0) {
+        const char* failLog = stbi_failure_reason();
+        std::cout << "ERROR::TEXTURE::FAILED_TO_LOAD_TEXTURE\n" << failLog << std::endl;
+    }
+    stbi_image_free(data);
+
+    return textures[name];
+}
+
+bool Renderer::render3D = false;
 float Renderer::lastFrame = 0.0f;
 float Renderer::deltaTime = 0.0f;
 std::map<std::string, Shader> Renderer::shaders;
-glm::mat4 Renderer::projection = glm::mat4(1.0f);
-glm::mat4 Renderer::view = glm::mat4(1.0f);
-glm::mat4 Renderer::model = glm::mat4(1.0f);
+std::map<std::string, Texture> Renderer::textures;

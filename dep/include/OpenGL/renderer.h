@@ -5,9 +5,12 @@
 #include "OpenGL\vertex_array.h"
 #include "OpenGL\index_buffer.h"
 #include "OpenGL\shader.h"
+#include "OpenGL\texture.h"
 
 class Renderer {
 public:
+	static bool render3D;
+
 	static void Render
 	(const VertexArray&, const IndexBuffer&, const Shader&);
 	static void RenderConfig
@@ -17,23 +20,19 @@ public:
 
 	static Shader& LoadShader
 	(const std::string name, const char* vertPath, const char* fragPath);
-
-	static void SetProjection(const glm::mat4& p) { projection = p; }
-	static void SetView(const glm::mat4& v) { view = v; }
-	static void SetModel(const glm::mat4& m) { model = m; }
-
+	static Texture& LoadTexture
+	(std::string name, const char* file = "", bool alpha = false, bool flipImage = false);
 
 	static float GetLastFrame() { return lastFrame; }
 	static float GetDeltaTime() { return deltaTime; }
 	static Shader& GetShader(const std::string name) { return shaders[name]; }
+	static Texture& GetTexture(const std::string name) { return textures[name]; }
 
 private:
 	static float lastFrame;
 	static float deltaTime;
 	static std::map<std::string, Shader> shaders;
-	static glm::mat4 projection;
-	static glm::mat4 view;
-	static glm::mat4 model;
+	static std::map<std::string, Texture> textures;
 };
 
 #endif
