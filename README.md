@@ -4,7 +4,7 @@ With this I intend to use all the knowledge acquired after reading the "Learn Op
 
 Currently there is only a prototype of the main game screen:
 
-![SpaceInvaders_MenuGIF](https://user-images.githubusercontent.com/69710741/130007608-205f6ac5-25f5-4507-a4c7-789d460ea34a.gif)
+https://user-images.githubusercontent.com/69710741/147152937-30276c0f-603b-4bcd-9ba8-765f560ce58a.mp4
 
 If you want to download the .exe file, you can find on "/builds/0_1_1- prototype_demo", simply download the entire folder and run the .exe file inside of it. It should run as demonstrated on the GIF.
 It is also possible to manipulate the number and position of the aliens on the level changing the contents of the "test.lvl" file (/res/levele):
