@@ -10,7 +10,6 @@ public:
 	glm::vec2 position, size, velocity;
 	glm::vec3 color;
 	float rotation;
-	bool canShoot;
 	bool destroyed;
 	std::string spriteName;
 

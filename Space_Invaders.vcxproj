@@ -137,6 +137,7 @@
     <None Include="res\shaders\main2D.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\bullet.cpp" />
     <ClCompile Include="src\bitmap_font.cpp" />
     <ClCompile Include="src\entity.cpp" />
     <ClCompile Include="src\game.cpp" />
@@ -157,6 +158,7 @@
     <Library Include="dep\lib\glfw3_mt.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dep\include\bullet.h" />
     <ClInclude Include="dep\include\bitmap_font.h" />
     <ClInclude Include="dep\include\entity.h" />
     <ClInclude Include="dep\include\game.h" />
@@ -204,6 +206,10 @@
     <Image Include="res\textures\alien_circle_0.png" />
     <Image Include="res\textures\background.jpg" />
     <Image Include="res\textures\background_1.jpg" />
+    <Image Include="res\textures\bullet_1a.png" />
+    <Image Include="res\textures\bullet_1b.png" />
+    <Image Include="res\textures\bullet_2a.png" />
+    <Image Include="res\textures\bullet_2b.png" />
     <Image Include="res\textures\player.png" />
     <Image Include="res\textures\sprite_sheet.png" />
     <Image Include="res\textures\alien_square_0.png" />

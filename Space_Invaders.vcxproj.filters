@@ -74,6 +74,9 @@
     <ClCompile Include="src\game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\bullet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="dep\lib\glfw3.lib" />
@@ -197,6 +200,9 @@
     <ClInclude Include="dep\include\sprite_renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="dep\include\bullet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\sprite_sheet.jpg">
@@ -248,6 +254,18 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\textures\background_1.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\bullet_2a.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\bullet_2b.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\bullet_1a.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\bullet_1b.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

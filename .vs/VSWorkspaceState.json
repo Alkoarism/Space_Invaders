@@ -5,9 +5,8 @@
     "\\dep\\include",
     "\\res",
     "\\res\\levels",
-    "\\src",
-    "\\src\\OpenGL_src"
+    "\\src"
   ],
-  "SelectedNode": "\\res\\levels\\test.lvl",
+  "SelectedNode": "\\src\\main.cpp",
   "PreviewInSolutionExplorer": false
 }

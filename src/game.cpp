@@ -1,8 +1,8 @@
 #include "game.h"
 
 Game::Game(unsigned int width, unsigned int height) 
-	: state(GAME_ACTIVE), width(width), height(height) {
-
+	: state(GAME_ACTIVE), width(width), height(height), m_TimeTracker(1) {
+	
 	// Shader Loading ---------------------------------------------------------
 	std::string spriteShaderName = "sprite";
 	Renderer::LoadShader(spriteShaderName, 
@@ -18,24 +18,18 @@ Game::Game(unsigned int width, unsigned int height)
 
 	m_SpRenderer.reset(new SpriteRenderer(spriteShaderName));
 	// Texture loading --------------------------------------------------------
-	m_TextureNames = { "background", "al_tr_0", "al_sq_0", "al_cl_0", "al_UFO_0" };
-
 	Renderer::LoadTexture("background", "res\\textures\\background_1.jpg");
 	Renderer::LoadTexture("al_tr_0", "res\\textures\\alien_triangle_0.png", true);
 	Renderer::LoadTexture("al_sq_0", "res\\textures\\alien_square_0.png", true);
 	Renderer::LoadTexture("al_cl_0", "res\\textures\\alien_circle_0.png", true);
 	Renderer::LoadTexture("al_UFO_0", "res\\textures\\alien_UFO_0.png", true);
 	Renderer::LoadTexture("player", "res\\textures\\player.png", true);
-
-	for (size_t i = 0; i != 1; i++) {
-		Renderer::GetTexture(m_TextureNames[i]).SetPar(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		Renderer::GetTexture(m_TextureNames[i]).SetPar(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		Renderer::GetTexture(m_TextureNames[i]).SetPar(GL_TEXTURE_WRAP_S, GL_REPEAT);
-		Renderer::GetTexture(m_TextureNames[i]).SetPar(GL_TEXTURE_WRAP_T, GL_REPEAT);
-	}
+	Renderer::LoadTexture("bullet_1a", "res\\textures\\bullet_1a.png", true);
+	Renderer::LoadTexture("bullet_1b", "res\\textures\\bullet_1b.png", true);
 
 	// Level Loading ----------------------------------------------------------
-	GameLevel one; one.Load("res\\levels\\test.lvl", this->width, this->height / 2);
+	GameLevel one; 
+	one.Load("res\\levels\\test.lvl", this->width, this->height / 2);
 	this->levels.push_back(one);
 	this->level = 0;
 
@@ -54,25 +48,48 @@ Game::~Game() {
 void Game::ProcessInput(float dt) {
 	if (this->state == GAME_ACTIVE) {
 		float ds = PLAYER_VELOCITY * dt;
-		if (this->keys[GLFW_KEY_A]) {
+		if (this->keys[GLFW_KEY_A] || this->keys[GLFW_KEY_LEFT]) {
 			if (m_Player->position.x >= 0.0f)
 				m_Player->position.x -= ds;
 		}
-		if (this->keys[GLFW_KEY_D]) {
+		if (this->keys[GLFW_KEY_D] || this->keys[GLFW_KEY_RIGHT]) {
 			if (m_Player->position.x <= (this->width - m_Player->size.x))
 				m_Player->position.x += ds;
+		}
+		if (this->keys[GLFW_KEY_SPACE]) {
+			if (m_TimeTracker >= 1) {
+				m_Sprite = "bullet_1a";
+				float posX = m_Player->position.x + ((PLAYER_SIZE.x / 2) - (BULLET_SIZE.x / 2));
+				float posY = m_Player->position.y - BULLET_SIZE.y;
+				glm::vec2 bulletPos = glm::vec2(posX, posY);
+				Bullet b(bulletPos, BULLET_SIZE, BULLET_VELOCITY, m_Sprite, PLAYER);
+				m_Bullets.push_back(b);
+				m_TimeTracker = 0;
+			}
 		}
 	}
 }
 
 void Game::Update(float) {
+	m_TimeTracker += Renderer::GetDeltaTime();
 
+	if (!m_Bullets.empty()) {
+		std::vector<Bullet>::iterator i = m_Bullets.begin();
+		while (i != m_Bullets.end()) {
+			if (!i->offScreen) {
+				i->Move(Renderer::GetDeltaTime(), this->height);
+				++i;
+			}	else
+				i = m_Bullets.erase(i);
+		}
+	}
 }
 
 void Game::Render() {
 	if (this->state == GAME_ACTIVE) {
-		// Draw Background
-		m_SpRenderer->DrawSprite(m_TextureNames[0],
+		// Draw Backgroundd
+		m_Sprite = "background";
+		m_SpRenderer->DrawSprite(m_Sprite,
 			glm::vec2(0.0f, 0.0f), glm::vec2(this->width, this->height), 0.0f);
 		
 		// Draw Level
@@ -80,5 +97,11 @@ void Game::Render() {
 
 		// Draw the Player
 		m_Player->Draw(*m_SpRenderer);
+
+		// Draw Every Bullet
+		if (!m_Bullets.empty()) {
+			for (auto b : m_Bullets)
+				b.Draw(*m_SpRenderer);
+		}
 	}
 }
