@@ -12,6 +12,8 @@ class Bullet : public Entity {
 public:
 
 	bool offScreen;
+	Shooter shooter;
+	std::string spriteName2;
 
 	Bullet();
 	Bullet(glm::vec2 pos, glm::vec2 size, glm::vec2 velocity, 
@@ -22,7 +24,6 @@ public:
 
 private:
 	float m_TimeCtr;
-	Shooter m_Shooter;
 };
 
 #endif

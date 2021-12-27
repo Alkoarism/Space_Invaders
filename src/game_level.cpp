@@ -1,5 +1,8 @@
 #include "game_level.h"
 
+GameLevel::GameLevel() : borderOffset(glm::vec2(0.0f)) {
+}
+
 bool GameLevel::Load(const char* file, unsigned int lvlWidth, unsigned int lvlHeight) {
 	this->aliens.clear();
 	unsigned int alienCode;
@@ -50,8 +53,8 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> alienData,
 	//calculate dimensions
 	unsigned int height = alienData.size();
 	unsigned int width	= alienData[0].size();
-	float unit_width	= lvlWidth / static_cast<float>(width);
-	float unit_height	= lvlHeight / static_cast<float>(height);
+	float unit_width	= (lvlWidth - (2 * this->borderOffset.x)) / static_cast<float>(width);
+	float unit_height	= (lvlHeight - (2 * this->borderOffset.y)) / static_cast<float>(height);
 
 	// initialize level aliens based on alienData
 	for (unsigned int y = 0; y < height; ++y) {
@@ -81,7 +84,9 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> alienData,
 					}
 				}
 
-				glm::vec2 pos(unit_width * x, unit_height * y);
+				glm::vec2 pos(
+					(unit_width * x) + this->borderOffset.x, 
+					(unit_height * y) + this->borderOffset.y);
 				glm::vec2 size(unit_width, unit_height);
 				this->aliens.push_back(Entity(pos, size, type, color));
 			}

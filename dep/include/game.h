@@ -38,6 +38,9 @@ private:
 	std::unique_ptr<SpriteRenderer> m_SpRenderer;
 	std::unique_ptr<Entity> m_Player;
 	std::vector<Bullet> m_Bullets;
+
+	void DoCollisions();
+	bool CheckCollision(Entity& one, Entity& two);
 };
 
 #endif

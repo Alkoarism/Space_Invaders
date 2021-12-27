@@ -9,10 +9,13 @@ class GameLevel {
 public:
 	//level state
 	std::vector<Entity> aliens;
-	GameLevel() { }
+	glm::vec2 borderOffset;
+
+	GameLevel();
 	bool Load(const char*, unsigned int, unsigned int);
 	void Draw(SpriteRenderer&);
 	bool IsCompleted();
+
 private:
 	void init(std::vector<std::vector<unsigned int>>, unsigned int, unsigned int);
 };

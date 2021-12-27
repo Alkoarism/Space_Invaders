@@ -28,7 +28,8 @@ Game::Game(unsigned int width, unsigned int height)
 	Renderer::LoadTexture("bullet_1b", "res\\textures\\bullet_1b.png", true);
 
 	// Level Loading ----------------------------------------------------------
-	GameLevel one; 
+	GameLevel one;
+	one.borderOffset = glm::vec2(50.0f, 0.0f);
 	one.Load("res\\levels\\test.lvl", this->width, this->height / 2);
 	this->levels.push_back(one);
 	this->level = 0;
@@ -56,8 +57,7 @@ void Game::ProcessInput(float dt) {
 			if (m_Player->position.x <= (this->width - m_Player->size.x))
 				m_Player->position.x += ds;
 		}
-		if (this->keys[GLFW_KEY_SPACE]) {
-			if (m_TimeTracker >= 1) {
+		if (this->keys[GLFW_KEY_SPACE] && m_TimeTracker >= 1) {
 				m_Sprite = "bullet_1a";
 				float posX = m_Player->position.x + ((PLAYER_SIZE.x / 2) - (BULLET_SIZE.x / 2));
 				float posY = m_Player->position.y - BULLET_SIZE.y;
@@ -65,7 +65,6 @@ void Game::ProcessInput(float dt) {
 				Bullet b(bulletPos, BULLET_SIZE, BULLET_VELOCITY, m_Sprite, PLAYER);
 				m_Bullets.push_back(b);
 				m_TimeTracker = 0;
-			}
 		}
 	}
 }
@@ -83,6 +82,8 @@ void Game::Update(float) {
 				i = m_Bullets.erase(i);
 		}
 	}
+
+	DoCollisions();
 }
 
 void Game::Render() {
@@ -104,4 +105,28 @@ void Game::Render() {
 				b.Draw(*m_SpRenderer);
 		}
 	}
+}
+
+void Game::DoCollisions() {
+	for (Entity& alien : this->levels[this->level].aliens) {
+		if (!alien.destroyed) {
+			if (!m_Bullets.empty()) {
+				for (Bullet& bullet : m_Bullets) {
+					if (bullet.shooter == PLAYER && CheckCollision(alien, bullet)) {
+						alien.destroyed = true;
+					}
+				}
+			}
+		}
+	}
+}
+
+bool Game::CheckCollision(Entity& one, Entity& two) {
+	bool collisionX = one.position.x + one.size.x >= two.position.x &&
+		two.position.x + two.size.x >= one.position.x;
+
+	bool collisionY = one.position.y + one.size.y >= two.position.y &&
+		two.position.y + two.size.y >= one.position.y;
+
+	return collisionX && collisionY;
 }
