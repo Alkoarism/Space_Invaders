@@ -25,7 +25,7 @@ Game::Game(unsigned int width, unsigned int height)
 	Renderer::LoadTexture("al_UFO_0", "res\\textures\\alien_UFO_0.png", true);
 	Renderer::LoadTexture("player", "res\\textures\\player.png", true);
 	Renderer::LoadTexture("bullet_1a", "res\\textures\\bullet_1a.png", true);
-	Renderer::LoadTexture("bullet_1b", "res\\textures\\bullet_1b.png", true);
+	Renderer::LoadTexture("bullet_2a", "res\\textures\\bullet_2a.png", true);
 
 	// Level Loading ----------------------------------------------------------
 	GameLevel one;
@@ -58,14 +58,23 @@ void Game::ProcessInput(float dt) {
 				m_Player->position.x += ds;
 		}
 		if (this->keys[GLFW_KEY_SPACE] && m_TimeTracker >= 1) {
+			if (this->sprite)
 				m_Sprite = "bullet_1a";
-				float posX = m_Player->position.x + ((PLAYER_SIZE.x / 2) - (BULLET_SIZE.x / 2));
-				float posY = m_Player->position.y - BULLET_SIZE.y;
-				glm::vec2 bulletPos = glm::vec2(posX, posY);
-				Bullet b(bulletPos, BULLET_SIZE, BULLET_VELOCITY, m_Sprite, PLAYER);
-				m_Bullets.push_back(b);
-				m_TimeTracker = 0;
+			else
+				m_Sprite = "bullet_2a";
+
+			float posX = m_Player->position.x + ((PLAYER_SIZE.x / 2) - (BULLET_SIZE.x / 2));
+			float posY = m_Player->position.y - BULLET_SIZE.y;
+			glm::vec2 bulletPos = glm::vec2(posX, posY);
+			Bullet b(bulletPos, BULLET_SIZE, BULLET_VELOCITY, m_Sprite, PLAYER);
+			b.color = glm::vec3(0.0f, 1.0f, 0.0f);
+			m_Bullets.push_back(b);
+			m_TimeTracker = 0;
 		}
+		if (this->keys[GLFW_KEY_Q])
+			sprite = true;
+		if (this->keys[GLFW_KEY_E])
+			sprite = false;
 	}
 }
 

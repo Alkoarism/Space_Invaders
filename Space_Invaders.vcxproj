@@ -51,15 +51,19 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Standard_OpenGL.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Standard_OpenGL.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Standard_OpenGL.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Standard_OpenGL.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -106,6 +110,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)dep\include\;</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)dep\lib\</AdditionalLibraryDirectories>
@@ -200,6 +205,7 @@
     <ClInclude Include="dep\include\OpenGL\vertex_buffer_layout.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\Textures\spaceInvaders\bullet_2a.png" />
     <Image Include="res\textures\alien_UFO_0.png" />
     <Image Include="res\textures\alien_UFO_1.png" />
     <Image Include="res\textures\alien_circle_1.png" />
@@ -207,16 +213,12 @@
     <Image Include="res\textures\background.jpg" />
     <Image Include="res\textures\background_1.jpg" />
     <Image Include="res\textures\bullet_1a.png" />
-    <Image Include="res\textures\bullet_1b.png" />
     <Image Include="res\textures\bullet_2a.png" />
-    <Image Include="res\textures\bullet_2b.png" />
     <Image Include="res\textures\player.png" />
-    <Image Include="res\textures\sprite_sheet.png" />
     <Image Include="res\textures\alien_square_0.png" />
     <Image Include="res\textures\alien_square_1.png" />
     <Image Include="res\textures\alien_triangle_0.png" />
     <Image Include="res\textures\alien_triangle_1.png" />
-    <Image Include="res\sprite_sheet.jpg" />
     <Image Include="res\textures\black_canvas.png" />
     <Image Include="res\textures\circle_alien_1.png" />
     <Image Include="res\textures\cirlce_alien_0.png" />

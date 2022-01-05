@@ -13,7 +13,6 @@ public:
 
 	bool offScreen;
 	Shooter shooter;
-	std::string spriteName2;
 
 	Bullet();
 	Bullet(glm::vec2 pos, glm::vec2 size, glm::vec2 velocity, 
@@ -23,7 +22,6 @@ public:
 	//void Reset(glm::vec2 position, glm::vec2 velocity); //Not really needed in this game
 
 private:
-	float m_TimeCtr;
 };
 
 #endif

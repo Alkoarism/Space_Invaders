@@ -13,7 +13,7 @@ enum GameState {
 };
 
 const glm::vec2 PLAYER_SIZE(130.0f, 80.0f);
-const glm::vec2 BULLET_SIZE(30.0f, 40.0f);
+const glm::vec2 BULLET_SIZE(10.0f, 10.0f);
 const glm::vec2 BULLET_VELOCITY(100.0f, 100.0f);
 const float PLAYER_VELOCITY(500.0f);
 
@@ -21,9 +21,10 @@ class Game {
 public:
 	GameState state;
 	bool keys[1024];
+	bool sprite;
 	unsigned int width, height;
-	std::vector<GameLevel> levels;
 	unsigned int level;
+	std::vector<GameLevel> levels;
 
 	Game(unsigned int, unsigned int);
 	~Game();

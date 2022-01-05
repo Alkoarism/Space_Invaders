@@ -205,9 +205,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\sprite_sheet.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="res\textures\black_canvas.png">
       <Filter>Resource Files</Filter>
     </Image>
@@ -217,16 +214,10 @@
     <Image Include="res\textures\cirlce_alien_0.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\textures\sprite_sheet.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="res\textures\alien_circle_1.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\textures\alien_circle_0.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\textures\sprite_sheet.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\textures\alien_square_0.png">
@@ -259,13 +250,10 @@
     <Image Include="res\textures\bullet_2a.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\textures\bullet_2b.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="res\textures\bullet_1a.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\textures\bullet_1b.png">
+    <Image Include="..\..\..\Textures\spaceInvaders\bullet_2a.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
