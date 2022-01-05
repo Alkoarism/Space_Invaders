@@ -18,14 +18,14 @@ Game::Game(unsigned int width, unsigned int height)
 
 	m_SpRenderer.reset(new SpriteRenderer(spriteShaderName));
 	// Texture loading --------------------------------------------------------
-	Renderer::LoadTexture("background", "res\\textures\\background_1.jpg");
-	Renderer::LoadTexture("al_tr_0", "res\\textures\\alien_triangle_0.png", true);
-	Renderer::LoadTexture("al_sq_0", "res\\textures\\alien_square_0.png", true);
-	Renderer::LoadTexture("al_cl_0", "res\\textures\\alien_circle_0.png", true);
-	Renderer::LoadTexture("al_UFO_0", "res\\textures\\alien_UFO_0.png", true);
-	Renderer::LoadTexture("player", "res\\textures\\player.png", true);
-	Renderer::LoadTexture("bullet_1a", "res\\textures\\bullet_1a.png", true);
-	Renderer::LoadTexture("bullet_2a", "res\\textures\\bullet_2a.png", true);
+	Renderer::LoadTexture("background",	"res\\textures\\background_1.jpg",		false);
+	Renderer::LoadTexture("al_tr_0",	"res\\textures\\alien_triangle_0.png",	true);
+	Renderer::LoadTexture("al_sq_0",	"res\\textures\\alien_square_0.png",	true);
+	Renderer::LoadTexture("al_cl_0",	"res\\textures\\alien_circle_0.png",	true);
+	Renderer::LoadTexture("al_UFO_0",	"res\\textures\\alien_UFO_0.png",		true);
+	Renderer::LoadTexture("player",		"res\\textures\\player.png",			true);
+	Renderer::LoadTexture("bullet_1a",	"res\\textures\\bullet_1a.png",			true);
+	Renderer::LoadTexture("bullet_2a",	"res\\textures\\bullet_2a.png",			true);
 
 	// Level Loading ----------------------------------------------------------
 	GameLevel one;

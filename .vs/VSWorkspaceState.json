@@ -1,12 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\dep",
-    "\\dep\\include",
-    "\\res",
-    "\\res\\levels",
-    "\\src"
+    ""
   ],
-  "SelectedNode": "\\Space_Invaders.sln",
+  "SelectedNode": "\\Invaders.sln",
   "PreviewInSolutionExplorer": false
 }

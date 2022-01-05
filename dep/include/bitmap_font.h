@@ -1,7 +1,8 @@
 #ifndef _BITMAP_FONTCLASS_H
 #define _BITMAP_FONTCLASS_H
 
-#include "OpenGL\renderer.h"
+#include "OpenGL/renderer.h"
+
 
 #define BFG_MAXSTRING 255     // Maximum string length
 
@@ -19,32 +20,28 @@ typedef struct
 class BitmapFont
 {
 public:
-	std::string shaderName;
+	bool print_2D;
 
-	BitmapFont(std::string sName = "");
+	BitmapFont(Shader&, Texture&);
 
 	bool Load(const char* fname);
 	int  GetWidth(const char* Text);
 
-	void SetCursor(const int&, const int&);
+	void SetColor(glm::vec4 color);
 	void SetColor
-		(const float&, const float&, const float&, const float& a = 1.0f);
+		(const float& r, const float& g, const float& b, const float& a = 1.0f);
 	void ReverseYAxis(const bool&);
-	void Print(const char*);
-	void Print(const char*, const int&, const int&);
+	void Print(const char* txt, float x, float y,const float scale = 1.0f);
 
 private:
 	int m_CellX, m_CellY, m_YOffset, m_RowPitch;
 	char m_Base;
 	char m_Width[256];
-	int m_CurX, m_CurY;
 	float m_RowFactor, m_ColFactor;
-	float m_Red, m_Green, m_Blue, m_Alpha;
 	bool m_InvertYAxis;
-	
-	std::string m_TextName;
 
-	static int m_TextNumber;
+	Shader& m_Shader;
+	Texture& m_Texture;
 
 	void Bind();
 	void Unbind();

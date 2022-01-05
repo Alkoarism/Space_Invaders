@@ -67,31 +67,59 @@ Shader& Renderer::LoadShader
 }
 
 Texture& Renderer::LoadTexture
-    (std::string name, const char* file, bool alpha, bool flipImage) {
+    (std::string name, const char* file, bool alpha) {
 
     textures.emplace(name, Texture());
     if (alpha) {
-        textures[name].format = GL_RGBA;
+        textures.at(name).format = GL_RGBA;
     }
 
-    if (flipImage)
-    stbi_set_flip_vertically_on_load(flipImage);
+    if (Renderer::flip_texture_on_load)
+        stbi_set_flip_vertically_on_load(Renderer::flip_texture_on_load);
+
     int imgWidth, imgHeight, nrChannels;
     unsigned char* data
         = stbi_load(file, &imgWidth, &imgHeight, &nrChannels, 0);
     if (data) {
-        textures[name].Load(data, imgWidth, imgHeight);
+        textures.at(name).Load(data, imgWidth, imgHeight);
     }
-    else if (name.size() != 0) {
+    else {
         const char* failLog = stbi_failure_reason();
-        std::cout << "ERROR::TEXTURE::FAILED_TO_LOAD_TEXTURE\n" << failLog << std::endl;
+        std::cout << "ERROR::TEXTURE::FAILED_TO_LOAD_TEXTURE: "
+            << name << "\n" << failLog << std::endl;
     }
     stbi_image_free(data);
 
-    return textures[name];
+    return textures.at(name);
+}
+
+Texture& Renderer::LoadTexture(std::string name) {
+    textures.emplace(name, Texture());
+    return textures.at(name);
+}
+
+Shader& Renderer::GetShader(const std::string name) {
+    try {
+        return shaders.at(name);
+    }
+    catch (std::exception e) {
+        std::cout << "ERROR::RENDERER::SHADER::FILE_NAME_NOT_FOUND: "
+            << name << std::endl;
+    }
+}
+
+Texture& Renderer::GetTexture(const std::string name) {
+    try {
+        return textures.at(name);
+    }
+    catch (std::exception e) {
+        std::cout << "ERROR::RENDERER::TEXTURE::FILE_NAME_NOT_FOUND: "
+            << name << std::endl;
+    }
 }
 
 bool Renderer::render3D = false;
+bool Renderer::flip_texture_on_load = false;
 float Renderer::lastFrame = 0.0f;
 float Renderer::deltaTime = 0.0f;
 std::map<std::string, Shader> Renderer::shaders;

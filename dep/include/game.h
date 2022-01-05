@@ -5,6 +5,7 @@
 #include "sprite_renderer.h"
 #include "game_level.h"
 #include "bullet.h"
+#include "bitmap_font.h"
 
 enum GameState {
 	GAME_MENU,
