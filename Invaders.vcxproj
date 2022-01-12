@@ -116,7 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dep\include\;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="dep\include\alien.h" />
     <ClInclude Include="dep\include\bitmap_font.h" />
     <ClInclude Include="dep\include\bullet.h" />
     <ClInclude Include="dep\include\entity.h" />
@@ -164,6 +165,7 @@
     <Library Include="dep\lib\glfw3_mt.lib" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\shaders\bitmap2D.frag" />
     <None Include="res\shaders\bitmap_frag.shader" />
     <None Include="res\shaders\bitmap_frag2D.shader" />
     <None Include="res\shaders\bitmap_vert.shader" />
@@ -174,6 +176,7 @@
     <None Include="res\shaders\main_vert.shader" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\alien.cpp" />
     <ClCompile Include="src\bitmap_font.cpp" />
     <ClCompile Include="src\bullet.cpp" />
     <ClCompile Include="src\entity.cpp" />

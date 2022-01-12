@@ -63,6 +63,9 @@
     <ClInclude Include="dep\include\bitmap_font.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="dep\include\alien.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="dep\lib\glfw3.lib" />
@@ -77,6 +80,7 @@
     <None Include="res\shaders\main_vert.shader" />
     <None Include="res\shaders\main2D.frag" />
     <None Include="res\shaders\main2D.vert" />
+    <None Include="res\shaders\bitmap2D.frag" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenGL_src\camera.cpp">
@@ -122,6 +126,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\bitmap_font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\alien.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -27,7 +27,7 @@ SpriteRenderer::~SpriteRenderer() {
 
 }
 
-void SpriteRenderer::DrawSprite(std::string& textureName, 
+void SpriteRenderer::DrawSprite(std::string textureName, 
 	glm::vec2 position, 
 	glm::vec2 size, float rotate, 
 	glm::vec3 color) {

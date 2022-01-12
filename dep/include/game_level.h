@@ -4,12 +4,20 @@
 #include "OpenGL\renderer.h"
 
 #include "entity.h"
+#include "alien.h"
+
+struct BorderOffset {
+	float top = 0;
+	float down = 0;
+	float left = 0;
+	float right = 0;
+};
 
 class GameLevel {
 public:
 	//level state
-	std::vector<Entity> aliens;
-	glm::vec2 borderOffset;
+	std::vector<Alien> aliens;
+	BorderOffset borderOffset;
 
 	GameLevel();
 	bool Load(const char*, unsigned int, unsigned int);

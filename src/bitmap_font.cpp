@@ -3,8 +3,10 @@
 using namespace std;
 
 BitmapFont::BitmapFont(Shader& s, Texture& t) 
-    : m_Shader(s), m_Texture(t), m_InvertYAxis(false) {
+    :   m_Shader(s), m_Texture(t), 
+        invertYAxis(false), m_NormalizeY(false) {
     this->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+    this->SetNormalY(false);
 }
 
 bool BitmapFont::Load(const char* fname)
@@ -60,7 +62,6 @@ bool BitmapFont::Load(const char* fname)
     m_RowPitch = ImgX / m_CellX;
     m_ColFactor = (float)m_CellX / (float)ImgX;
     m_RowFactor = (float)m_CellY / (float)ImgY;
-    m_YOffset = m_CellY;
 
     // Determine blending options based on BPP
     switch (bpp)
@@ -112,20 +113,37 @@ bool BitmapFont::Load(const char* fname)
 }
 
 // Returns the width in pixels of the specified text
-int BitmapFont::GetWidth(const char* Text)
+glm::vec2 BitmapFont::GetSize(const char* Text)
 {
-    int size = 0;
+    int width = 0;
     size_t sLen = strnlen(Text, BFG_MAXSTRING);
 
     for (size_t loop = 0; loop != sLen; loop++)
     {
-        size += m_Width[Text[loop]];
+        width += m_Width[Text[loop]];
     }
 
-    return size;
+    if (m_NormalizeY) {
+        return glm::vec2(
+            width * m_NormalY * this->scale, 
+            this->scale);
+    }
+    else {
+        return glm::vec2(width * scale, m_CellY * scale);
+    }
 }
 
-void BitmapFont::SetColor(glm::vec4 color) {
+void BitmapFont::SetNormalY(const bool set) {
+    m_NormalizeY = set;
+    if (m_NormalizeY) {
+        m_NormalY = (1 / static_cast<float>(m_CellY));
+    }
+    else {
+        m_NormalX = m_NormalY = 1.0f;
+    }
+}
+
+void BitmapFont::SetColor(const glm::vec4& color) {
     m_Shader.SetUniform("fontColor", color);
 }
 
@@ -135,21 +153,15 @@ void BitmapFont::SetColor
     this->SetColor(glm::vec4(r, g, b, a));
 }
 
-void BitmapFont::ReverseYAxis(const bool& State)
-{
-    if (State || m_InvertYAxis)
-        m_YOffset = -m_CellY;
-    else
-        m_YOffset = m_CellY;
-
-    m_InvertYAxis = State;
+void BitmapFont::Print(const char* text, float posX, float posY) {
+    this->Print(text, posX, posY, this->scale);
 }
 
 void BitmapFont::Print
-    (const char* text, float posX, float posY, const float scale) {
+    (const char* text, float posX, float posY, const float size) {
 
     //texture mapping, top and bottom
-    float u, v, u1, v1;
+    float u, v, u1, v1, w, h, normalX, normalY;
     int row, col;
     size_t sLen = strnlen(text, BFG_MAXSTRING);
 
@@ -164,32 +176,39 @@ void BitmapFont::Print
     };
     IndexBuffer ib(indices, 6);
 
-    VertexBuffer vbo_2D(nullptr, (sizeof(float) * 4 * 4), GL_DYNAMIC_DRAW);
+    VertexBuffer vbo_2D(nullptr, sizeof(float) * 4 * 4);
     VertexBufferLayout vbl_2D;
     vbl_2D.Push<float>(4);
     vao.AddBuffer(vbo_2D, vbl_2D);
 
-    for (size_t i = 0; i != sLen; i++) {
+    for (size_t i = 0; i != sLen; ++i) {
         row = (text[i] - m_Base) / m_RowPitch;
         col = (text[i] - m_Base) - (row * m_RowPitch);
 
         u = col * m_ColFactor;
-        v = row * m_RowFactor;
         u1 = u + m_ColFactor;
-        v1 = v + m_RowFactor;
 
-        float w = m_CellX * scale;
-        float h = m_CellY * scale;
+        if (this->invertYAxis) {
+            v1 = row * m_RowFactor;
+            v = v1 + m_RowFactor;
+        }
+        else {
+            v = row * m_RowFactor;
+            v1 = v + m_RowFactor;
+        }
+
+        w = m_CellX * m_NormalY * size;
+        h = m_CellY * m_NormalY * size;
 
         float vertices_2D[] = {
             //vertex data                   //texture	
-            (posX + w),     (posY + h),     u1, v,      //top right
-            (posX + w),      posY,          u1, v1,     //bottom right
-             posX,           posY,          u,  v1,     //bottom left
-             posX,          (posY + h),     u,  v,      //top left
+            posX,         posY + h,     u,  v,      //top left
+            posX,         posY,         u,  v1,     //bottom left
+            posX + w,     posY,         u1, v1,     //bottom right
+            posX + w,     posY + h,     u1, v,      //top right
         };
 
-        posX += m_Width[text[i]] * scale;
+        posX += m_Width[text[i]] * m_NormalY * size;
 
         vbo_2D.Update(vertices_2D, sizeof(vertices_2D), 0);
         Renderer::Render(vao, ib, m_Shader);
@@ -200,6 +219,7 @@ void BitmapFont::Print
 
 void BitmapFont::Bind()
 {
+    m_Shader.Use();
     m_Texture.Bind();
 }
 

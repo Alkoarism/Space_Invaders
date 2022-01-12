@@ -16,7 +16,7 @@ public:
 
 	Bullet();
 	Bullet(glm::vec2 pos, glm::vec2 size, glm::vec2 velocity, 
-		std::string& sprite, Shooter shooter);
+		std::string sprite, Shooter shooter);
 
 	glm::vec2 Move(float dt, unsigned int window_height);
 	//void Reset(glm::vec2 position, glm::vec2 velocity); //Not really needed in this game

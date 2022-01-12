@@ -13,6 +13,9 @@ enum GameState {
 	GAME_ACTIVE
 };
 
+const float TOP_HUD_SIZE = 100.0f;
+const float BOTTOM_HUD_SIZE = 50.0f;
+
 const glm::vec2 PLAYER_SIZE(130.0f, 80.0f);
 const glm::vec2 BULLET_SIZE(10.0f, 10.0f);
 const glm::vec2 BULLET_VELOCITY(100.0f, 100.0f);
@@ -22,6 +25,7 @@ class Game {
 public:
 	GameState state;
 	bool keys[1024];
+	bool keysProcessed[1024];
 	bool sprite;
 	unsigned int width, height;
 	unsigned int level;
@@ -35,8 +39,8 @@ public:
 	void Render();
 
 private:
-	float m_TimeTracker;
-	std::string m_Sprite;
+	unsigned int m_PlayerShots, m_AlienShots;
+	std::unique_ptr<BitmapFont> m_Font;
 	std::unique_ptr<SpriteRenderer> m_SpRenderer;
 	std::unique_ptr<Entity> m_Player;
 	std::vector<Bullet> m_Bullets;

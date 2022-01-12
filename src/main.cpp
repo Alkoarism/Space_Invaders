@@ -81,8 +81,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key >= 0 && key < 1024) {
 		if (action == GLFW_PRESS)
 			spaceInvaders->keys[key] = true;
-		else if (action == GLFW_RELEASE)
+		else if (action == GLFW_RELEASE) {
 			spaceInvaders->keys[key] = false;
+			spaceInvaders->keysProcessed[key] = false;
+		}
 	}
 }
 

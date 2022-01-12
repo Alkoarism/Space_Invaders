@@ -4,7 +4,7 @@ Bullet::Bullet() : Entity(),
 	offScreen(false), shooter(PLAYER) {
 }
 
-Bullet::Bullet(glm::vec2 pos, glm::vec2 size, glm::vec2 velocity, std::string& sprite, Shooter shooter)
+Bullet::Bullet(glm::vec2 pos, glm::vec2 size, glm::vec2 velocity, std::string sprite, Shooter shooter)
 	: Entity(pos, size, sprite, glm::vec3(1.0f), velocity),
 	offScreen(false), shooter(shooter) {
 
