@@ -30,7 +30,7 @@ Game::Game(unsigned int width, unsigned int height)
 	bitmapFontShader.SetUniform("image", 0);
 
 	// Texture loading --------------------------------------------------------
-	Renderer::LoadTexture("background",	"res\\textures\\background_1.jpg",		false);
+	Renderer::LoadTexture("background",	"res\\textures\\background.jpg",		false);
 	Renderer::LoadTexture("al_tr_0",	"res\\textures\\alien_triangle_0.png",	true);
 	Renderer::LoadTexture("al_tr_1",	"res\\textures\\alien_triangle_1.png", true);
 	Renderer::LoadTexture("al_tr_2",	"res\\textures\\alien_triangle_2.png", true);
@@ -67,11 +67,15 @@ Game::Game(unsigned int width, unsigned int height)
 	this->level = 0;
 
 	// Player Initialization --------------------------------------------------
-	glm::vec2 playerPos = glm::vec2(
-		(this->width / 2.0f) - (PLAYER_SIZE.x / 2.0f),
-		(this->height - PLAYER_SIZE.y));
+	glm::vec2 playerSize = glm::vec2(
+		this->levels[level].unitWidth,
+		this->levels[level].unitHeight);
 
-	m_Player.reset(new Entity(playerPos, PLAYER_SIZE, "player", glm::vec3(0.0f, 1.0f, 0.0f)));
+	glm::vec2 playerPos = glm::vec2(
+		(this->width - playerSize.x) / 2.0f,
+		this->height - (this->levels[level].borderOffset.down + this->levels[level].unitHeight));
+
+	m_Player.reset(new Entity(playerPos, playerSize, "player", glm::vec3(0.0f, 1.0f, 0.0f)));
 }
 
 Game::~Game() {
@@ -83,6 +87,7 @@ void Game::ProcessInput(float dt) {
 		case (GAME_MENU) :{
 			if (this->keys[GLFW_KEY_ENTER] && !this->keysProcessed[GLFW_KEY_ENTER]) {
 				this->state = GAME_ACTIVE;
+				this->keysProcessed[GLFW_KEY_ENTER] = true;
 			}
 		} break;
 		case (GAME_ACTIVE): {
@@ -100,7 +105,7 @@ void Game::ProcessInput(float dt) {
 					m_Player->position.x = this->width - m_Player->size.x;
 			}
 			if (this->keys[GLFW_KEY_SPACE] && m_PlayerShots == 0) {
-				float posX = m_Player->position.x + ((PLAYER_SIZE.x / 2) - (BULLET_SIZE.x / 2));
+				float posX = m_Player->position.x + ((m_Player->size.x / 2) - (BULLET_SIZE.x / 2));
 				float posY = m_Player->position.y - BULLET_SIZE.y;
 				glm::vec2 bulletPos = glm::vec2(posX, posY);
 				Bullet b(bulletPos, BULLET_SIZE, BULLET_VELOCITY, "bullet_1a", PLAYER);
@@ -109,42 +114,53 @@ void Game::ProcessInput(float dt) {
 				++m_PlayerShots;
 			}
 		} break;
+		case (GAME_END): {
+			if (this->keys[GLFW_KEY_ENTER] && !this->keysProcessed[GLFW_KEY_ENTER]) {
+				this->state = GAME_MENU;
+				this->keysProcessed[GLFW_KEY_ENTER] = true;
+			}
+		} break;
 	}
 }
 
-void Game::Update(float) {
-	float sinFunction = 0.5 * (sin(glfwGetTime() * 3.14) + 1);
-	float dt = Renderer::GetDeltaTime();
+void Game::Update(float dt) {
+	if (this->state == GAME_ACTIVE) {
+		float sinFunction = 0.5 * (sin(glfwGetTime() * 3.14) + 1);
 
-	if (!m_Bullets.empty()) {
-		std::vector<Bullet>::iterator i = m_Bullets.begin();
-		while (i != m_Bullets.end()) {
-			if (!(i->offScreen || i->destroyed)) {
-				if (i->shooter == PLAYER)
-					i->color = glm::vec3(0.0f, sinFunction, 0.0f);
-				else
-					i->color = glm::vec3(sinFunction, 0.0f, 0.0f);
-				i->Move(dt, this->height);
-				++i;
-			}
-			else {
-				if (i->shooter == PLAYER)
-					--m_PlayerShots;
-				else if (i->shooter == ALIEN)
-					--m_AlienShots;
+		if (!m_Bullets.empty()) {
+			std::vector<Bullet>::iterator i = m_Bullets.begin();
+			while (i != m_Bullets.end()) {
+				if (!(i->offScreen || i->destroyed)) {
+					if (i->shooter == PLAYER)
+						i->color = glm::vec3(0.0f, sinFunction, 0.0f);
+					else
+						i->color = glm::vec3(sinFunction, 0.0f, 0.0f);
+					i->Move(dt, this->height);
+					++i;
+				}
+				else {
+					if (i->shooter == PLAYER)
+						--m_PlayerShots;
+					else if (i->shooter == ALIEN)
+						--m_AlienShots;
 
-				i = m_Bullets.erase(i);
+					i = m_Bullets.erase(i);
+				}
 			}
 		}
-	}
 
-	for (auto& alien : this->levels[this->level].aliens) {
-		if (alien.destroyed != true) {
-			alien.Move(dt, this->width);
+		for (auto& alien : this->levels[this->level].aliens) {
+			if (alien.destroyed != true) {
+				alien.Move(dt, this->width);
+			}
+		}
+
+		DoCollisions();
+
+		if (this->levels[level].IsCompleted()) {
+			this->state = GAME_END;
 		}
 	}
-
-	DoCollisions();
 }
 
 void Game::Render() {
@@ -175,6 +191,16 @@ void Game::Render() {
 				for (auto& b : m_Bullets)
 					b.Draw(*m_SpRenderer);
 			}
+		} break;
+		case (GAME_END): {
+			m_SpRenderer->DrawSprite("background",
+				glm::vec2(0.0f, 0.0f), glm::vec2(this->width, this->height), 0.0f);
+
+			m_Font->SetColor(glm::vec4(0.0f, std::abs(sin(glfwGetTime())), 0.0f, 1.0f));
+			glm::vec2 textSize = m_Font->GetSize("Congratulations!");
+			m_Font->Print("Congratulations!",
+				(this->width - textSize.x) / 2,
+				(this->height - textSize.y) / 2);
 		} break;
 	}
 }

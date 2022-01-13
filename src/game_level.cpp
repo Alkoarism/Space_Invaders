@@ -3,7 +3,7 @@
 GameLevel::GameLevel() {
 }
 
-bool GameLevel::Load(const char* file, unsigned int lvlWidth, unsigned int lvlHeight) {
+bool GameLevel::Load(const char* file, unsigned int screenWidth, unsigned int screenHeight) {
 	this->aliens.clear();
 	unsigned int alienCode;
 	std::string line;
@@ -22,7 +22,7 @@ bool GameLevel::Load(const char* file, unsigned int lvlWidth, unsigned int lvlHe
 			alienData.push_back(row);
 		}
 		if (alienData.size() > 0)
-			init(alienData, lvlWidth, lvlHeight);
+			init(alienData, screenWidth, screenHeight);
 
 		fstream.close();
 	}
@@ -48,21 +48,28 @@ bool GameLevel::IsCompleted() {
 }
 
 void GameLevel::init(std::vector<std::vector<unsigned int>> alienData, 
-	unsigned int lvlWidth, unsigned int lvlHeight) {
+	unsigned int screenWidth, unsigned int screenHeight) {
 
-	//calculate dimensions
-	unsigned int height = alienData.size();
-	unsigned int width	= alienData[0].size();
-	float unit_width	= (lvlWidth - 
-		(this->borderOffset.left + this->borderOffset.right)) / 
-		static_cast<float>(width);
-	float unit_height	= (lvlHeight - 
-		(this->borderOffset.top + this->borderOffset.down)) / 
-		static_cast<float>(height);
+	float playAreaHeight = screenHeight - (this->borderOffset.top + this->borderOffset.down);
+
+	this->unitWidth = static_cast<float>(screenWidth) / MAX_ALIEN_COLS;
+	this->unitHeight = playAreaHeight / MAX_ALIEN_ROWS;
+
+	float alienTileOffset = 1.0f - ALIEN_TILE_PROPORTION;
 
 	// initialize level aliens based on alienData
-	for (unsigned int y = 0; y < height; ++y) {
-		for (unsigned int x = 0; x < width; ++x) {
+	for (unsigned int y = 0; y != alienData.size(); ++y) {
+		if (y == MAX_ALIEN_ROWS) break;
+
+		for (unsigned int x = 0; x != alienData[y].size(); ++x) {
+			if (x == MAX_ALIEN_COLS) break;
+
+			glm::vec2 alienRelativeOffset(
+				MAX_ALIEN_COLS >= alienData[y].size() ? 
+					(MAX_ALIEN_COLS - alienData[y].size()) / 2 : 0,
+				2.5 // UFO Offset
+				);
+
 			//check alien type from level data (2D level array)
 			if (alienData[y][x] > 0) {
 				glm::vec3 color = glm::vec3(1.0f);
@@ -82,10 +89,12 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> alienData,
 				}
 
 				glm::vec2 pos(
-					(unit_width * x) + this->borderOffset.left, 
-					(unit_height * y) + this->borderOffset.top);
-				glm::vec2 size(unit_width, unit_height);
-				this->aliens.push_back(Alien(pos, size, glm::vec2(1.0f), type));
+					(this->unitWidth * (alienRelativeOffset.x + x + alienTileOffset)),
+					(this->unitHeight * (alienRelativeOffset.y + y + alienTileOffset)) + this->borderOffset.top);
+				glm::vec2 size(
+					this->unitWidth * ALIEN_TILE_PROPORTION, 
+					this->unitHeight * ALIEN_TILE_PROPORTION);
+				this->aliens.push_back(Alien(pos, size, glm::vec2(30.0f), type));
 			}
 		}
 	}

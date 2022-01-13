@@ -20,8 +20,12 @@ public:
 	void Draw(SpriteRenderer&) override;
 
 private:
+	static bool m_TurnAround;
+	static bool m_GoDown;
+
 	bool m_AddSpriteNbr;
 	float m_TimeTracker;
+	float m_Descent;
 
 	//implement this later...
 	size_t m_SubSpriteNbr;

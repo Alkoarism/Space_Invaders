@@ -2,12 +2,12 @@
 This is a clone project of the game Space Invaders for learning purposes.
 With this I intend to use all the knowledge acquired after reading the "Learn OpenGL" book and practice and further improve my skills with OOP, while also learning more about the C++ language and Graphics Programming.
 
-Currently there is only a prototype of the main game screen:
+Currently there is only a prototype of the main game loop:
 
 ![Prototype_Demo](https://user-images.githubusercontent.com/69710741/147152994-3f51dd59-7871-4d0e-a01f-2ea01c3c8638.gif)
 
-If you want to download the .exe file, you can find on "/builds/0_1_1- prototype_demo", simply download the entire folder and run the .exe file inside of it. It should run as demonstrated on the GIF.
-It is also possible to manipulate the number and position of the aliens on the level changing the contents of the "test.lvl" file (/res/levele):
+If you want to download the .exe file, you can find on "/builds/0_1_3- initial_game_loop", simply download the entire folder and run the .exe file inside of it. It should run as demonstrated on the GIF.
+It is also possible to manipulate the number and position of the aliens on the level changing the contents of the "classic.lvl" file (/res/levels) (Although this feature have not been tested or debugged in this release):
 - Numbers must be separated by a space and represent the type of enemy:
 	- 0: Empty;
 	- 1: Circle alien;
@@ -18,7 +18,8 @@ It is also possible to manipulate the number and position of the aliens on the l
 - Any other number has no meaning to the game.
 
 The used keys are:
-- A/D: Move player pad;
+- A/D or LEFT/RiGHT: Move player pad;
+- SPACE: Shoot;
 - ESC: Close application.
 
 External sources:
