@@ -10,6 +10,7 @@
 class Renderer {
 public:
 	static bool render3D;
+	static bool flip_texture_on_load;
 
 	static void Render
 	(const VertexArray&, const IndexBuffer&, const Shader&);
@@ -20,13 +21,13 @@ public:
 
 	static Shader& LoadShader
 	(const std::string name, const char* vertPath, const char* fragPath);
-	static Texture& LoadTexture
-	(std::string name, const char* file = "", bool alpha = false, bool flipImage = false);
+	static Texture& LoadTexture(std::string name);
+	static Texture& LoadTexture(std::string name, const char* file, bool alpha);
 
 	static float GetLastFrame() { return lastFrame; }
 	static float GetDeltaTime() { return deltaTime; }
-	static Shader& GetShader(const std::string name) { return shaders[name]; }
-	static Texture& GetTexture(const std::string name) { return textures[name]; }
+	static Shader& GetShader(const std::string name);
+	static Texture& GetTexture(const std::string name);
 
 private:
 	static float lastFrame;

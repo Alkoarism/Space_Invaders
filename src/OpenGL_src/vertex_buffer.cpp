@@ -1,9 +1,9 @@
 #include "OpenGL/vertex_buffer.h"
 
-VertexBuffer::VertexBuffer(const void* data, unsigned int size) {
+VertexBuffer::VertexBuffer(const void* data, unsigned int size, GLenum usage) {
 	glGenBuffers(1, &m_vertexBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size, data, usage);
 }
 
 VertexBuffer::~VertexBuffer() {
@@ -21,6 +21,11 @@ VertexBuffer& VertexBuffer::operator=(VertexBuffer&& other) noexcept {
 		std::swap(m_vertexBufferID, other.m_vertexBufferID);
 	}
 	return *this;
+}
+
+void VertexBuffer::Update(const void* data, unsigned int size, unsigned int offset) {
+	this->Bind();
+	glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
 }
 
 void VertexBuffer::Bind() const {

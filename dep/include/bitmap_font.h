@@ -19,32 +19,32 @@ typedef struct
 class BitmapFont
 {
 public:
-	std::string shaderName;
+	bool invertYAxis;
+	float scale;
 
-	BitmapFont(std::string sName = "");
+	BitmapFont(Shader&, Texture&);
 
 	bool Load(const char* fname);
-	int  GetWidth(const char* Text);
+	glm::vec2 GetSize(const char* Text);
 
-	void SetCursor(const int&, const int&);
+	void SetNormalY(const bool);
+	void SetColor(const glm::vec4& color);
 	void SetColor
-		(const float&, const float&, const float&, const float& a = 1.0f);
-	void ReverseYAxis(const bool&);
-	void Print(const char*);
-	void Print(const char*, const int&, const int&);
+		(const float& r, const float& g, const float& b, const float& a = 1.0f);
+	void Print(const char* txt, float x, float y);
+	void Print(const char* txt, float x, float y,const float scale);
 
 private:
-	int m_CellX, m_CellY, m_YOffset, m_RowPitch;
+	int m_CellX, m_CellY, m_RowPitch;
 	char m_Base;
 	char m_Width[256];
-	int m_CurX, m_CurY;
 	float m_RowFactor, m_ColFactor;
-	float m_Red, m_Green, m_Blue, m_Alpha;
-	bool m_InvertYAxis;
-	
-	std::string m_TextName;
+	float m_NormalX, m_NormalY;
+	bool m_NormalizeY;
 
-	static int m_TextNumber;
+
+	Shader& m_Shader;
+	Texture& m_Texture;
 
 	void Bind();
 	void Unbind();

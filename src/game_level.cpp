@@ -1,6 +1,9 @@
 #include "game_level.h"
 
-bool GameLevel::Load(const char* file, unsigned int lvlWidth, unsigned int lvlHeight) {
+GameLevel::GameLevel() {
+}
+
+bool GameLevel::Load(const char* file, unsigned int screenWidth, unsigned int screenHeight) {
 	this->aliens.clear();
 	unsigned int alienCode;
 	std::string line;
@@ -19,7 +22,7 @@ bool GameLevel::Load(const char* file, unsigned int lvlWidth, unsigned int lvlHe
 			alienData.push_back(row);
 		}
 		if (alienData.size() > 0)
-			init(alienData, lvlWidth, lvlHeight);
+			init(alienData, screenWidth, screenHeight);
 
 		fstream.close();
 	}
@@ -45,45 +48,53 @@ bool GameLevel::IsCompleted() {
 }
 
 void GameLevel::init(std::vector<std::vector<unsigned int>> alienData, 
-	unsigned int lvlWidth, unsigned int lvlHeight) {
+	unsigned int screenWidth, unsigned int screenHeight) {
 
-	//calculate dimensions
-	unsigned int height = alienData.size();
-	unsigned int width	= alienData[0].size();
-	float unit_width	= lvlWidth / static_cast<float>(width);
-	float unit_height	= lvlHeight / static_cast<float>(height);
+	float playAreaHeight = screenHeight - (this->borderOffset.top + this->borderOffset.down);
+
+	this->unitWidth = static_cast<float>(screenWidth) / MAX_ALIEN_COLS;
+	this->unitHeight = playAreaHeight / MAX_ALIEN_ROWS;
+
+	float alienTileOffset = 1.0f - ALIEN_TILE_PROPORTION;
 
 	// initialize level aliens based on alienData
-	for (unsigned int y = 0; y < height; ++y) {
-		for (unsigned int x = 0; x < width; ++x) {
+	for (unsigned int y = 0; y != alienData.size(); ++y) {
+		if (y == MAX_ALIEN_ROWS) break;
+
+		for (unsigned int x = 0; x != alienData[y].size(); ++x) {
+			if (x == MAX_ALIEN_COLS) break;
+
+			glm::vec2 alienRelativeOffset(
+				MAX_ALIEN_COLS >= alienData[y].size() ? 
+					(MAX_ALIEN_COLS - alienData[y].size()) / 2 : 0,
+				2.5 // UFO Offset
+				);
+
 			//check alien type from level data (2D level array)
 			if (alienData[y][x] > 0) {
 				glm::vec3 color = glm::vec3(1.0f);
-				std::string type = "";
+				AlienShape type;
 
 				switch (alienData[y][x]) {
 					case 1: {
-						color = glm::vec3(0.0f, 0.0f, 1.0f);
-						type = "al_cl_0";
+						type = CIRCLE;
 						break;
 					} case 2: {
-						color = glm::vec3(0.0f, 1.0f, 0.0f);
-						type = "al_sq_0";
+						type = SQUARE;
 						break;
 					} case 3: {
-						color = glm::vec3(1.0f, 0.1f, 1.0f);
-						type = "al_tr_0";
+						type = TRIANGLE;
 						break;
-					} default: {
-						color = glm::vec3(1.0f, 0.0f, 0.0f);
-						type = "al_UFO_0";
-						break;
-					}
+					} 
 				}
 
-				glm::vec2 pos(unit_width * x, unit_height * y);
-				glm::vec2 size(unit_width, unit_height);
-				this->aliens.push_back(Entity(pos, size, type, color));
+				glm::vec2 pos(
+					(this->unitWidth * (alienRelativeOffset.x + x + alienTileOffset)),
+					(this->unitHeight * (alienRelativeOffset.y + y + alienTileOffset)) + this->borderOffset.top);
+				glm::vec2 size(
+					this->unitWidth * ALIEN_TILE_PROPORTION, 
+					this->unitHeight * ALIEN_TILE_PROPORTION);
+				this->aliens.push_back(Alien(pos, size, glm::vec2(30.0f), type));
 			}
 		}
 	}

@@ -1,13 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\dep",
-    "\\dep\\include",
-    "\\res",
-    "\\res\\levels",
-    "\\src",
-    "\\src\\OpenGL_src"
+    ""
   ],
-  "SelectedNode": "\\res\\levels\\test.lvl",
+  "SelectedNode": "\\Invaders.sln",
   "PreviewInSolutionExplorer": false
 }
