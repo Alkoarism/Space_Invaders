@@ -13,7 +13,6 @@ It is also possible to manipulate the number and position of the aliens on the l
 	- 1: Circle alien;
 	- 2: Square alien;
 	- 3: Triangle alien;
-	- 4: UFO;
 
 - Any other number has no meaning to the game.
 
