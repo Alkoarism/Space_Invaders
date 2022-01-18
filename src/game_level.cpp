@@ -22,7 +22,7 @@ bool GameLevel::Load(const char* file, unsigned int screenWidth, unsigned int sc
 			alienData.push_back(row);
 		}
 		if (alienData.size() > 0)
-			init(alienData, screenWidth, screenHeight);
+			InitPosition(alienData, screenWidth, screenHeight);
 
 		fstream.close();
 	}
@@ -47,7 +47,7 @@ bool GameLevel::IsCompleted() {
 	return true;
 }
 
-void GameLevel::init(std::vector<std::vector<unsigned int>> alienData, 
+void GameLevel::InitPosition(std::vector<std::vector<unsigned int>> alienData, 
 	unsigned int screenWidth, unsigned int screenHeight) {
 
 	float playAreaHeight = screenHeight - (this->borderOffset.top + this->borderOffset.down);

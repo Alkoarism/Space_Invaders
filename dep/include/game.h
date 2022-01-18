@@ -17,8 +17,8 @@ enum GameState {
 const float TOP_HUD_SIZE = 100.0f;
 const float BOTTOM_HUD_SIZE = 50.0f;
 
-const glm::vec2 BULLET_SIZE(5.0f, 5.0f);
-const glm::vec2 BULLET_VELOCITY(100.0f, 100.0f);
+const glm::vec2 BULLET_SIZE(5.0f, 15.0f);
+const float BULLET_VELOCITY(500.0f);
 const float PLAYER_VELOCITY(400.0f);
 
 class Game {
@@ -47,6 +47,7 @@ private:
 
 	void DoCollisions();
 	bool CheckCollision(Entity& one, Entity& two);
+	void GenerateBullet(Entity& shooter, BulletType type);
 };
 
 #endif

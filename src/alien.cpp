@@ -61,7 +61,7 @@ glm::vec2 Alien::Move(float dt, unsigned int window_width) {
 
 void Alien::Draw(SpriteRenderer& renderer) {
 	m_TimeTracker += Renderer::GetDeltaTime();
-	if (m_TimeTracker >= 1) {
+	if (m_TimeTracker >= 0.75) {
 		if (m_SubSpriteNbr + 1 == m_SubSprites.size())
 			m_AddSpriteNbr = false;
 		else if (m_SubSpriteNbr == 0)

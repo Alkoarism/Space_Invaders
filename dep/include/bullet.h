@@ -3,22 +3,24 @@
 
 #include "entity.h"
 
-enum Shooter {
-	PLAYER,
-	ALIEN
+enum BulletType {
+	LASER,
+	SLOW,
+	FAST,
+	WIGGLY
 };
 
 class Bullet : public Entity {
 public:
-
-	bool offScreen;
-	Shooter shooter;
+	bool hitScreenBorder;
+	BulletType type;
 
 	Bullet();
 	Bullet(glm::vec2 pos, glm::vec2 size, glm::vec2 velocity, 
-		std::string sprite, Shooter shooter);
+		std::string sprite, BulletType type);
 
-	glm::vec2 Move(float dt, unsigned int window_height);
+	glm::vec2 Move(float dt, const float heigh_limit);
+	void Draw(SpriteRenderer& renderer) override;
 	//void Reset(glm::vec2 position, glm::vec2 velocity); //Not really needed in this game
 
 private:

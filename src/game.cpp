@@ -105,12 +105,7 @@ void Game::ProcessInput(float dt) {
 					m_Player->position.x = this->width - m_Player->size.x;
 			}
 			if (this->keys[GLFW_KEY_SPACE] && m_PlayerShots == 0) {
-				float posX = m_Player->position.x + ((m_Player->size.x / 2) - (BULLET_SIZE.x / 2));
-				float posY = m_Player->position.y - BULLET_SIZE.y;
-				glm::vec2 bulletPos = glm::vec2(posX, posY);
-				Bullet b(bulletPos, BULLET_SIZE, BULLET_VELOCITY, "bullet_1a", PLAYER);
-				b.color = glm::vec3(0.0f, 1.0f, 0.0f);
-				m_Bullets.push_back(b);
+				GenerateBullet(*m_Player, LASER);
 				++m_PlayerShots;
 			}
 		} break;
@@ -125,33 +120,37 @@ void Game::ProcessInput(float dt) {
 
 void Game::Update(float dt) {
 	if (this->state == GAME_ACTIVE) {
-		float sinFunction = 0.5 * (sin(glfwGetTime() * 3.14) + 1);
 
 		if (!m_Bullets.empty()) {
-			std::vector<Bullet>::iterator i = m_Bullets.begin();
-			while (i != m_Bullets.end()) {
-				if (!(i->offScreen || i->destroyed)) {
-					if (i->shooter == PLAYER)
-						i->color = glm::vec3(0.0f, sinFunction, 0.0f);
+			std::vector<Bullet>::iterator bullet = m_Bullets.begin();
+			while (bullet != m_Bullets.end()) {
+				if (!(bullet->hitScreenBorder || bullet->destroyed)) {
+					if (bullet->type == LASER)
+						bullet->Move(dt, TOP_HUD_SIZE);
 					else
-						i->color = glm::vec3(sinFunction, 0.0f, 0.0f);
-					i->Move(dt, this->height);
-					++i;
+						bullet->Move(dt, this->height - BOTTOM_HUD_SIZE);
+
+					++bullet;
 				}
 				else {
-					if (i->shooter == PLAYER)
+					if (bullet->type == LASER)
 						--m_PlayerShots;
-					else if (i->shooter == ALIEN)
+					else 
 						--m_AlienShots;
 
-					i = m_Bullets.erase(i);
+					bullet = m_Bullets.erase(bullet);
 				}
 			}
 		}
 
+		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+		std::default_random_engine generator(seed);
+		std::uniform_int_distribution<int> distribution(0, 2);
+
 		for (auto& alien : this->levels[this->level].aliens) {
 			if (alien.destroyed != true) {
 				alien.Move(dt, this->width);
+
 			}
 		}
 
@@ -178,7 +177,9 @@ void Game::Render() {
 		case (GAME_ACTIVE): {
 			// Draw Backgroundd
 			m_SpRenderer->DrawSprite("background",
-				glm::vec2(0.0f, 0.0f), glm::vec2(this->width, this->height), 0.0f);
+				glm::vec2(0.0f, TOP_HUD_SIZE), 
+				glm::vec2(this->width, this->height - (TOP_HUD_SIZE + BOTTOM_HUD_SIZE)),
+					0.0f);
 
 			// Draw Level
 			this->levels[this->level].Draw(*m_SpRenderer);
@@ -211,7 +212,7 @@ void Game::DoCollisions() {
 			if (!m_Bullets.empty()) {
 				for (Bullet& bullet : m_Bullets) {
 					if (!bullet.destroyed) {
-						if (bullet.shooter == PLAYER && CheckCollision(alien, bullet)) {
+						if (bullet.type == LASER && CheckCollision(alien, bullet)) {
 							alien.destroyed = bullet.destroyed = true;
 						}
 					}
@@ -230,4 +231,42 @@ bool Game::CheckCollision(Entity& one, Entity& two) {
 		two.position.y + two.size.y >= one.position.y;
 
 	return collisionX && collisionY;
+}
+
+void Game::GenerateBullet(Entity& shooter, BulletType type) {
+	std::string texture;
+	float posX, posY, speedY;
+	glm::vec2 bulletPos, bulletSpeed;
+	glm::vec3 color;
+
+	posX = shooter.position.x + ((shooter.size.x / 2) - (BULLET_SIZE.x / 2));
+	posY = shooter.position.y;
+	color = glm::vec3(1.0f, 0.2f, 0.2f);
+
+	switch (type) {
+		case LASER: {
+			texture = "bullet_1a";
+			posY = shooter.position.y - BULLET_SIZE.y;
+			speedY = -BULLET_VELOCITY;
+			color = glm::vec3(0.0f, 1.0f, 0.0f);
+		} break;
+		case SLOW: {
+			texture = "bullet_2a";
+			speedY = BULLET_VELOCITY * 0.75;
+		} break;
+		case FAST: {
+			texture = "bullet_2a";
+			speedY = BULLET_VELOCITY * 1.25;
+		} break;
+		case WIGGLY: {
+			texture = "bullet_2a";
+			speedY = BULLET_VELOCITY;
+		} break;
+	}
+
+	bulletPos = glm::vec2(posX, posY);
+	bulletSpeed = glm::vec2(0.0f, speedY);
+	Bullet b(bulletPos, BULLET_SIZE, bulletSpeed, texture, type);
+	b.color = color;
+	m_Bullets.push_back(b);
 }

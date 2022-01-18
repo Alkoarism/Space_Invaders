@@ -32,7 +32,7 @@ public:
 	bool IsCompleted();
 
 private:
-	void init(std::vector<std::vector<unsigned int>>, unsigned int, unsigned int);
+	void InitPosition(std::vector<std::vector<unsigned int>>, unsigned int, unsigned int);
 };
 
 #endif
