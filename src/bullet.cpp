@@ -15,7 +15,7 @@ glm::vec2 Bullet::Move(float dt, const float height_limit) {
 	if (this->type == LASER && this->position.y <= height_limit)
 		this->hitScreenBorder = true;
 	
-	if (this->type != LASER && this->position.y >= height_limit + this->size.y)
+	if (this->type != LASER && this->position.y >= height_limit - this->size.y)
 		this->hitScreenBorder = true;
 
 	return this->position;

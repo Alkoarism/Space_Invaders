@@ -11,7 +11,7 @@ const unsigned int MAX_ALIEN_ROWS = 20;
 const unsigned int MAX_ALIEN_COLS = 22;
 
 // alien size based on a single play area tile
-const float ALIEN_TILE_PROPORTION = 0.9;
+const float ALIEN_TILE_PROPORTION = 0.8;
 
 struct BorderOffset {
 	float top = 0;
@@ -24,15 +24,17 @@ public:
 	float unitHeight;
 
 	std::vector<Alien> aliens;
+	std::vector<std::vector<unsigned int>> alienData;
 	BorderOffset borderOffset;
 
 	GameLevel();
 	bool Load(const char*, unsigned int, unsigned int);
-	void Draw(SpriteRenderer&);
 	bool IsCompleted();
+	void Draw(SpriteRenderer&);
+	void Restart(unsigned int, unsigned int);
 
 private:
-	void InitPosition(std::vector<std::vector<unsigned int>>, unsigned int, unsigned int);
+	void InitPosition(unsigned int, unsigned int);
 };
 
 #endif

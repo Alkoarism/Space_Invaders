@@ -12,6 +12,7 @@ enum AlienShape {
 class Alien final: public Entity {
 public:
 	const AlienShape shape;
+	glm::vec2 gridPos;
 
 	Alien(AlienShape shape);
 	Alien(glm::vec2 pos, glm::vec2 size, glm::vec2 velocity, AlienShape shape);

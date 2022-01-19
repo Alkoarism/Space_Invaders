@@ -29,23 +29,24 @@ Game::Game(unsigned int width, unsigned int height)
 	bitmapFontShader.SetUniform("model", glm::mat4(1.0f));
 	bitmapFontShader.SetUniform("image", 0);
 
-	// Texture loading --------------------------------------------------------
-	Renderer::LoadTexture("background",	"res\\textures\\background.jpg",		false);
-	Renderer::LoadTexture("al_tr_0",	"res\\textures\\alien_triangle_0.png",	true);
-	Renderer::LoadTexture("al_tr_1",	"res\\textures\\alien_triangle_1.png", true);
-	Renderer::LoadTexture("al_tr_2",	"res\\textures\\alien_triangle_2.png", true);
-	Renderer::LoadTexture("al_sq_0",	"res\\textures\\alien_square_0.png",	true);
-	Renderer::LoadTexture("al_sq_1",	"res\\textures\\alien_square_1.png", true);
-	Renderer::LoadTexture("al_sq_2",	"res\\textures\\alien_square_2.png", true);
-	Renderer::LoadTexture("al_cl_0",	"res\\textures\\alien_circle_0.png",	true);
-	Renderer::LoadTexture("al_cl_1",	"res\\textures\\alien_circle_1.png", true);
-	Renderer::LoadTexture("al_cl_2",	"res\\textures\\alien_circle_2.png", true);
-	Renderer::LoadTexture("al_UFO_0",	"res\\textures\\alien_UFO_0.png",		true);
-	Renderer::LoadTexture("al_UFO_1",	"res\\textures\\alien_UFO_1.png", true);
-	Renderer::LoadTexture("al_UFO_2",	"res\\textures\\alien_UFO_2.png", true);
-	Renderer::LoadTexture("player",		"res\\textures\\player.png",			true);
-	Renderer::LoadTexture("bullet_1a",	"res\\textures\\bullet_1a.png",			true);
-	Renderer::LoadTexture("bullet_2a",	"res\\textures\\bullet_2a.png",			true);
+	// Texture loading e config --------------------------------------------------
+	Renderer::LoadTexture("background",		"res\\textures\\background.jpg",		false);
+	Renderer::LoadTexture("background_1",	"res\\textures\\background_1.jpg", false);
+	Renderer::LoadTexture("al_tr_0",		"res\\textures\\alien_triangle_0.png",	true);
+	Renderer::LoadTexture("al_tr_1",		"res\\textures\\alien_triangle_1.png", true);
+	Renderer::LoadTexture("al_tr_2",		"res\\textures\\alien_triangle_2.png", true);
+	Renderer::LoadTexture("al_sq_0",		"res\\textures\\alien_square_0.png",	true);
+	Renderer::LoadTexture("al_sq_1",		"res\\textures\\alien_square_1.png", true);
+	Renderer::LoadTexture("al_sq_2",		"res\\textures\\alien_square_2.png", true);
+	Renderer::LoadTexture("al_cl_0",		"res\\textures\\alien_circle_0.png",	true);
+	Renderer::LoadTexture("al_cl_1",		"res\\textures\\alien_circle_1.png", true);
+	Renderer::LoadTexture("al_cl_2",		"res\\textures\\alien_circle_2.png", true);
+	Renderer::LoadTexture("al_UFO_0",		"res\\textures\\alien_UFO_0.png",		true);
+	Renderer::LoadTexture("al_UFO_1",		"res\\textures\\alien_UFO_1.png", true);
+	Renderer::LoadTexture("al_UFO_2",		"res\\textures\\alien_UFO_2.png", true);
+	Renderer::LoadTexture("player",			"res\\textures\\player.png",			true);
+	Renderer::LoadTexture("bullet_1a",		"res\\textures\\bullet_1a.png",			true);
+	Renderer::LoadTexture("bullet_2a",		"res\\textures\\bullet_2a.png",			true);
 
 	// Font Loading -----------------------------------------------------------
 	m_Font.reset(new BitmapFont(
@@ -88,6 +89,13 @@ void Game::ProcessInput(float dt) {
 			if (this->keys[GLFW_KEY_ENTER] && !this->keysProcessed[GLFW_KEY_ENTER]) {
 				this->state = GAME_ACTIVE;
 				this->keysProcessed[GLFW_KEY_ENTER] = true;
+
+				if (this->levels[this->level].IsCompleted()) {
+					this->levels[this->level].Restart(this->width, this->height);
+					m_Bullets.clear();
+					m_AlienShots = 0;
+					m_PlayerShots = 0;
+				}
 			}
 		} break;
 		case (GAME_ACTIVE): {
@@ -145,12 +153,44 @@ void Game::Update(float dt) {
 
 		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 		std::default_random_engine generator(seed);
-		std::uniform_int_distribution<int> distribution(0, 2);
+		std::uniform_int_distribution<int> distribution(0, 100);
 
-		for (auto& alien : this->levels[this->level].aliens) {
-			if (alien.destroyed != true) {
+		size_t totalAliens = this->levels[level].aliens.size();
+		for (size_t cnt = 0; cnt != totalAliens; ++cnt) {
+			Alien& alien = this->levels[this->level].aliens[cnt];
+			if (!alien.destroyed) {
 				alien.Move(dt, this->width);
 
+				if (this->m_AlienShots < 3) {
+
+					int randomNbr = distribution(generator);
+					if (randomNbr < 50) {
+						
+						// No need to check previous aliens
+						std::vector<size_t> sameColumnAliens;
+						for (size_t i = cnt; i != totalAliens; ++i) {
+							if (this->levels[level].aliens[i].gridPos.x == alien.gridPos.x)
+								sameColumnAliens.push_back(i);
+						}
+
+						bool willShoot = true;
+						for (auto& toCheck : sameColumnAliens) {
+							Alien& target = this->levels[level].aliens[toCheck];
+							if (target.gridPos.y > alien.gridPos.y)
+								if (!target.destroyed)
+									willShoot = false;
+						}
+
+						if (willShoot) {
+							if (alien.shape == TRIANGLE)
+								GenerateBullet(alien, WIGGLY);
+							else
+								GenerateBullet(alien, randomNbr < 80 ? SLOW : FAST);
+
+							++m_AlienShots;
+						}
+					}
+				}
 			}
 		}
 
@@ -175,11 +215,19 @@ void Game::Render() {
 				(this->height  / 2) - (textSize.y / 2));
 		} break;
 		case (GAME_ACTIVE): {
-			// Draw Backgroundd
+			// Draw Background
+			m_SpRenderer->DrawSprite("background_1",
+				glm::vec2(0.0f, 0.0f),
+				glm::vec2(this->width, TOP_HUD_SIZE),
+				0.0f);
+			m_SpRenderer->DrawSprite("background_1",
+				glm::vec2(0.0f, this->height - BOTTOM_HUD_SIZE),
+				glm::vec2(this->width, BOTTOM_HUD_SIZE),
+				0.0f);
 			m_SpRenderer->DrawSprite("background",
 				glm::vec2(0.0f, TOP_HUD_SIZE), 
 				glm::vec2(this->width, this->height - (TOP_HUD_SIZE + BOTTOM_HUD_SIZE)),
-					0.0f);
+				0.0f);
 
 			// Draw Level
 			this->levels[this->level].Draw(*m_SpRenderer);
@@ -240,7 +288,7 @@ void Game::GenerateBullet(Entity& shooter, BulletType type) {
 	glm::vec3 color;
 
 	posX = shooter.position.x + ((shooter.size.x / 2) - (BULLET_SIZE.x / 2));
-	posY = shooter.position.y;
+	posY = shooter.position.y + shooter.size.y;
 	color = glm::vec3(1.0f, 0.2f, 0.2f);
 
 	switch (type) {

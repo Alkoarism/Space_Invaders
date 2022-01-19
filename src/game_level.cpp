@@ -7,7 +7,6 @@ bool GameLevel::Load(const char* file, unsigned int screenWidth, unsigned int sc
 	this->aliens.clear();
 	unsigned int alienCode;
 	std::string line;
-	std::vector<std::vector<unsigned int>> alienData;
 	std::ifstream fstream;
 
 	fstream.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -19,10 +18,24 @@ bool GameLevel::Load(const char* file, unsigned int screenWidth, unsigned int sc
 			std::vector<unsigned int> row;
 			while (sstream >> alienCode)
 				row.push_back(alienCode);
-			alienData.push_back(row);
+			this->alienData.push_back(row);
 		}
-		if (alienData.size() > 0)
-			InitPosition(alienData, screenWidth, screenHeight);
+
+		if (this->alienData.size() > 0) {
+			// Ensure that every row have the same size
+			unsigned int largerRow = 0;
+			for (size_t i = 0; i != this->alienData.size(); ++i) {
+				if (this->alienData[i].size() > 0)
+					largerRow = this->alienData[i].size();
+			}
+			for (auto& row : this->alienData) {
+				while (row.size() != largerRow) {
+					row.push_back(0);
+				}
+			}
+
+			InitPosition(screenWidth, screenHeight);
+		}
 
 		fstream.close();
 	}
@@ -34,12 +47,6 @@ bool GameLevel::Load(const char* file, unsigned int screenWidth, unsigned int sc
 	return true;
 }
 
-void GameLevel::Draw(SpriteRenderer& renderer) {
-	for (Entity& alien : this->aliens)
-		if (!alien.destroyed)
-			alien.Draw(renderer);
-}
-
 bool GameLevel::IsCompleted() {
 	for (Entity& alien : this->aliens)
 		if (!alien.destroyed)
@@ -47,8 +54,18 @@ bool GameLevel::IsCompleted() {
 	return true;
 }
 
-void GameLevel::InitPosition(std::vector<std::vector<unsigned int>> alienData, 
-	unsigned int screenWidth, unsigned int screenHeight) {
+void GameLevel::Draw(SpriteRenderer& renderer) {
+	for (Entity& alien : this->aliens)
+		if (!alien.destroyed)
+			alien.Draw(renderer);
+}
+
+void GameLevel::Restart(unsigned int screenWidth, unsigned int screenHeight) {
+	this->aliens.clear();
+	InitPosition(screenWidth, screenHeight);
+}
+
+void GameLevel::InitPosition(unsigned int screenWidth, unsigned int screenHeight) {
 
 	float playAreaHeight = screenHeight - (this->borderOffset.top + this->borderOffset.down);
 
@@ -58,24 +75,24 @@ void GameLevel::InitPosition(std::vector<std::vector<unsigned int>> alienData,
 	float alienTileOffset = 1.0f - ALIEN_TILE_PROPORTION;
 
 	// initialize level aliens based on alienData
-	for (unsigned int y = 0; y != alienData.size(); ++y) {
+	for (unsigned int y = 0; y != this->alienData.size(); ++y) {
 		if (y == MAX_ALIEN_ROWS) break;
 
-		for (unsigned int x = 0; x != alienData[y].size(); ++x) {
+		for (unsigned int x = 0; x != this->alienData[y].size(); ++x) {
 			if (x == MAX_ALIEN_COLS) break;
 
 			glm::vec2 alienRelativeOffset(
-				MAX_ALIEN_COLS >= alienData[y].size() ? 
-					(MAX_ALIEN_COLS - alienData[y].size()) / 2 : 0,
+				MAX_ALIEN_COLS >= this->alienData[y].size() ? 
+					(MAX_ALIEN_COLS - this->alienData[y].size()) / 2 : 0,
 				2.5 // UFO Offset
 				);
 
 			//check alien type from level data (2D level array)
-			if (alienData[y][x] > 0) {
+			if (this->alienData[y][x] > 0) {
 				glm::vec3 color = glm::vec3(1.0f);
 				AlienShape type;
 
-				switch (alienData[y][x]) {
+				switch (this->alienData[y][x]) {
 					case 1: {
 						type = CIRCLE;
 						break;
@@ -95,6 +112,7 @@ void GameLevel::InitPosition(std::vector<std::vector<unsigned int>> alienData,
 					this->unitWidth * ALIEN_TILE_PROPORTION, 
 					this->unitHeight * ALIEN_TILE_PROPORTION);
 				this->aliens.push_back(Alien(pos, size, glm::vec2(30.0f), type));
+				this->aliens[this->aliens.size() - 1].gridPos = glm::vec2(x, y);
 			}
 		}
 	}
