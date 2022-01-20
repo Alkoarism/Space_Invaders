@@ -23,6 +23,9 @@ const float PLAYER_VELOCITY(400.0f);
 
 class Game {
 public:
+	static std::default_random_engine engine;
+	static std::uniform_int_distribution<int> randomDist;
+
 	GameState state;
 	bool keys[1024];
 	bool keysProcessed[1024];
@@ -40,6 +43,7 @@ public:
 
 private:
 	unsigned int m_PlayerShots, m_AlienShots;
+	glm::vec2 m_playerStartPos;
 	std::unique_ptr<BitmapFont> m_Font;
 	std::unique_ptr<SpriteRenderer> m_SpRenderer;
 	std::unique_ptr<Entity> m_Player;

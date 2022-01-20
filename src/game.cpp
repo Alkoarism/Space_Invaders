@@ -1,5 +1,8 @@
 #include "game.h"
 
+std::default_random_engine Game::engine(std::chrono::system_clock::now().time_since_epoch().count());
+std::uniform_int_distribution<int> Game::randomDist(0, 10);
+
 Game::Game(unsigned int width, unsigned int height) 
 	:	state(GAME_MENU), 
 		width(width), height(height), 
@@ -72,11 +75,11 @@ Game::Game(unsigned int width, unsigned int height)
 		this->levels[level].unitWidth,
 		this->levels[level].unitHeight);
 
-	glm::vec2 playerPos = glm::vec2(
+	m_playerStartPos = glm::vec2(
 		(this->width - playerSize.x) / 2.0f,
 		this->height - (this->levels[level].borderOffset.down + this->levels[level].unitHeight));
 
-	m_Player.reset(new Entity(playerPos, playerSize, "player", glm::vec3(0.0f, 1.0f, 0.0f)));
+	m_Player.reset(new Entity(m_playerStartPos, playerSize, "player", glm::vec3(0.0f, 1.0f, 0.0f)));
 }
 
 Game::~Game() {
@@ -99,22 +102,33 @@ void Game::ProcessInput(float dt) {
 			}
 		} break;
 		case (GAME_ACTIVE): {
-			float ds = PLAYER_VELOCITY * dt;
-			if (this->keys[GLFW_KEY_A] || this->keys[GLFW_KEY_LEFT]) {
-				if (m_Player->position.x >= 0.0f)
-					m_Player->position.x -= ds;
-				if (m_Player->position.x < 0.0f)
-					m_Player->position.x = 0.0f;
+			if (!m_Player->destroyed) {
+				float ds = PLAYER_VELOCITY * dt;
+				if (this->keys[GLFW_KEY_A] || this->keys[GLFW_KEY_LEFT]) {
+					if (m_Player->position.x >= 0.0f)
+						m_Player->position.x -= ds;
+					if (m_Player->position.x < 0.0f)
+						m_Player->position.x = 0.0f;
+				}
+				if (this->keys[GLFW_KEY_D] || this->keys[GLFW_KEY_RIGHT]) {
+					if (m_Player->position.x <= (this->width - m_Player->size.x))
+						m_Player->position.x += ds;
+					if (m_Player->position.x > this->width - m_Player->size.x)
+						m_Player->position.x = this->width - m_Player->size.x;
+				}
+				if (this->keys[GLFW_KEY_SPACE] && m_PlayerShots == 0) {
+					GenerateBullet(*m_Player, LASER);
+					++m_PlayerShots;
+				}
 			}
-			if (this->keys[GLFW_KEY_D] || this->keys[GLFW_KEY_RIGHT]) {
-				if (m_Player->position.x <= (this->width - m_Player->size.x))
-					m_Player->position.x += ds;
-				if (m_Player->position.x > this->width - m_Player->size.x)
-					m_Player->position.x = this->width - m_Player->size.x;
-			}
-			if (this->keys[GLFW_KEY_SPACE] && m_PlayerShots == 0) {
-				GenerateBullet(*m_Player, LASER);
-				++m_PlayerShots;
+			else {
+				if (this->keys[GLFW_KEY_ENTER] && !this->keysProcessed[GLFW_KEY_ENTER]) {
+					this->keysProcessed[GLFW_KEY_ENTER] = true;
+					m_Player->destroyed = false;
+					m_Player->position = m_playerStartPos;
+					m_Bullets.clear();
+					m_PlayerShots = m_AlienShots = 0;
+				}
 			}
 		} break;
 		case (GAME_END): {
@@ -127,7 +141,7 @@ void Game::ProcessInput(float dt) {
 }
 
 void Game::Update(float dt) {
-	if (this->state == GAME_ACTIVE) {
+	if (this->state == GAME_ACTIVE && !m_Player->destroyed) {
 
 		if (!m_Bullets.empty()) {
 			std::vector<Bullet>::iterator bullet = m_Bullets.begin();
@@ -151,10 +165,6 @@ void Game::Update(float dt) {
 			}
 		}
 
-		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-		std::default_random_engine generator(seed);
-		std::uniform_int_distribution<int> distribution(0, 100);
-
 		size_t totalAliens = this->levels[level].aliens.size();
 		for (size_t cnt = 0; cnt != totalAliens; ++cnt) {
 			Alien& alien = this->levels[this->level].aliens[cnt];
@@ -163,29 +173,25 @@ void Game::Update(float dt) {
 
 				if (this->m_AlienShots < 3) {
 
-					int randomNbr = distribution(generator);
-					if (randomNbr < 50) {
+					int randomNbr = this->randomDist(this->engine);
+					if (randomNbr > 5) {
 						
 						// No need to check previous aliens
-						std::vector<size_t> sameColumnAliens;
-						for (size_t i = cnt; i != totalAliens; ++i) {
-							if (this->levels[level].aliens[i].gridPos.x == alien.gridPos.x)
-								sameColumnAliens.push_back(i);
-						}
-
 						bool willShoot = true;
-						for (auto& toCheck : sameColumnAliens) {
-							Alien& target = this->levels[level].aliens[toCheck];
-							if (target.gridPos.y > alien.gridPos.y)
-								if (!target.destroyed)
-									willShoot = false;
+						for (size_t i = cnt; i != totalAliens; ++i) {
+							Alien& target = this->levels[level].aliens[i];
+							if (target.gridPos.x == alien.gridPos.x
+								&& target.gridPos.y > alien.gridPos.y
+								&& !target.destroyed)
+								
+								willShoot = false;
 						}
 
 						if (willShoot) {
 							if (alien.shape == TRIANGLE)
 								GenerateBullet(alien, WIGGLY);
 							else
-								GenerateBullet(alien, randomNbr < 80 ? SLOW : FAST);
+								GenerateBullet(alien, randomNbr < 9 ? SLOW : FAST);
 
 							++m_AlienShots;
 						}
@@ -233,7 +239,15 @@ void Game::Render() {
 			this->levels[this->level].Draw(*m_SpRenderer);
 
 			// Draw the Player
-			m_Player->Draw(*m_SpRenderer);
+			if (!m_Player->destroyed)
+				m_Player->Draw(*m_SpRenderer);
+			else {
+				m_Font->SetColor(glm::vec4(1.0f, std::abs(sin(glfwGetTime())), 1.0f, 1.0f));
+				glm::vec2 textSize = m_Font->GetSize("You Died");
+				m_Font->Print("You Died",
+					(this->width / 2) - (textSize.x / 2),
+					(this->height / 2) - (textSize.y / 2));
+			}
 
 			// Draw Every Bullet
 			if (!m_Bullets.empty()) {
@@ -255,15 +269,41 @@ void Game::Render() {
 }
 
 void Game::DoCollisions() {
-	for (Entity& alien : this->levels[this->level].aliens) {
-		if (!alien.destroyed) {
-			if (!m_Bullets.empty()) {
-				for (Bullet& bullet : m_Bullets) {
-					if (!bullet.destroyed) {
-						if (bullet.type == LASER && CheckCollision(alien, bullet)) {
-							alien.destroyed = bullet.destroyed = true;
+	if (!m_Bullets.empty()) {
+		for (Bullet& bullet : m_Bullets) {
+			if (bullet.type == LASER) {
+				for (Bullet& bullet2 : m_Bullets) {
+					if (bullet2.type != LASER && CheckCollision(bullet, bullet2)) {
+						int randNbr = this->randomDist(this->engine);
+						switch (bullet2.type) {
+							case FAST: {
+								if (randNbr < 5)
+									bullet2.destroyed = true;
+							} break;
+							case WIGGLY: {
+								if (randNbr < 2)
+									bullet2.destroyed = true;
+							} break;
+							default: {
+								bullet2.destroyed = true;
+							}
 						}
+
+						bullet.destroyed = true;
+						break;
 					}
+				}
+				if (bullet.destroyed) 
+
+				for (Entity& alien : this->levels[level].aliens) {
+					if (!alien.destroyed && CheckCollision(alien, bullet)) {
+						alien.destroyed = bullet.destroyed = true;
+					}
+				}
+			}
+			else {
+				if (CheckCollision(*m_Player, bullet)) {
+					m_Player->destroyed = true;
 				}
 			}
 		}
