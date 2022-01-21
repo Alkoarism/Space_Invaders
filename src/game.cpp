@@ -77,7 +77,7 @@ Game::Game(unsigned int width, unsigned int height)
 
 	m_playerStartPos = glm::vec2(
 		(this->width - playerSize.x) / 2.0f,
-		this->height - (this->levels[level].borderOffset.down + this->levels[level].unitHeight));
+		this->height - (BOTTOM_HUD_SIZE + playerSize.y));
 
 	m_Player.reset(new Entity(m_playerStartPos, playerSize, "player", glm::vec3(0.0f, 1.0f, 0.0f)));
 }
@@ -286,14 +286,14 @@ void Game::DoCollisions() {
 							} break;
 							default: {
 								bullet2.destroyed = true;
-							}
+							} break;
 						}
 
 						bullet.destroyed = true;
 						break;
 					}
 				}
-				if (bullet.destroyed) 
+				if (bullet.destroyed) continue;
 
 				for (Entity& alien : this->levels[level].aliens) {
 					if (!alien.destroyed && CheckCollision(alien, bullet)) {

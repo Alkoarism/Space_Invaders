@@ -2,6 +2,8 @@
 
 bool Alien::m_TurnAround = false;
 bool Alien::m_GoDown = false;
+float Alien::m_BorderOffset = 0;
+glm::vec2 Alien::unitGridSize = glm::vec2(0.0f);
 
 Alien::Alien(AlienShape shape) : 
 	Alien(glm::vec2(0.0f), glm::vec2(1.0f),	glm::vec2(0.0f), shape) {
@@ -9,7 +11,8 @@ Alien::Alien(AlienShape shape) :
 
 Alien::Alien(glm::vec2 pos, glm::vec2 size, glm::vec2 velocity, AlienShape shape)
 	:	Entity(pos, size, "", glm::vec3(1.0f), velocity), 
-		shape(shape), m_SubSpriteNbr(0), m_TimeTracker(0), m_AddSpriteNbr(true), m_Descent(0.0f)
+		shape(shape), m_SubSpriteNbr(0), m_TimeTracker(0), 
+		m_AddSpriteNbr(true), m_Descent(0.0f), m_BorderOffsetProcessed(true)
 {
 	m_SubSprites = { '0', '1', '2' };
 
@@ -34,27 +37,40 @@ Alien::Alien(glm::vec2 pos, glm::vec2 size, glm::vec2 velocity, AlienShape shape
 
 glm::vec2 Alien::Move(float dt, unsigned int window_width) {
 
-	if (this->position.x <= 0 || this->position.x >= window_width - this->size.x) {
-		if (this->position.x <= 0)
-			this->position.x = 0;
-		else if (this->position.x >= window_width - this->size.x)
-			this->position.x = window_width - this->size.x;
+	if (this->position.x < 0 || this->position.x > window_width - this->size.x) {
+		if (this->position.x <= 0 && this->position.x < m_BorderOffset) {
+			m_BorderOffset = this->position.x;
+		}
+		else if (this->position.x >= window_width - this->size.x) {
+			float offScreen = this->position.x - (window_width - this->size.x);
+			if (offScreen > m_BorderOffset) {
+				m_BorderOffset = offScreen;
+			}
+		}
 
 		m_GoDown = true;
 	}
 
-	if (m_Descent > this->size.y / 2) {
+	if (m_Descent > this->unitGridSize.y) {
 		m_GoDown = false;
 		m_Descent = 0;
-		this->velocity.x *= -1;
+		m_BorderOffset = 0;
+		m_BorderOffsetProcessed = false;
+		this->velocity.x = -(this->velocity.x);
 	}
 
 	if (m_GoDown) {
+		if (!m_BorderOffsetProcessed) {
+			this->position.x -= m_BorderOffset;
+			m_BorderOffsetProcessed = true;
+		}
+
 		this->position.y += this->velocity.y * dt;
 		m_Descent += this->velocity.y * dt;
 	}
-	else
+	else {
 		this->position.x += this->velocity.x * dt;
+	}
 
 	return this->position;
 }

@@ -11,6 +11,8 @@ enum AlienShape {
 
 class Alien final: public Entity {
 public:
+	static glm::vec2 unitGridSize;
+
 	const AlienShape shape;
 	glm::vec2 gridPos;
 
@@ -23,10 +25,13 @@ public:
 private:
 	static bool m_TurnAround;
 	static bool m_GoDown;
+	static float m_BorderOffset;
 
+	bool m_BorderOffsetProcessed;
 	bool m_AddSpriteNbr;
 	float m_TimeTracker;
 	float m_Descent;
+	float m_LastBorderTrespassValue;
 
 	//implement this later...
 	size_t m_SubSpriteNbr;

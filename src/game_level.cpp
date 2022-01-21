@@ -66,11 +66,12 @@ void GameLevel::Restart(unsigned int screenWidth, unsigned int screenHeight) {
 }
 
 void GameLevel::InitPosition(unsigned int screenWidth, unsigned int screenHeight) {
-
 	float playAreaHeight = screenHeight - (this->borderOffset.top + this->borderOffset.down);
 
 	this->unitWidth = static_cast<float>(screenWidth) / MAX_ALIEN_COLS;
 	this->unitHeight = playAreaHeight / MAX_ALIEN_ROWS;
+
+	Alien::unitGridSize = glm::vec2(this->unitWidth, this->unitHeight);
 
 	float alienTileOffset = 1.0f - ALIEN_TILE_PROPORTION;
 
@@ -84,7 +85,7 @@ void GameLevel::InitPosition(unsigned int screenWidth, unsigned int screenHeight
 			glm::vec2 alienRelativeOffset(
 				MAX_ALIEN_COLS >= this->alienData[y].size() ? 
 					(MAX_ALIEN_COLS - this->alienData[y].size()) / 2 : 0,
-				2.5 // UFO Offset
+				2 // UFO Offset
 				);
 
 			//check alien type from level data (2D level array)
