@@ -72,6 +72,7 @@ void GameLevel::InitPosition(unsigned int screenWidth, unsigned int screenHeight
 	this->unitHeight = playAreaHeight / MAX_ALIEN_ROWS;
 
 	Alien::unitGridSize = glm::vec2(this->unitWidth, this->unitHeight);
+	Alien::velocity = glm::vec2(30.0f);
 
 	float alienTileOffset = 1.0f - ALIEN_TILE_PROPORTION;
 
@@ -112,7 +113,7 @@ void GameLevel::InitPosition(unsigned int screenWidth, unsigned int screenHeight
 				glm::vec2 size(
 					this->unitWidth * ALIEN_TILE_PROPORTION, 
 					this->unitHeight * ALIEN_TILE_PROPORTION);
-				this->aliens.push_back(Alien(pos, size, glm::vec2(30.0f), type));
+				this->aliens.push_back(Alien(pos, size, type));
 				this->aliens[this->aliens.size() - 1].gridPos = glm::vec2(x, y);
 			}
 		}

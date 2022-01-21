@@ -39,10 +39,10 @@
     <ClInclude Include="dep\include\OpenGL\vertex_buffer_layout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dep\include\bullet.h">
+    <ClInclude Include="dep\include\_Entities\bullet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dep\include\entity.h">
+    <ClInclude Include="dep\include\_Entities\entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dep\include\game.h">
@@ -63,7 +63,10 @@
     <ClInclude Include="dep\include\bitmap_font.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dep\include\alien.h">
+    <ClInclude Include="dep\include\_Entities\alien.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\_Entities\entityDynamic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -107,10 +110,10 @@
     <ClCompile Include="src\OpenGL_src\vertex_buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\bullet.cpp">
+    <ClCompile Include="src\_Entities\bullet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\entity.cpp">
+    <ClCompile Include="src\_Entities\entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\game.cpp">
@@ -128,7 +131,7 @@
     <ClCompile Include="src\bitmap_font.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\alien.cpp">
+    <ClCompile Include="src\_Entities\alien.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

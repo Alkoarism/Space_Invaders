@@ -1,11 +1,12 @@
 #include "bullet.h"
 
-Bullet::Bullet() : Entity(), type(LASER), hitScreenBorder(false) {
+Bullet::Bullet() 
+	: EntityDynamic(), type(LASER), hitScreenBorder(false), velocity(glm::vec2(1.0f)) {
 }
 
 Bullet::Bullet(glm::vec2 pos, glm::vec2 size, glm::vec2 velocity, std::string sprite, BulletType type)
-	: Entity(pos, size, sprite, glm::vec3(1.0f), velocity),
-	type(type), hitScreenBorder(false) {
+	: EntityDynamic(pos, size, sprite, glm::vec3(1.0f)),
+	type(type), hitScreenBorder(false), velocity(velocity) {
 
 }
 

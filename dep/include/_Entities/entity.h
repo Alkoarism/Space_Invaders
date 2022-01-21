@@ -7,7 +7,7 @@
 
 class Entity {
 public:
-	glm::vec2 position, size, velocity;
+	glm::vec2 position, size;
 	glm::vec3 color;
 	float rotation;
 	bool destroyed;
@@ -16,8 +16,8 @@ public:
 	Entity();
 	Entity(
 		glm::vec2 pos, glm::vec2 size, 
-		std::string textName, glm::vec3 color = glm::vec3(1.0f), 	
-		glm::vec2 velocity = glm::vec2(0.0f, 0.0f));
+		std::string textName, glm::vec3 color = glm::vec3(1.0f));
+	virtual ~Entity() = default;
 
 	virtual void Draw(SpriteRenderer&);
 };
