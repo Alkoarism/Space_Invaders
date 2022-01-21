@@ -144,7 +144,7 @@ void Game::Update(float dt) {
 	if (this->state == GAME_ACTIVE && !m_Player->destroyed) {
 
 		if (!m_Bullets.empty()) {
-			std::vector<Bullet>::iterator bullet = m_Bullets.begin();
+			auto bullet = m_Bullets.begin(), prev = m_Bullets.before_begin();
 			while (bullet != m_Bullets.end()) {
 				if (!(bullet->hitScreenBorder || bullet->destroyed)) {
 					if (bullet->type == LASER)
@@ -152,7 +152,7 @@ void Game::Update(float dt) {
 					else
 						bullet->Move(dt, this->height - BOTTOM_HUD_SIZE);
 
-					++bullet;
+					prev = bullet;
 				}
 				else {
 					if (bullet->type == LASER)
@@ -160,8 +160,10 @@ void Game::Update(float dt) {
 					else 
 						--m_AlienShots;
 
-					bullet = m_Bullets.erase(bullet);
+					bullet = prev;
+					m_Bullets.erase_after(prev);
 				}
+				++bullet;
 			}
 		}
 
@@ -182,9 +184,11 @@ void Game::Update(float dt) {
 							Alien& target = this->levels[level].aliens[i];
 							if (target.gridPos.x == alien.gridPos.x
 								&& target.gridPos.y > alien.gridPos.y
-								&& !target.destroyed)
-								
+								&& !target.destroyed) {
+
 								willShoot = false;
+								break;
+							}
 						}
 
 						if (willShoot) {
@@ -293,11 +297,11 @@ void Game::DoCollisions() {
 						break;
 					}
 				}
-				if (bullet.destroyed) continue;
-
-				for (Entity& alien : this->levels[level].aliens) {
-					if (!alien.destroyed && CheckCollision(alien, bullet)) {
-						alien.destroyed = bullet.destroyed = true;
+				if (!bullet.destroyed) {
+					for (Entity& alien : this->levels[level].aliens) {
+						if (!alien.destroyed && CheckCollision(alien, bullet)) {
+							alien.destroyed = bullet.destroyed = true;
+						}
 					}
 				}
 			}
@@ -356,5 +360,5 @@ void Game::GenerateBullet(Entity& shooter, BulletType type) {
 	bulletSpeed = glm::vec2(0.0f, speedY);
 	Bullet b(bulletPos, BULLET_SIZE, bulletSpeed, texture, type);
 	b.color = color;
-	m_Bullets.push_back(b);
+	m_Bullets.push_front(b);
 }
