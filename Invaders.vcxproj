@@ -166,6 +166,7 @@
     <Library Include="dep\lib\glfw3_mt.lib" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\levels\backup.lvl" />
     <None Include="res\shaders\bitmap2D.frag" />
     <None Include="res\shaders\bitmap_frag.shader" />
     <None Include="res\shaders\bitmap_frag2D.shader" />

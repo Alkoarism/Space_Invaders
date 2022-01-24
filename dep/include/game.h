@@ -21,6 +21,9 @@ const glm::vec2 BULLET_SIZE(5.0f, 15.0f);
 const float BULLET_VELOCITY(500.0f);
 const float PLAYER_VELOCITY(400.0f);
 
+const float ALIEN_VELOCITY_MAX(100.0f);
+const float ALIEN_VELOCITY_MIN(20.0f);
+
 class Game {
 public:
 	static std::default_random_engine engine;

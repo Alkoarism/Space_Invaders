@@ -157,7 +157,7 @@ void Game::Update(float dt) {
 				else {
 					if (bullet->type == LASER)
 						--m_PlayerShots;
-					else 
+					else
 						--m_AlienShots;
 
 					bullet = prev;
@@ -167,35 +167,40 @@ void Game::Update(float dt) {
 			}
 		}
 
-		size_t totalAliens = this->levels[level].aliens.size();
-		for (size_t cnt = 0; cnt != totalAliens; ++cnt) {
-			Alien& alien = this->levels[this->level].aliens[cnt];
-			if (!alien.destroyed) {
-				alien.Move(dt, this->width);
+		float activeAlienRatio =
+			static_cast<float>(this->levels[level].activeAliens) /
+			static_cast<float>(this->levels[level].initialAlienCnt);
+		glm::vec2 alienSpeed(
+			((1 - activeAlienRatio) * (ALIEN_VELOCITY_MAX - ALIEN_VELOCITY_MIN)) + 
+			ALIEN_VELOCITY_MIN);
+		Alien::SetVelocity(glm::vec2(alienSpeed));
+
+		auto alienListBegin = this->levels[this->level].aliens.begin();
+		auto alienListEnd = this->levels[this->level].aliens.end();
+		for (auto alien = alienListBegin; alien != alienListEnd; ++alien) {
+			if (!alien->destroyed) {
+				alien->Move(dt, this->width);
 
 				if (this->m_AlienShots < 3) {
 
 					int randomNbr = this->randomDist(this->engine);
 					if (randomNbr > 5) {
 						
-						// No need to check previous aliens
+						// Aliens are sorted using column major order
 						bool willShoot = true;
-						for (size_t i = cnt; i != totalAliens; ++i) {
-							Alien& target = this->levels[level].aliens[i];
-							if (target.gridPos.x == alien.gridPos.x
-								&& target.gridPos.y > alien.gridPos.y
-								&& !target.destroyed) {
-
+						for (auto target = alienListBegin; target != alien; ++target) {
+							if (target->gridPos.x != alien->gridPos.x) continue;
+							if (target->gridPos.y > alien->gridPos.y && !target->destroyed) {
 								willShoot = false;
 								break;
 							}
 						}
 
 						if (willShoot) {
-							if (alien.shape == TRIANGLE)
-								GenerateBullet(alien, WIGGLY);
+							if (alien->shape == TRIANGLE)
+								GenerateBullet(*alien, WIGGLY);
 							else
-								GenerateBullet(alien, randomNbr < 9 ? SLOW : FAST);
+								GenerateBullet(*alien, randomNbr < 9 ? SLOW : FAST);
 
 							++m_AlienShots;
 						}
@@ -258,6 +263,15 @@ void Game::Render() {
 				for (auto& b : m_Bullets)
 					b.Draw(*m_SpRenderer);
 			}
+
+			m_Font->SetColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+			std::string debug = 
+				std::to_string(this->levels[this->level].initialAlienCnt) + " " + 
+				std::to_string(this->levels[this->level].activeAliens);
+			glm::vec2 textSize = m_Font->GetSize(debug.c_str());
+			m_Font->Print(debug.c_str(),
+				(this->width / 2) - (textSize.x / 2),
+				(this->height - (BOTTOM_HUD_SIZE / 2)) - (textSize.y / 2));
 		} break;
 		case (GAME_END): {
 			m_SpRenderer->DrawSprite("background",

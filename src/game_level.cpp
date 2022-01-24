@@ -4,7 +4,6 @@ GameLevel::GameLevel() {
 }
 
 bool GameLevel::Load(const char* file, unsigned int screenWidth, unsigned int screenHeight) {
-	this->aliens.clear();
 	unsigned int alienCode;
 	std::string line;
 	std::ifstream fstream;
@@ -16,8 +15,11 @@ bool GameLevel::Load(const char* file, unsigned int screenWidth, unsigned int sc
 		while (!fstream.eof() && std::getline(fstream, line)) {
 			std::istringstream sstream(line);
 			std::vector<unsigned int> row;
-			while (sstream >> alienCode)
+			while (sstream >> alienCode) {
+				if (row.size() == MAX_ALIEN_COLS) break;
 				row.push_back(alienCode);
+			}
+			if (this->alienData.size() == MAX_ALIEN_ROWS - 3) break;
 			this->alienData.push_back(row);
 		}
 
@@ -25,7 +27,7 @@ bool GameLevel::Load(const char* file, unsigned int screenWidth, unsigned int sc
 			// Ensure that every row have the same size
 			unsigned int largerRow = 0;
 			for (size_t i = 0; i != this->alienData.size(); ++i) {
-				if (this->alienData[i].size() > 0)
+				if (this->alienData[i].size() > largerRow)
 					largerRow = this->alienData[i].size();
 			}
 			for (auto& row : this->alienData) {
@@ -34,7 +36,7 @@ bool GameLevel::Load(const char* file, unsigned int screenWidth, unsigned int sc
 				}
 			}
 
-			InitPosition(screenWidth, screenHeight);
+			this->Restart(screenWidth, screenHeight);
 		}
 
 		fstream.close();
@@ -48,8 +50,20 @@ bool GameLevel::Load(const char* file, unsigned int screenWidth, unsigned int sc
 }
 
 bool GameLevel::IsCompleted() {
-	for (Entity& alien : this->aliens)
-		if (!alien.destroyed)
+	unsigned int removed = 0;
+	auto condition = [&removed](const Alien& value) -> bool 
+	{ 
+		if (value.destroyed) {
+			++removed;
+			return true;
+		}
+		else
+			return false;
+	};
+	this->aliens.remove_if(condition);
+	this->activeAliens -= removed;
+
+	if (this->aliens.begin() != this->aliens.end())
 			return false;
 	return true;
 }
@@ -68,28 +82,23 @@ void GameLevel::Restart(unsigned int screenWidth, unsigned int screenHeight) {
 void GameLevel::InitPosition(unsigned int screenWidth, unsigned int screenHeight) {
 	float playAreaHeight = screenHeight - (this->borderOffset.top + this->borderOffset.down);
 
+	this->initialAlienCnt = 0;
 	this->unitWidth = static_cast<float>(screenWidth) / MAX_ALIEN_COLS;
 	this->unitHeight = playAreaHeight / MAX_ALIEN_ROWS;
 
 	Alien::unitGridSize = glm::vec2(this->unitWidth, this->unitHeight);
-	Alien::velocity = glm::vec2(30.0f);
 
 	float alienTileOffset = 1.0f - ALIEN_TILE_PROPORTION;
 
-	// initialize level aliens based on alienData
-	for (unsigned int y = 0; y != this->alienData.size(); ++y) {
-		if (y == MAX_ALIEN_ROWS) break;
-
-		for (unsigned int x = 0; x != this->alienData[y].size(); ++x) {
-			if (x == MAX_ALIEN_COLS) break;
-
+	// initialize level aliens based on alienData with Column-major order
+	for (unsigned int x = 0; x != this->alienData[0].size(); ++x) {
+		for (unsigned int y = 0; y != this->alienData.size(); ++y) {
 			glm::vec2 alienRelativeOffset(
-				MAX_ALIEN_COLS >= this->alienData[y].size() ? 
-					(MAX_ALIEN_COLS - this->alienData[y].size()) / 2 : 0,
+				MAX_ALIEN_COLS >= this->alienData[y].size() ?
+				(MAX_ALIEN_COLS - this->alienData[y].size()) / 2 : 0,
 				2 // UFO Offset
-				);
+			);
 
-			//check alien type from level data (2D level array)
 			if (this->alienData[y][x] > 0) {
 				glm::vec3 color = glm::vec3(1.0f);
 				AlienShape type;
@@ -104,18 +113,22 @@ void GameLevel::InitPosition(unsigned int screenWidth, unsigned int screenHeight
 					} case 3: {
 						type = TRIANGLE;
 						break;
-					} 
+					}
 				}
 
 				glm::vec2 pos(
 					(this->unitWidth * (alienRelativeOffset.x + x + alienTileOffset)),
 					(this->unitHeight * (alienRelativeOffset.y + y + alienTileOffset)) + this->borderOffset.top);
 				glm::vec2 size(
-					this->unitWidth * ALIEN_TILE_PROPORTION, 
+					this->unitWidth * ALIEN_TILE_PROPORTION,
 					this->unitHeight * ALIEN_TILE_PROPORTION);
-				this->aliens.push_back(Alien(pos, size, type));
-				this->aliens[this->aliens.size() - 1].gridPos = glm::vec2(x, y);
+				Alien a(pos, size, type);
+				a.gridPos = glm::vec2(x, y);
+				this->aliens.push_front(a);
+				++this->initialAlienCnt;
 			}
 		}
 	}
+
+	this->activeAliens = this->initialAlienCnt;
 }

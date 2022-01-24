@@ -20,10 +20,12 @@ struct BorderOffset {
 
 class GameLevel {
 public:
+	unsigned int initialAlienCnt;
+	unsigned int activeAliens;
 	float unitWidth;
 	float unitHeight;
 
-	std::vector<Alien> aliens;
+	std::forward_list<Alien> aliens;
 	std::vector<std::vector<unsigned int>> alienData;
 	BorderOffset borderOffset;
 

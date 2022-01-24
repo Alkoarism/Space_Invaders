@@ -12,7 +12,6 @@ enum AlienShape {
 class Alien final : public EntityDynamic {
 public:
 	static glm::vec2 unitGridSize;
-	static glm::vec2 velocity;
 
 	const AlienShape shape;
 	glm::vec2 gridPos;
@@ -23,13 +22,16 @@ public:
 	glm::vec2 Move(float dt, float window_width) override;
 	void Draw(SpriteRenderer&) override;
 
+	static void SetVelocity(glm::vec2);
 private:
 	static bool m_HorizontalMove;
+	static glm::vec2 m_Velocity;
 
 	bool m_ProcessedMoveChange;
 	bool m_AddSpriteNbr;
-	float m_TimeTracker;
+	float m_PositionTracker;
 	float m_Descent;
+	glm::vec2 m_Movement;
 	glm::vec2 m_LastPos;
 
 	size_t m_SubSpriteNbr;
