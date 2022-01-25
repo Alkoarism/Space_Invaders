@@ -1,9 +1,10 @@
 #include "alien.h"
 
+bool Alien::m_MoveRight = true;
 bool Alien::m_HorizontalMove = true;
 
 glm::vec2 Alien::unitGridSize = glm::vec2(0.0f);
-glm::vec2 Alien::m_Velocity = glm::vec2(0.0f);
+glm::vec2 Alien::velocity = glm::vec2(0.0f);
 
 Alien::Alien(AlienShape shape) : 
 	Alien(glm::vec2(0.0f), glm::vec2(1.0f),	shape) {
@@ -37,19 +38,19 @@ Alien::Alien(glm::vec2 pos, glm::vec2 size, AlienShape shape)
 }
 
 glm::vec2 Alien::Move(float dt, float window_width) {
-	m_Movement = m_Velocity * dt;
+	m_Movement = this->velocity * dt;
 	if (m_ProcessedMoveChange == m_HorizontalMove) {
 		if (m_HorizontalMove) {
 
 			float relativeBorder = window_width - this->size.x;
 			if (this->position.x < 0 || this->position.x > relativeBorder) {
 				m_HorizontalMove = false;
-				m_Velocity.x = -(m_Velocity.x);
+				m_MoveRight = !m_MoveRight;
 			}
 			else {
 				m_LastPos = this->position;
-				this->position.x += m_Movement.x;
-				m_PositionTracker += abs(m_Movement.x);
+				this->position.x += m_Movement.x * (m_MoveRight ? 1 : -1);
+				m_PositionTracker += m_Movement.x;
 			}
 		}
 		else {
@@ -57,7 +58,7 @@ glm::vec2 Alien::Move(float dt, float window_width) {
 				m_LastPos = this->position;
 				this->position.y += m_Movement.y;
 				m_Descent += m_Movement.y;
-				m_PositionTracker += abs(m_Movement.y);
+				m_PositionTracker += m_Movement.y;
 			}
 			else {
 				m_HorizontalMove = true;
@@ -102,9 +103,6 @@ void Alien::Draw(SpriteRenderer& renderer) {
 	Entity::Draw(renderer);
 }
 
-void Alien::SetVelocity(glm::vec2 velocity) {
-	glm::vec2 velSign(
-		signbit(m_Velocity.x) ? -1 : 1, 
-		signbit(m_Velocity.y) ? -1 : 1);
-	m_Velocity = velocity * velSign;
+void Alien::SetHorDir(bool moveRight) {
+	m_MoveRight = moveRight;
 }

@@ -14,8 +14,8 @@ enum GameState {
 	GAME_END
 };
 
-const float TOP_HUD_SIZE = 100.0f;
-const float BOTTOM_HUD_SIZE = 50.0f;
+const float TOP_HUD_SIZE(100.0f);
+const float BOTTOM_HUD_SIZE(50.0f);
 
 const glm::vec2 BULLET_SIZE(5.0f, 15.0f);
 const float BULLET_VELOCITY(500.0f);
@@ -45,8 +45,8 @@ public:
 	void Render();
 
 private:
-	unsigned int m_PlayerShots, m_AlienShots;
-	glm::vec2 m_playerStartPos;
+	unsigned int m_PlayerShots, m_AlienShots, m_ShotsUntilUFO;
+	glm::vec2 m_PlayerStartPos;
 	std::unique_ptr<BitmapFont> m_Font;
 	std::unique_ptr<SpriteRenderer> m_SpRenderer;
 	std::unique_ptr<Entity> m_Player;

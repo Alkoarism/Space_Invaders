@@ -46,6 +46,7 @@ bool GameLevel::Load(const char* file, unsigned int screenWidth, unsigned int sc
 		return false;
 	}
 
+	this->ufo.destroyed = true;
 	return true;
 }
 
@@ -65,6 +66,7 @@ bool GameLevel::IsCompleted() {
 
 	if (this->aliens.begin() != this->aliens.end())
 			return false;
+	this->ufo.destroyed = true;
 	return true;
 }
 
@@ -72,11 +74,26 @@ void GameLevel::Draw(SpriteRenderer& renderer) {
 	for (Entity& alien : this->aliens)
 		if (!alien.destroyed)
 			alien.Draw(renderer);
+	if (!this->ufo.destroyed)
+		this->ufo.Draw(renderer);
 }
 
 void GameLevel::Restart(unsigned int screenWidth, unsigned int screenHeight) {
 	this->aliens.clear();
 	InitPosition(screenWidth, screenHeight);
+}
+
+void GameLevel::SetUFO(unsigned int screenWidth) {
+	glm::vec2 size = ALIEN_TILE_PROPORTION * glm::vec2(
+		2 * this->unitWidth,
+		this->unitHeight);
+
+	glm::vec2 pos = glm::vec2(screenWidth ,
+		 this->borderOffset.top +
+		(this->unitHeight * (UFO_OFFSET / 2)) - 
+		(size.x / 2));
+
+	this->ufo = UFO(pos, size, glm::vec2(100.0f));
 }
 
 void GameLevel::InitPosition(unsigned int screenWidth, unsigned int screenHeight) {
@@ -86,6 +103,7 @@ void GameLevel::InitPosition(unsigned int screenWidth, unsigned int screenHeight
 	this->unitWidth = static_cast<float>(screenWidth) / MAX_ALIEN_COLS;
 	this->unitHeight = playAreaHeight / MAX_ALIEN_ROWS;
 
+	Alien::SetHorDir(true);
 	Alien::unitGridSize = glm::vec2(this->unitWidth, this->unitHeight);
 
 	float alienTileOffset = 1.0f - ALIEN_TILE_PROPORTION;
@@ -96,7 +114,7 @@ void GameLevel::InitPosition(unsigned int screenWidth, unsigned int screenHeight
 			glm::vec2 alienRelativeOffset(
 				MAX_ALIEN_COLS >= this->alienData[y].size() ?
 				(MAX_ALIEN_COLS - this->alienData[y].size()) / 2 : 0,
-				2 // UFO Offset
+				UFO_OFFSET
 			);
 
 			if (this->alienData[y][x] > 0) {

@@ -6,7 +6,7 @@ std::uniform_int_distribution<int> Game::randomDist(0, 10);
 Game::Game(unsigned int width, unsigned int height) 
 	:	state(GAME_MENU), 
 		width(width), height(height), 
-		m_PlayerShots(0), m_AlienShots(0) {
+		m_PlayerShots(0), m_AlienShots(0), m_ShotsUntilUFO(22) {
 	
 	// Shader Loading ---------------------------------------------------------
 	std::string spriteShaderName = "sprite";
@@ -75,11 +75,11 @@ Game::Game(unsigned int width, unsigned int height)
 		this->levels[level].unitWidth,
 		this->levels[level].unitHeight);
 
-	m_playerStartPos = glm::vec2(
+	m_PlayerStartPos = glm::vec2(
 		(this->width - playerSize.x) / 2.0f,
 		this->height - (BOTTOM_HUD_SIZE + playerSize.y));
 
-	m_Player.reset(new Entity(m_playerStartPos, playerSize, "player", glm::vec3(0.0f, 1.0f, 0.0f)));
+	m_Player.reset(new Entity(m_PlayerStartPos, playerSize, "player", glm::vec3(0.0f, 1.0f, 0.0f)));
 }
 
 Game::~Game() {
@@ -98,6 +98,7 @@ void Game::ProcessInput(float dt) {
 					m_Bullets.clear();
 					m_AlienShots = 0;
 					m_PlayerShots = 0;
+					m_Player->position = m_PlayerStartPos;
 				}
 			}
 		} break;
@@ -116,16 +117,24 @@ void Game::ProcessInput(float dt) {
 					if (m_Player->position.x > this->width - m_Player->size.x)
 						m_Player->position.x = this->width - m_Player->size.x;
 				}
-				if (this->keys[GLFW_KEY_SPACE] && m_PlayerShots == 0) {
+				if (this->keys[GLFW_KEY_SPACE] && m_PlayerShots == 0)
+				{
 					GenerateBullet(*m_Player, LASER);
 					++m_PlayerShots;
+					if (this->levels[this->level].ufo.destroyed) {
+						--m_ShotsUntilUFO;
+						if (m_ShotsUntilUFO <= 0) {
+							m_ShotsUntilUFO = 14;
+							this->levels[level].SetUFO(this->width);
+						}
+					}
 				}
 			}
 			else {
 				if (this->keys[GLFW_KEY_ENTER] && !this->keysProcessed[GLFW_KEY_ENTER]) {
 					this->keysProcessed[GLFW_KEY_ENTER] = true;
 					m_Player->destroyed = false;
-					m_Player->position = m_playerStartPos;
+					m_Player->position = m_PlayerStartPos;
 					m_Bullets.clear();
 					m_PlayerShots = m_AlienShots = 0;
 				}
@@ -170,10 +179,9 @@ void Game::Update(float dt) {
 		float activeAlienRatio =
 			static_cast<float>(this->levels[level].activeAliens) /
 			static_cast<float>(this->levels[level].initialAlienCnt);
-		glm::vec2 alienSpeed(
+		Alien::velocity = glm::vec2(
 			((1 - activeAlienRatio) * (ALIEN_VELOCITY_MAX - ALIEN_VELOCITY_MIN)) + 
 			ALIEN_VELOCITY_MIN);
-		Alien::SetVelocity(glm::vec2(alienSpeed));
 
 		auto alienListBegin = this->levels[this->level].aliens.begin();
 		auto alienListEnd = this->levels[this->level].aliens.end();
@@ -184,7 +192,7 @@ void Game::Update(float dt) {
 				if (this->m_AlienShots < 3) {
 
 					int randomNbr = this->randomDist(this->engine);
-					if (randomNbr > 5) {
+					if (randomNbr > 7) {
 						
 						// Aliens are sorted using column major order
 						bool willShoot = true;
@@ -207,6 +215,13 @@ void Game::Update(float dt) {
 					}
 				}
 			}
+		}
+
+		UFO& levelUFO = this->levels[level].ufo;
+		if (!levelUFO.destroyed) {
+			levelUFO.Move(dt, this->width);
+			if (levelUFO.position.x < -levelUFO.size.x)
+				levelUFO.destroyed = true;
 		}
 
 		DoCollisions();
@@ -311,13 +326,17 @@ void Game::DoCollisions() {
 						break;
 					}
 				}
-				if (!bullet.destroyed) {
-					for (Entity& alien : this->levels[level].aliens) {
-						if (!alien.destroyed && CheckCollision(alien, bullet)) {
-							alien.destroyed = bullet.destroyed = true;
-						}
+				if (bullet.destroyed) continue;
+
+				for (Entity& alien : this->levels[level].aliens) {
+					if (!alien.destroyed && CheckCollision(alien, bullet)) {
+						alien.destroyed = bullet.destroyed = true;
 					}
 				}
+
+				Entity& lvlUFO = this->levels[level].ufo;
+				if (!lvlUFO.destroyed && CheckCollision(lvlUFO, bullet))
+					lvlUFO.destroyed = bullet.destroyed = true;
 			}
 			else {
 				if (CheckCollision(*m_Player, bullet)) {
