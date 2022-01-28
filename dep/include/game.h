@@ -5,6 +5,7 @@
 #include "sprite_renderer.h"
 #include "game_level.h"
 #include "bullet.h"
+#include "player.h"
 #include "bitmap_font.h"
 
 enum GameState {
@@ -49,7 +50,7 @@ private:
 	glm::vec2 m_PlayerStartPos;
 	std::unique_ptr<BitmapFont> m_Font;
 	std::unique_ptr<SpriteRenderer> m_SpRenderer;
-	std::unique_ptr<Entity> m_Player;
+	std::unique_ptr<Player> m_Player;
 	std::forward_list<Bullet> m_Bullets;
 
 	void DoCollisions();

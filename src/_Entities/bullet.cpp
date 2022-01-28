@@ -5,8 +5,8 @@ Bullet::Bullet()
 }
 
 Bullet::Bullet(glm::vec2 pos, glm::vec2 size, glm::vec2 velocity, std::string sprite, BulletType type)
-	: EntityDynamic(pos, size, sprite, glm::vec3(1.0f)),
-	type(type), hitScreenBorder(false), velocity(velocity) {
+	: EntityDynamic(pos, size, glm::vec3(1.0f)),
+	type(type), hitScreenBorder(false), velocity(velocity), sprite(sprite) {
 
 }
 
@@ -25,5 +25,6 @@ glm::vec2 Bullet::Move(float dt, const float height_limit) {
 void Bullet::Draw(SpriteRenderer& renderer) {
 	// Add sprite changing logic
 
-	Entity::Draw(renderer);
+	renderer.DrawSprite(this->sprite, 
+		this->position, this->size, this->rotation, this->color);
 }

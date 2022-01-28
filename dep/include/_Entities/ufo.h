@@ -5,6 +5,7 @@
 class UFO : public EntityDynamic {
 public:
 	glm::vec2 velocity;
+	std::vector<std::string> sprites;
 
 	UFO();
 	UFO(glm::vec2 pos, glm::vec2 size, glm::vec2 velocity);
@@ -17,7 +18,6 @@ private:
 
 	bool m_AddSpriteNbr;
 	size_t m_SubSpriteNbr;
-	std::vector<char> m_SubSprites;
 };
 
 #endif

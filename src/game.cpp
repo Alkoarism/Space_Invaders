@@ -79,7 +79,7 @@ Game::Game(unsigned int width, unsigned int height)
 		(this->width - playerSize.x) / 2.0f,
 		this->height - (BOTTOM_HUD_SIZE + playerSize.y));
 
-	m_Player.reset(new Entity(m_PlayerStartPos, playerSize, "player", glm::vec3(0.0f, 1.0f, 0.0f)));
+	m_Player.reset(new Player(m_PlayerStartPos, playerSize, 3));
 }
 
 Game::~Game() {

@@ -72,6 +72,9 @@
     <ClInclude Include="dep\include\_Entities\ufo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="dep\include\_Entities\barrier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="dep\lib\glfw3.lib" />
@@ -139,6 +142,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\_Entities\ufo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Entities\barrier.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dep\include\_Entities\player.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Entities\player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

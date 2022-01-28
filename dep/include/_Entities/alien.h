@@ -16,6 +16,7 @@ public:
 
 	const AlienShape shape;
 	glm::vec2 gridPos;
+	std::vector<std::string> sprites;
 
 	Alien(AlienShape shape);
 	Alien(glm::vec2 pos, glm::vec2 size, AlienShape shape);
@@ -36,7 +37,6 @@ private:
 	glm::vec2 m_LastPos;
 
 	size_t m_SubSpriteNbr;
-	std::vector<char> m_SubSprites;
 };
 
 #endif

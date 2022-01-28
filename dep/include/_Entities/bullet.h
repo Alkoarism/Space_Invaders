@@ -13,6 +13,7 @@ enum BulletType {
 class Bullet : public EntityDynamic {
 public:
 	bool hitScreenBorder;
+	std::string sprite;
 	glm::vec2 velocity;
 	BulletType type;
 
