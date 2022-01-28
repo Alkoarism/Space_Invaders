@@ -109,8 +109,8 @@ void GameLevel::InitPosition(unsigned int screenWidth, unsigned int screenHeight
 	float alienTileOffset = 1.0f - ALIEN_TILE_PROPORTION;
 
 	// initialize level aliens based on alienData with Column-major order
-	for (unsigned int x = 0; x != this->alienData[0].size(); ++x) {
-		for (unsigned int y = 0; y != this->alienData.size(); ++y) {
+	for (unsigned int y = 0; y != this->alienData.size(); ++y) {
+		for (unsigned int x = 0; x != this->alienData[y].size(); ++x){
 			glm::vec2 alienRelativeOffset(
 				MAX_ALIEN_COLS >= this->alienData[y].size() ?
 				(MAX_ALIEN_COLS - this->alienData[y].size()) / 2 : 0,

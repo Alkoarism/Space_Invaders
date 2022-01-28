@@ -197,8 +197,10 @@ void Game::Update(float dt) {
 						// Aliens are sorted using column major order
 						bool willShoot = true;
 						for (auto target = alienListBegin; target != alien; ++target) {
-							if (target->gridPos.x != alien->gridPos.x) continue;
-							if (target->gridPos.y > alien->gridPos.y && !target->destroyed) {
+							if (target->gridPos.x == alien->gridPos.x && 
+								target->gridPos.y > alien->gridPos.y && 
+								!target->destroyed) 
+							{
 								willShoot = false;
 								break;
 							}
