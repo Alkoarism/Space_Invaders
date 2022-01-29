@@ -4,6 +4,7 @@ GameLevel::GameLevel() {
 }
 
 bool GameLevel::Load(const char* file, unsigned int screenWidth, unsigned int screenHeight) {
+	// alien initialization ------------------------------------------------------
 	unsigned int alienCode;
 	std::string line;
 	std::ifstream fstream;
@@ -46,6 +47,24 @@ bool GameLevel::Load(const char* file, unsigned int screenWidth, unsigned int sc
 		return false;
 	}
 
+	// barrier initialization -------------------------------------------------
+	glm::vec2 barSize = glm::vec2(
+		this->unitWidth * 2,
+		this->unitHeight * 2);
+
+	float xOffSet = 
+		(screenWidth - (barSize.x * MAX_BARRIER_COUNT)) / (MAX_BARRIER_COUNT + 1);
+	float yPos = screenHeight - this->borderOffset.down - barSize.y - 
+		(this->unitHeight * BARRIER_OFFSET);
+
+	for (unsigned int i = 0; i != MAX_BARRIER_COUNT; ++i) {
+		glm::vec2 barPos = glm::vec2(
+			i * (barSize.x + xOffSet) + xOffSet,
+			yPos);
+		this->barriers.emplace_back(Barrier(barPos, barSize));
+	}
+
+	// UFO initialization --------------------------------------------------------
 	this->ufo.destroyed = true;
 	return true;
 }
@@ -74,6 +93,11 @@ void GameLevel::Draw(SpriteRenderer& renderer) {
 	for (Entity& alien : this->aliens)
 		if (!alien.destroyed)
 			alien.Draw(renderer);
+
+	for (Entity& barrier : this->barriers)
+		if (!barrier.destroyed)
+			barrier.Draw(renderer);
+	
 	if (!this->ufo.destroyed)
 		this->ufo.Draw(renderer);
 }
@@ -81,6 +105,9 @@ void GameLevel::Draw(SpriteRenderer& renderer) {
 void GameLevel::Restart(unsigned int screenWidth, unsigned int screenHeight) {
 	this->aliens.clear();
 	InitPosition(screenWidth, screenHeight);
+	
+	for (Barrier& barrier : this->barriers)
+		barrier.Reset();
 }
 
 void GameLevel::SetUFO(unsigned int screenWidth) {
@@ -108,7 +135,6 @@ void GameLevel::InitPosition(unsigned int screenWidth, unsigned int screenHeight
 
 	float alienTileOffset = 1.0f - ALIEN_TILE_PROPORTION;
 
-	// initialize level aliens based on alienData with Column-major order
 	for (unsigned int y = 0; y != this->alienData.size(); ++y) {
 		for (unsigned int x = 0; x != this->alienData[y].size(); ++x){
 			glm::vec2 alienRelativeOffset(

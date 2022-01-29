@@ -34,22 +34,23 @@ Game::Game(unsigned int width, unsigned int height)
 
 	// Texture loading e config --------------------------------------------------
 	Renderer::LoadTexture("background",		"res\\textures\\background.jpg",		false);
-	Renderer::LoadTexture("background_1",	"res\\textures\\background_1.jpg", false);
+	Renderer::LoadTexture("background_1",	"res\\textures\\background_1.jpg",		false);
 	Renderer::LoadTexture("al_tr_0",		"res\\textures\\alien_triangle_0.png",	true);
-	Renderer::LoadTexture("al_tr_1",		"res\\textures\\alien_triangle_1.png", true);
-	Renderer::LoadTexture("al_tr_2",		"res\\textures\\alien_triangle_2.png", true);
+	Renderer::LoadTexture("al_tr_1",		"res\\textures\\alien_triangle_1.png",	true);
+	Renderer::LoadTexture("al_tr_2",		"res\\textures\\alien_triangle_2.png",	true);
 	Renderer::LoadTexture("al_sq_0",		"res\\textures\\alien_square_0.png",	true);
-	Renderer::LoadTexture("al_sq_1",		"res\\textures\\alien_square_1.png", true);
-	Renderer::LoadTexture("al_sq_2",		"res\\textures\\alien_square_2.png", true);
+	Renderer::LoadTexture("al_sq_1",		"res\\textures\\alien_square_1.png",	true);
+	Renderer::LoadTexture("al_sq_2",		"res\\textures\\alien_square_2.png",	true);
 	Renderer::LoadTexture("al_cl_0",		"res\\textures\\alien_circle_0.png",	true);
-	Renderer::LoadTexture("al_cl_1",		"res\\textures\\alien_circle_1.png", true);
-	Renderer::LoadTexture("al_cl_2",		"res\\textures\\alien_circle_2.png", true);
+	Renderer::LoadTexture("al_cl_1",		"res\\textures\\alien_circle_1.png",	true);
+	Renderer::LoadTexture("al_cl_2",		"res\\textures\\alien_circle_2.png",	true);
 	Renderer::LoadTexture("al_UFO_0",		"res\\textures\\alien_UFO_0.png",		true);
-	Renderer::LoadTexture("al_UFO_1",		"res\\textures\\alien_UFO_1.png", true);
-	Renderer::LoadTexture("al_UFO_2",		"res\\textures\\alien_UFO_2.png", true);
+	Renderer::LoadTexture("al_UFO_1",		"res\\textures\\alien_UFO_1.png",		true);
+	Renderer::LoadTexture("al_UFO_2",		"res\\textures\\alien_UFO_2.png",		true);
 	Renderer::LoadTexture("player",			"res\\textures\\player.png",			true);
 	Renderer::LoadTexture("bullet_1a",		"res\\textures\\bullet_1a.png",			true);
 	Renderer::LoadTexture("bullet_2a",		"res\\textures\\bullet_2a.png",			true);
+	Renderer::LoadTexture("barrier",		"res\\textures\\barrier_placeHolder.png", true);
 
 	// Font Loading -----------------------------------------------------------
 	m_Font.reset(new BitmapFont(
@@ -72,7 +73,7 @@ Game::Game(unsigned int width, unsigned int height)
 
 	// Player Initialization --------------------------------------------------
 	glm::vec2 playerSize = glm::vec2(
-		this->levels[level].unitWidth,
+		this->levels[level].unitWidth * 1.5,
 		this->levels[level].unitHeight);
 
 	m_PlayerStartPos = glm::vec2(
@@ -98,6 +99,7 @@ void Game::ProcessInput(float dt) {
 					m_Bullets.clear();
 					m_AlienShots = 0;
 					m_PlayerShots = 0;
+					m_ShotsUntilUFO = 22;
 					m_Player->position = m_PlayerStartPos;
 				}
 			}
@@ -343,6 +345,22 @@ void Game::DoCollisions() {
 			else {
 				if (CheckCollision(*m_Player, bullet)) {
 					m_Player->destroyed = true;
+					continue;
+				}
+			}
+
+			for (auto& barrier : this->levels[this->level].barriers) {
+				if (CheckCollision(barrier, bullet)) {
+					for (auto& section : barrier.barrierContent) {
+						if (!bullet.destroyed) {
+							for (auto& subSection : section) {
+								if (!subSection.destroyed && CheckCollision(subSection, bullet)) {
+									subSection.destroyed = bullet.destroyed = true;
+									break;
+								}
+							}
+						}
+					}
 				}
 			}
 		}

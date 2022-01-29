@@ -145,6 +145,7 @@
     <ClInclude Include="dep\include\_Entities\alien.h" />
     <ClInclude Include="dep\include\bitmap_font.h" />
     <ClInclude Include="dep\include\_Entities\barrier.h" />
+    <ClInclude Include="dep\include\_Entities\barrierSubSection.h" />
     <ClInclude Include="dep\include\_Entities\bullet.h" />
     <ClInclude Include="dep\include\_Entities\entity.h" />
     <ClInclude Include="dep\include\game.h" />
@@ -184,6 +185,7 @@
     <ClCompile Include="src\_Entities\alien.cpp" />
     <ClCompile Include="src\bitmap_font.cpp" />
     <ClCompile Include="src\_Entities\barrier.cpp" />
+    <ClCompile Include="src\_Entities\barrierSubSection.cpp" />
     <ClCompile Include="src\_Entities\bullet.cpp" />
     <ClCompile Include="src\_Entities\entity.cpp" />
     <ClCompile Include="src\game.cpp" />

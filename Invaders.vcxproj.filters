@@ -75,6 +75,9 @@
     <ClInclude Include="dep\include\_Entities\barrier.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="dep\include\_Entities\barrierSubSection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="dep\lib\glfw3.lib" />
@@ -151,6 +154,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\_Entities\player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Entities\barrierSubSection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
