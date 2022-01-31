@@ -1,5 +1,8 @@
 #include "bullet.h"
 
+std::default_random_engine Bullet::m_Engine(std::chrono::system_clock::now().time_since_epoch().count());
+std::uniform_int_distribution<int> Bullet::m_RandomDist(0, 10);
+
 Bullet::Bullet() 
 	: EntityDynamic(), type(LASER), hitScreenBorder(false), velocity(glm::vec2(1.0f)) {
 }
@@ -7,6 +10,25 @@ Bullet::Bullet()
 Bullet::Bullet(glm::vec2 pos, glm::vec2 size, glm::vec2 velocity, std::string sprite, BulletType type)
 	: EntityDynamic(pos, size, glm::vec3(1.0f)),
 	type(type), hitScreenBorder(false), velocity(velocity), sprite(sprite) {
+
+}
+
+bool Bullet::Pierce()
+{
+	int randNbr = m_RandomDist(m_Engine);
+	switch (this->type) {
+		case FAST: {
+			if (randNbr < 5)
+				return true;
+		} break;
+		case WIGGLY: {
+			if (randNbr < 2)
+				return true;
+		} break;
+		default: {
+			return false;
+		} break;
+	}
 
 }
 

@@ -8,6 +8,7 @@ bool GameLevel::Load(const char* file, unsigned int screenWidth, unsigned int sc
 	unsigned int alienCode;
 	std::string line;
 	std::ifstream fstream;
+	std::vector<std::vector<unsigned int>> alienData;
 
 	fstream.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 	try {
@@ -20,24 +21,22 @@ bool GameLevel::Load(const char* file, unsigned int screenWidth, unsigned int sc
 				if (row.size() == MAX_ALIEN_COLS) break;
 				row.push_back(alienCode);
 			}
-			if (this->alienData.size() == MAX_ALIEN_ROWS - 3) break;
-			this->alienData.push_back(row);
+			if (alienData.size() == MAX_ALIEN_ROWS - 3) break;
+			alienData.push_back(row);
 		}
 
-		if (this->alienData.size() > 0) {
+		if (alienData.size() > 0) {
 			// Ensure that every row have the same size
 			unsigned int largerRow = 0;
-			for (size_t i = 0; i != this->alienData.size(); ++i) {
-				if (this->alienData[i].size() > largerRow)
-					largerRow = this->alienData[i].size();
+			for (size_t i = 0; i != alienData.size(); ++i) {
+				if (alienData[i].size() > largerRow)
+					largerRow = alienData[i].size();
 			}
-			for (auto& row : this->alienData) {
+			for (auto& row : alienData) {
 				while (row.size() != largerRow) {
 					row.push_back(0);
 				}
 			}
-
-			this->Restart(screenWidth, screenHeight);
 		}
 
 		fstream.close();
@@ -47,22 +46,42 @@ bool GameLevel::Load(const char* file, unsigned int screenWidth, unsigned int sc
 		return false;
 	}
 
+	float playAreaHeight = screenHeight - (this->borderOffset.top + this->borderOffset.down);
+
+	this->unitWidth = static_cast<float>(screenWidth) / MAX_ALIEN_COLS;
+	this->unitHeight = playAreaHeight / MAX_ALIEN_ROWS;
+	glm::vec2 unitGrid = glm::vec2(this->unitWidth, this->unitHeight);
+
+	glm::vec2 relativePos = glm::vec2(
+		MAX_ALIEN_COLS >= alienData[0].size() ?
+			(MAX_ALIEN_COLS - alienData[0].size()) / 2 : 0,
+		UFO_OFFSET);
+
+	m_HordeInitPos = relativePos * unitGrid;
+	m_HordeInitPos.y += this->borderOffset.top;
+
+	this->horde.reset(new AlienHorde(
+		m_HordeInitPos, unitGrid,
+		glm::vec2(30.0f), glm::vec2(100.0f),
+		alienData, 
+		ALIEN_TILE_PROPORTION, true));
+
 	// barrier initialization -------------------------------------------------
-	glm::vec2 barSize = glm::vec2(
-		this->unitWidth * 2,
-		this->unitHeight * 2);
+	//glm::vec2 barSize = glm::vec2(
+	//	this->unitWidth * 2,
+	//	this->unitHeight * 2);
 
-	float xOffSet = 
-		(screenWidth - (barSize.x * MAX_BARRIER_COUNT)) / (MAX_BARRIER_COUNT + 1);
-	float yPos = screenHeight - this->borderOffset.down - barSize.y - 
-		(this->unitHeight * BARRIER_OFFSET);
+	//float xOffSet = 
+	//	(screenWidth - (barSize.x * MAX_BARRIER_COUNT)) / (MAX_BARRIER_COUNT + 1);
+	//float yPos = screenHeight - this->borderOffset.down - barSize.y - 
+	//	(this->unitHeight * BARRIER_OFFSET);
 
-	for (unsigned int i = 0; i != MAX_BARRIER_COUNT; ++i) {
-		glm::vec2 barPos = glm::vec2(
-			i * (barSize.x + xOffSet) + xOffSet,
-			yPos);
-		this->barriers.emplace_back(Barrier(barPos, barSize));
-	}
+	//for (unsigned int i = 0; i != MAX_BARRIER_COUNT; ++i) {
+	//	glm::vec2 barPos = glm::vec2(
+	//		i * (barSize.x + xOffSet) + xOffSet,
+	//		yPos);
+	//	this->barriers.emplace_back(Barrier(barPos, barSize));
+	//}
 
 	// UFO initialization --------------------------------------------------------
 	this->ufo.destroyed = true;
@@ -70,44 +89,39 @@ bool GameLevel::Load(const char* file, unsigned int screenWidth, unsigned int sc
 }
 
 bool GameLevel::IsCompleted() {
-	unsigned int removed = 0;
-	auto condition = [&removed](const Alien& value) -> bool 
-	{ 
-		if (value.destroyed) {
-			++removed;
-			return true;
-		}
-		else
-			return false;
-	};
-	this->aliens.remove_if(condition);
-	this->activeAliens -= removed;
 
-	if (this->aliens.begin() != this->aliens.end())
-			return false;
-	this->ufo.destroyed = true;
-	return true;
+	if (this->horde->destroyed) {
+		return true;
+		this->ufo.destroyed = true;
+	}
+	return false;
+}
+
+void GameLevel::Update() {
+	this->horde->Update();
+
+	//for (Barrier& barrier : this->barriers)
+	//	if (!barrier.destroyed)
+	//		barrier.Update();
 }
 
 void GameLevel::Draw(SpriteRenderer& renderer) {
-	for (Entity& alien : this->aliens)
-		if (!alien.destroyed)
-			alien.Draw(renderer);
+	if (!this->horde->destroyed)
+		this->horde->Draw(renderer);
 
-	for (Entity& barrier : this->barriers)
-		if (!barrier.destroyed)
-			barrier.Draw(renderer);
+	//for (Entity& barrier : this->barriers)
+	//	if (!barrier.destroyed)
+	//		barrier.Draw(renderer);
 	
 	if (!this->ufo.destroyed)
 		this->ufo.Draw(renderer);
 }
 
 void GameLevel::Restart(unsigned int screenWidth, unsigned int screenHeight) {
-	this->aliens.clear();
-	InitPosition(screenWidth, screenHeight);
+	this->horde->Reset(m_HordeInitPos, true);
 	
-	for (Barrier& barrier : this->barriers)
-		barrier.Reset();
+	//for (Barrier& barrier : this->barriers)
+	//	barrier.Reset();
 }
 
 void GameLevel::SetUFO(unsigned int screenWidth) {
@@ -121,58 +135,4 @@ void GameLevel::SetUFO(unsigned int screenWidth) {
 		(size.x / 2));
 
 	this->ufo = UFO(pos, size, glm::vec2(100.0f));
-}
-
-void GameLevel::InitPosition(unsigned int screenWidth, unsigned int screenHeight) {
-	float playAreaHeight = screenHeight - (this->borderOffset.top + this->borderOffset.down);
-
-	this->initialAlienCnt = 0;
-	this->unitWidth = static_cast<float>(screenWidth) / MAX_ALIEN_COLS;
-	this->unitHeight = playAreaHeight / MAX_ALIEN_ROWS;
-
-	Alien::SetHorDir(true);
-	Alien::unitGridSize = glm::vec2(this->unitWidth, this->unitHeight);
-
-	float alienTileOffset = 1.0f - ALIEN_TILE_PROPORTION;
-
-	for (unsigned int y = 0; y != this->alienData.size(); ++y) {
-		for (unsigned int x = 0; x != this->alienData[y].size(); ++x){
-			glm::vec2 alienRelativeOffset(
-				MAX_ALIEN_COLS >= this->alienData[y].size() ?
-				(MAX_ALIEN_COLS - this->alienData[y].size()) / 2 : 0,
-				UFO_OFFSET
-			);
-
-			if (this->alienData[y][x] > 0) {
-				glm::vec3 color = glm::vec3(1.0f);
-				AlienShape type;
-
-				switch (this->alienData[y][x]) {
-					case 1: {
-						type = CIRCLE;
-						break;
-					} case 2: {
-						type = SQUARE;
-						break;
-					} case 3: {
-						type = TRIANGLE;
-						break;
-					}
-				}
-
-				glm::vec2 pos(
-					(this->unitWidth * (alienRelativeOffset.x + x + alienTileOffset)),
-					(this->unitHeight * (alienRelativeOffset.y + y + alienTileOffset)) + this->borderOffset.top);
-				glm::vec2 size(
-					this->unitWidth * ALIEN_TILE_PROPORTION,
-					this->unitHeight * ALIEN_TILE_PROPORTION);
-				Alien a(pos, size, type);
-				a.gridPos = glm::vec2(x, y);
-				this->aliens.push_front(a);
-				++this->initialAlienCnt;
-			}
-		}
-	}
-
-	this->activeAliens = this->initialAlienCnt;
 }

@@ -75,7 +75,10 @@
     <ClInclude Include="dep\include\_Entities\barrier.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dep\include\_Entities\barrierSubSection.h">
+    <ClInclude Include="dep\include\_Entities\barrierSection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dep\include\_Entities\alienHorde.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -156,7 +159,10 @@
     <ClCompile Include="src\_Entities\player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\_Entities\barrierSubSection.cpp">
+    <ClCompile Include="src\_Entities\barrierSection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Entities\alienHorde.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

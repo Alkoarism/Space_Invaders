@@ -65,11 +65,10 @@ Game::Game(unsigned int width, unsigned int height)
 	borders.top = TOP_HUD_SIZE;
 	borders.down = BOTTOM_HUD_SIZE;
 	
-	GameLevel one;
-	one.borderOffset = borders;
-	one.Load("res\\levels\\classic.lvl", this->width, this->height);
-	this->levels.push_back(one);
+	this->levels.emplace_back(GameLevel());
 	this->level = 0;
+	this->levels[this->level].borderOffset = borders;
+	this->levels[this->level].Load("res\\levels\\classic.lvl", this->width, this->height);
 
 	// Player Initialization --------------------------------------------------
 	glm::vec2 playerSize = glm::vec2(
@@ -153,7 +152,6 @@ void Game::ProcessInput(float dt) {
 
 void Game::Update(float dt) {
 	if (this->state == GAME_ACTIVE && !m_Player->destroyed) {
-
 		if (!m_Bullets.empty()) {
 			auto bullet = m_Bullets.begin(), prev = m_Bullets.before_begin();
 			while (bullet != m_Bullets.end()) {
@@ -178,47 +176,39 @@ void Game::Update(float dt) {
 			}
 		}
 
-		float activeAlienRatio =
-			static_cast<float>(this->levels[level].activeAliens) /
-			static_cast<float>(this->levels[level].initialAlienCnt);
-		Alien::velocity = glm::vec2(
-			((1 - activeAlienRatio) * (ALIEN_VELOCITY_MAX - ALIEN_VELOCITY_MIN)) + 
-			ALIEN_VELOCITY_MIN);
+		this->levels[this->level].Update();
+		this->levels[this->level].horde->Move(dt, this->width);
 
-		auto alienListBegin = this->levels[this->level].aliens.begin();
-		auto alienListEnd = this->levels[this->level].aliens.end();
+		auto alienListBegin = this->levels[this->level].horde->aliens.begin();
+		auto alienListEnd = this->levels[this->level].horde->aliens.end();
 		for (auto alien = alienListBegin; alien != alienListEnd; ++alien) {
-			if (!alien->destroyed) {
-				alien->Move(dt, this->width);
+			if (this->m_AlienShots < 3) {
 
-				if (this->m_AlienShots < 3) {
-
-					int randomNbr = this->randomDist(this->engine);
-					if (randomNbr > 7) {
+				int randomNbr = this->randomDist(this->engine);
+				if (randomNbr > 7) {
 						
-						// Aliens are sorted using column major order
-						bool willShoot = true;
-						for (auto target = alienListBegin; target != alien; ++target) {
-							if (target->gridPos.x == alien->gridPos.x && 
-								target->gridPos.y > alien->gridPos.y && 
-								!target->destroyed) 
-							{
-								willShoot = false;
-								break;
-							}
+					bool willShoot = true;
+					for (auto target = alienListBegin; target != alien; ++target) {
+						if (target->hordePos.x == alien->hordePos.x && 
+							target->hordePos.y > alien->hordePos.y && 
+							!target->destroyed) 
+						{
+							willShoot = false;
+							break;
 						}
+					}
 
-						if (willShoot) {
-							if (alien->shape == TRIANGLE)
-								GenerateBullet(*alien, WIGGLY);
-							else
-								GenerateBullet(*alien, randomNbr < 9 ? SLOW : FAST);
+					if (willShoot) {
+						if (alien->shape == TRIANGLE)
+							GenerateBullet(*alien, WIGGLY);
+						else
+							GenerateBullet(*alien, randomNbr < 9 ? SLOW : FAST);
 
-							++m_AlienShots;
-						}
+						++m_AlienShots;
 					}
 				}
 			}
+			
 		}
 
 		UFO& levelUFO = this->levels[level].ufo;
@@ -285,8 +275,8 @@ void Game::Render() {
 
 			m_Font->SetColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 			std::string debug = 
-				std::to_string(this->levels[this->level].initialAlienCnt) + " " + 
-				std::to_string(this->levels[this->level].activeAliens);
+				std::to_string(this->levels[this->level].horde->initialAlienCnt) + " " + 
+				std::to_string(this->levels[this->level].horde->activeAliens);
 			glm::vec2 textSize = m_Font->GetSize(debug.c_str());
 			m_Font->Print(debug.c_str(),
 				(this->width / 2) - (textSize.x / 2),
@@ -311,30 +301,18 @@ void Game::DoCollisions() {
 			if (bullet.type == LASER) {
 				for (Bullet& bullet2 : m_Bullets) {
 					if (bullet2.type != LASER && CheckCollision(bullet, bullet2)) {
-						int randNbr = this->randomDist(this->engine);
-						switch (bullet2.type) {
-							case FAST: {
-								if (randNbr < 5)
-									bullet2.destroyed = true;
-							} break;
-							case WIGGLY: {
-								if (randNbr < 2)
-									bullet2.destroyed = true;
-							} break;
-							default: {
-								bullet2.destroyed = true;
-							} break;
-						}
-
+						bullet2.destroyed = !bullet2.Pierce();
 						bullet.destroyed = true;
 						break;
 					}
 				}
 				if (bullet.destroyed) continue;
 
-				for (Entity& alien : this->levels[level].aliens) {
-					if (!alien.destroyed && CheckCollision(alien, bullet)) {
-						alien.destroyed = bullet.destroyed = true;
+				if (CheckCollision(bullet, *this->levels[level].horde)) {
+					for (Entity& alien : this->levels[level].horde->aliens) {
+						if (!alien.destroyed && CheckCollision(alien, bullet)) {
+							alien.destroyed = bullet.destroyed = true;
+						}
 					}
 				}
 
@@ -346,21 +324,6 @@ void Game::DoCollisions() {
 				if (CheckCollision(*m_Player, bullet)) {
 					m_Player->destroyed = true;
 					continue;
-				}
-			}
-
-			for (auto& barrier : this->levels[this->level].barriers) {
-				if (CheckCollision(barrier, bullet)) {
-					for (auto& section : barrier.barrierContent) {
-						if (!bullet.destroyed) {
-							for (auto& subSection : section) {
-								if (!subSection.destroyed && CheckCollision(subSection, bullet)) {
-									subSection.destroyed = bullet.destroyed = true;
-									break;
-								}
-							}
-						}
-					}
 				}
 			}
 		}
@@ -377,6 +340,7 @@ bool Game::CheckCollision(Entity& one, Entity& two) {
 
 	return collisionX && collisionY;
 }
+
 
 void Game::GenerateBullet(Entity& shooter, BulletType type) {
 	std::string texture;

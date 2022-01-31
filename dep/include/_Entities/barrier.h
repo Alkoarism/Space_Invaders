@@ -2,24 +2,22 @@
 #define BARRIER_H
 
 #include "entity.h"
-#include "barrierSubSection.h"
+#include "barrierSection.h"
 
 const unsigned int VERTICAL_SUB_SECTIONS(6);
-const unsigned int HORIZONTAL_SUB_SECTIONS(12);
+const unsigned int HORIZONTAL_SUB_SECTIONS(6);
 
 class Barrier : public Entity {
 public:
-	std::vector<std::vector<BarrierSubSection>> barrierContent;
+	std::vector<std::vector<BarrierSection>> barrierContent;
 
 	Barrier();
 	Barrier(glm::vec2 pos, glm::vec2 size);
 
+	void Update();
 	void Reset();
 	void Draw(SpriteRenderer& renderer) override;
 private:
-	std::vector<std::vector<bool>> m_SectionState;
-
-	void UpdateTextures(size_t row, size_t col);
 };
 
 #endif

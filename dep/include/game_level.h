@@ -3,9 +3,9 @@
 
 #include "OpenGL\renderer.h"
 
-#include "alien.h"
+#include "alienHorde.h"
 #include "ufo.h"
-#include "barrier.h"
+//#include "barrier.h"
 
 const unsigned int MAX_ALIEN_ROWS(20);
 const unsigned int MAX_ALIEN_COLS(22);
@@ -27,28 +27,26 @@ struct BorderOffset {
 
 class GameLevel {
 public:
-	unsigned int initialAlienCnt;
-	unsigned int activeAliens;
 	float unitWidth;
 	float unitHeight;
 
 	UFO ufo;
-	std::vector<Barrier> barriers;
-	std::forward_list<Alien> aliens;
-	std::vector<std::vector<unsigned int>> alienData;
+	std::unique_ptr<AlienHorde> horde;
+	//std::vector<Barrier> barriers;
 	
 	BorderOffset borderOffset;
 
 	GameLevel();
 	bool Load(const char*, unsigned int, unsigned int);
 	bool IsCompleted();
+	void Update();
 	void Draw(SpriteRenderer&);
 	void Restart(unsigned int, unsigned int);
 
 	void SetUFO(unsigned int);
 
 private:
-	void InitPosition(unsigned int, unsigned int);
+	glm::vec2 m_HordeInitPos;
 };
 
 #endif
