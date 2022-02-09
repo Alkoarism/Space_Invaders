@@ -162,7 +162,9 @@
     <ClInclude Include="dep\include\sprite_renderer.h" />
     <ClInclude Include="dep\include\stb_image.h" />
     <ClInclude Include="dep\include\_Entities\entityDynamic.h" />
+    <ClInclude Include="dep\include\_Entities\player.h" />
     <ClInclude Include="dep\include\_Entities\ufo.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="dep\lib\glfw3.lib" />
@@ -181,7 +183,6 @@
     <None Include="res\shaders\main_vert.shader" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dep\include\_Entities\player.h" />
     <ClCompile Include="src\_Entities\alien.cpp" />
     <ClCompile Include="src\bitmap_font.cpp" />
     <ClCompile Include="src\_Entities\barrier.cpp" />
@@ -202,6 +203,12 @@
     <ClCompile Include="src\sprite_renderer.cpp" />
     <ClCompile Include="src\_Entities\player.cpp" />
     <ClCompile Include="src\_Entities\ufo.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Invaders.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

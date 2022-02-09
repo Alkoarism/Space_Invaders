@@ -9,7 +9,7 @@ public:
 	int lives;
 	std::string sprite;
 
-	Player(glm::vec2 pos, glm::vec2 size, int lives);
+	Player(const glm::vec2 pos, const glm::vec2 size, const int lives);
 	void Draw(SpriteRenderer& renderer) override;
 
 private:
