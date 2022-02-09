@@ -27,6 +27,9 @@ struct BorderOffset {
 
 class GameLevel {
 public:
+	float screenWidth;
+	float screenHeight;
+
 	float unitWidth;
 	float unitHeight;
 
@@ -36,14 +39,14 @@ public:
 	
 	BorderOffset borderOffset;
 
-	GameLevel();
-	bool Load(const char*, unsigned int, unsigned int);
-	bool IsCompleted();
+	GameLevel(float screenWidth, float screenHeight);
+	bool Load(const char*);
+	int IsCompleted();
 	void Update();
 	void Draw(SpriteRenderer&);
-	void Restart(unsigned int, unsigned int);
+	void Restart();
 
-	void SetUFO(unsigned int);
+	void SetUFO();
 
 private:
 	glm::vec2 m_HordeInitPos;

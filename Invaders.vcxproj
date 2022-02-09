@@ -163,6 +163,7 @@
     <ClInclude Include="dep\include\sprite_renderer.h" />
     <ClInclude Include="dep\include\stb_image.h" />
     <ClInclude Include="dep\include\_Entities\entityDynamic.h" />
+    <ClInclude Include="dep\include\_Entities\player.h" />
     <ClInclude Include="dep\include\_Entities\ufo.h" />
   </ItemGroup>
   <ItemGroup>
@@ -182,7 +183,6 @@
     <None Include="res\shaders\main_vert.shader" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dep\include\_Entities\player.h" />
     <ClCompile Include="src\_Entities\alien.cpp" />
     <ClCompile Include="src\bitmap_font.cpp" />
     <ClCompile Include="src\_Entities\alienHorde.cpp" />

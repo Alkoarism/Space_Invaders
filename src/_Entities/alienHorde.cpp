@@ -32,7 +32,8 @@ void AlienHorde::Update() {
 			static_cast<float>(this->activeAliens) /
 			static_cast<float>(this->initialAlienCnt);
 		this->curVelocity = glm::vec2(
-			((1 - activeAlienRatio) * (this->maxVelocity - this->minVelocity)) +
+			((1 - activeAlienRatio) * (1 - activeAlienRatio) *
+				(this->maxVelocity - this->minVelocity)) +
 			this->minVelocity);
 		
 		bool firstAlien = true;
@@ -99,9 +100,10 @@ glm::vec2 AlienHorde::Move(float dt, float window_width) {
 	
 	if (m_HorizontalMove) {
 		
+		float leftBorderOffset = this->unitGridSize.x * (1 - m_GridToAlProp);
 		float nextHorPos = this->position.x + movement.x * (m_MoveRight ? 1 : -1);
-		float relativeBorder = window_width - this->size.x;
-		if (nextHorPos < 0 || nextHorPos > relativeBorder) {
+		float rightBorderOffset= window_width - this->size.x;
+		if (nextHorPos < -leftBorderOffset || nextHorPos > rightBorderOffset) {
 			m_HorizontalMove = false;
 			m_MoveRight = !m_MoveRight;
 		}

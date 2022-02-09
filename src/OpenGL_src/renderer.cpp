@@ -67,7 +67,7 @@ Shader& Renderer::LoadShader
 }
 
 Texture& Renderer::LoadTexture
-    (std::string name, const char* file, bool alpha) {
+    (const std::string name, const char* file, const bool alpha) {
 
     textures.emplace(name, Texture());
     if (alpha) {

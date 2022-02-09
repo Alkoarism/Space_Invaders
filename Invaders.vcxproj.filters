@@ -81,6 +81,9 @@
     <ClInclude Include="dep\include\_Entities\alienHorde.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="dep\include\_Entities\player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="dep\lib\glfw3.lib" />
@@ -153,16 +156,13 @@
     <ClCompile Include="src\_Entities\barrier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dep\include\_Entities\player.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\_Entities\player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\_Entities\barrierSection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\_Entities\alienHorde.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Entities\player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

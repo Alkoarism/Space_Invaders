@@ -1,7 +1,7 @@
 #include "game.h"
 
 std::default_random_engine Game::engine(std::chrono::system_clock::now().time_since_epoch().count());
-std::uniform_int_distribution<int> Game::randomDist(0, 10);
+std::uniform_int_distribution<int> Game::randomDist(0, 50);
 
 Game::Game(unsigned int width, unsigned int height) 
 	:	state(GAME_MENU), 
@@ -65,10 +65,10 @@ Game::Game(unsigned int width, unsigned int height)
 	borders.top = TOP_HUD_SIZE;
 	borders.down = BOTTOM_HUD_SIZE;
 	
-	this->levels.emplace_back(GameLevel());
+	this->levels.emplace_back(GameLevel(this->width, this->height));
 	this->level = 0;
 	this->levels[this->level].borderOffset = borders;
-	this->levels[this->level].Load("res\\levels\\classic.lvl", this->width, this->height);
+	this->levels[this->level].Load("res\\levels\\classic.lvl");
 
 	// Player Initialization --------------------------------------------------
 	glm::vec2 playerSize = glm::vec2(
@@ -93,13 +93,15 @@ void Game::ProcessInput(float dt) {
 				this->state = GAME_ACTIVE;
 				this->keysProcessed[GLFW_KEY_ENTER] = true;
 
-				if (this->levels[this->level].IsCompleted()) {
-					this->levels[this->level].Restart(this->width, this->height);
+				if (m_GameResult != 0) {
+					this->levels[this->level].Restart();
 					m_Bullets.clear();
 					m_AlienShots = 0;
 					m_PlayerShots = 0;
 					m_ShotsUntilUFO = 22;
 					m_Player->position = m_PlayerStartPos;
+					m_Player->lives = 3;
+					m_GameResult = 0;
 				}
 			}
 		} break;
@@ -126,7 +128,7 @@ void Game::ProcessInput(float dt) {
 						--m_ShotsUntilUFO;
 						if (m_ShotsUntilUFO <= 0) {
 							m_ShotsUntilUFO = 14;
-							this->levels[level].SetUFO(this->width);
+							this->levels[level].SetUFO();
 						}
 					}
 				}
@@ -134,6 +136,7 @@ void Game::ProcessInput(float dt) {
 			else {
 				if (this->keys[GLFW_KEY_ENTER] && !this->keysProcessed[GLFW_KEY_ENTER]) {
 					this->keysProcessed[GLFW_KEY_ENTER] = true;
+					--m_Player->lives;
 					m_Player->destroyed = false;
 					m_Player->position = m_PlayerStartPos;
 					m_Bullets.clear();
@@ -185,7 +188,7 @@ void Game::Update(float dt) {
 			if (this->m_AlienShots < 3) {
 
 				int randomNbr = this->randomDist(this->engine);
-				if (randomNbr > 7) {
+				if (randomNbr > 24) {
 						
 					bool willShoot = true;
 					for (auto target = alienListBegin; target != alien; ++target) {
@@ -202,7 +205,7 @@ void Game::Update(float dt) {
 						if (alien->shape == TRIANGLE)
 							GenerateBullet(*alien, WIGGLY);
 						else
-							GenerateBullet(*alien, randomNbr < 9 ? SLOW : FAST);
+							GenerateBullet(*alien, randomNbr < 40 ? SLOW : FAST);
 
 						++m_AlienShots;
 					}
@@ -220,7 +223,14 @@ void Game::Update(float dt) {
 
 		DoCollisions();
 
-		if (this->levels[level].IsCompleted()) {
+		if (m_Player->lives != 0) {
+			m_GameResult = this->levels[level].IsCompleted();
+			if (m_GameResult != 0) {
+				this->state = GAME_END;
+			}
+		}
+		else {
+			m_GameResult = -1;
 			this->state = GAME_END;
 		}
 	}
@@ -240,16 +250,8 @@ void Game::Render() {
 		} break;
 		case (GAME_ACTIVE): {
 			// Draw Background
-			m_SpRenderer->DrawSprite("background_1",
-				glm::vec2(0.0f, 0.0f),
-				glm::vec2(this->width, TOP_HUD_SIZE),
-				0.0f);
-			m_SpRenderer->DrawSprite("background_1",
-				glm::vec2(0.0f, this->height - BOTTOM_HUD_SIZE),
-				glm::vec2(this->width, BOTTOM_HUD_SIZE),
-				0.0f);
 			m_SpRenderer->DrawSprite("background",
-				glm::vec2(0.0f, TOP_HUD_SIZE), 
+				glm::vec2(0.0f, TOP_HUD_SIZE),
 				glm::vec2(this->width, this->height - (TOP_HUD_SIZE + BOTTOM_HUD_SIZE)),
 				0.0f);
 
@@ -273,24 +275,51 @@ void Game::Render() {
 					b.Draw(*m_SpRenderer);
 			}
 
-			m_Font->SetColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-			std::string debug = 
-				std::to_string(this->levels[this->level].horde->initialAlienCnt) + " " + 
-				std::to_string(this->levels[this->level].horde->activeAliens);
-			glm::vec2 textSize = m_Font->GetSize(debug.c_str());
-			m_Font->Print(debug.c_str(),
-				(this->width / 2) - (textSize.x / 2),
-				(this->height - (BOTTOM_HUD_SIZE / 2)) - (textSize.y / 2));
+			// Draw HUD
+			m_SpRenderer->DrawSprite("background_1",
+				glm::vec2(0.0f, 0.0f),
+				glm::vec2(this->width, TOP_HUD_SIZE),
+				0.0f);
+
+			m_SpRenderer->DrawSprite("background_1",
+				glm::vec2(0.0f, this->height - BOTTOM_HUD_SIZE),
+				glm::vec2(this->width, BOTTOM_HUD_SIZE),
+				0.0f);
+
+			// -- Player lives
+			float ySize = BOTTOM_HUD_SIZE / 2;
+			glm::vec2 size(ySize * 1.5, ySize);
+
+			for (int l = 0; l != m_Player->lives; ++l) {
+				glm::vec2 pos(
+					l * ((this->width * 0.01f) + m_Player->size.x) + size.y,
+					this->height + (size.y / 2) - BOTTOM_HUD_SIZE);
+
+				m_SpRenderer->DrawSprite("player", 
+					pos, size, 0.0f, m_Player->color);
+			}
+
 		} break;
 		case (GAME_END): {
 			m_SpRenderer->DrawSprite("background",
 				glm::vec2(0.0f, 0.0f), glm::vec2(this->width, this->height), 0.0f);
 
-			m_Font->SetColor(glm::vec4(0.0f, std::abs(sin(glfwGetTime())), 0.0f, 1.0f));
-			glm::vec2 textSize = m_Font->GetSize("Congratulations!");
-			m_Font->Print("Congratulations!",
-				(this->width - textSize.x) / 2,
-				(this->height - textSize.y) / 2);
+			if (m_GameResult == 1) {
+				m_Font->SetColor(glm::vec4(0.0f, std::abs(sin(glfwGetTime())), 0.0f, 1.0f));
+				glm::vec2 textSize = m_Font->GetSize("Congratulations!");
+				m_Font->Print("Congratulations!",
+					(this->width - textSize.x) / 2,
+					(this->height - textSize.y) / 2);
+			}
+
+			if (m_GameResult == -1) {
+				m_Font->SetColor(glm::vec4(0.0f, std::abs(sin(glfwGetTime())), 0.0f, 1.0f));
+				glm::vec2 textSize = m_Font->GetSize("You Lose!");
+				m_Font->Print("You Lose!",
+					(this->width - textSize.x) / 2,
+					(this->height - textSize.y) / 2);
+			}
+
 		} break;
 	}
 }

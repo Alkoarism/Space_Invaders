@@ -47,6 +47,7 @@ public:
 
 private:
 	unsigned int m_PlayerShots, m_AlienShots, m_ShotsUntilUFO;
+	int m_GameResult;
 	glm::vec2 m_PlayerStartPos;
 	std::unique_ptr<BitmapFont> m_Font;
 	std::unique_ptr<SpriteRenderer> m_SpRenderer;
