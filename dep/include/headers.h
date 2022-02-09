@@ -19,4 +19,9 @@
 #include <map>
 #include <sstream>
 
+//Game specific headers
+#include <chrono>
+#include <random>
+#include <forward_list>
+
 #endif

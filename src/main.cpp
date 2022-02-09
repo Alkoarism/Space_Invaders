@@ -29,7 +29,7 @@ int main() {
 
 	// glfw: window creation and setup -------------------------------------------
 	GLFWwindow* window = glfwCreateWindow
-		(screenWidth,  screenHeight, "OpenGL Space_Invaders_Clone", NULL, NULL);
+		(screenWidth,  screenHeight, "OpenGL Invaders", NULL, NULL);
 	if (!window) {
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
@@ -40,6 +40,24 @@ int main() {
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetKeyCallback(window, key_callback);
+
+	//// glfw: icon (need an img parser to handle stb linking weirdness)
+	//GLFWimage images[1];
+	//int imgWidth, imgHeight, nrChannels;
+	//unsigned char* data
+	//	= stbi_load("icon.ico", &imgWidth, &imgHeight, &nrChannels, 0);
+	//if (data == nullptr) {
+	//	const char* failLog = stbi_failure_reason();
+	//	std::cout << "ERROR::TEXTURE::FAILED_TO_LOAD_ICON"
+	//		<< "\n" << failLog << std::endl;
+	//}
+	//stbi_image_free(data);
+
+	//images[0].width = imgWidth;
+	//images[0].height = imgHeight;
+	//images[0].pixels = data;
+
+	//glfwSetWindowIcon(window, 1, images);
 
 	// glad: load all OpenGL function pointers
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {

@@ -27,7 +27,19 @@ SpriteRenderer::~SpriteRenderer() {
 
 }
 
-void SpriteRenderer::DrawSprite(std::string textureName, 
+void SpriteRenderer::DrawSprite(std::string textureName,
+	glm::vec2 position,
+	glm::vec2 size, float rotate,
+	glm::vec3 color) 
+{
+	Renderer::GetShader(m_ShaderName).Use();
+	glActiveTexture(GL_TEXTURE0);
+	Renderer::GetTexture(textureName).Bind();
+
+	this->DrawSprite(position, size, rotate, color);
+}
+
+void SpriteRenderer::DrawSprite( 
 	glm::vec2 position, 
 	glm::vec2 size, float rotate, 
 	glm::vec3 color) {
@@ -46,9 +58,6 @@ void SpriteRenderer::DrawSprite(std::string textureName,
 
 	Renderer::GetShader(m_ShaderName).SetUniform("model", model);
 	Renderer::GetShader(m_ShaderName).SetUniform("textColor", color);
-
-	glActiveTexture(GL_TEXTURE0);
-	Renderer::GetTexture(textureName).Bind();
 
 	Renderer::Render(m_QuadVAO, *m_IBO, Renderer::GetShader(m_ShaderName));
 }

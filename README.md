@@ -2,7 +2,7 @@
 This is a clone project of the game Space Invaders for learning purposes.
 With this I intend to use all the knowledge acquired after reading the "Learn OpenGL" book and practice and further improve my skills with OOP, while also learning more about the C++ language and Graphics Programming.
 
-Currently there is only a prototype of the main game loop:
+Currently there is only a prototype of the main game loop (the lag on the video is due to the recording method):
 
 ![image](https://user-images.githubusercontent.com/69710741/149419224-9363547c-dc7d-4ac8-8424-8dc2da9a70c2.png)
 
